@@ -1,21 +1,22 @@
-package main
+package robonet
 
-type rNConvLayer struct {
+//RNConvLayer basic type for a convolutional layer
+type RNConvLayer struct {
 	Filters []Filter
 }
 
-func (l rNConvLayer) AddFilter(fil *Filter) {
+//AddFilter adds a filter to a layer
+func (l RNConvLayer) AddFilter(fil *Filter) {
 	l.Filters = append(l.Filters, *fil)
 }
 
 //Calculate applys all Filters to a given Volume
-func (l rNConvLayer) calculate(vol rNVolume) *rNVolume {
-	result := newRNVolume(vol.Height(), vol.Width(), vol.Depth())
+func (l RNConvLayer) Calculate(vol rNVolume) rNVolume {
+	//result := newRNVolume(vol.Height(), vol.Width(), vol.Depth())
 	for _, v := range l.Filters {
-		//TODO apply filtes
 		vol = vol.Apply(v)
 	}
-	return result
+	return vol
 }
 
 // Layer represents the general type of all layer types

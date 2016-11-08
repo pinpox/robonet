@@ -1,4 +1,4 @@
-package main
+package robonet
 
 import (
 	"fmt"
@@ -12,13 +12,19 @@ type Filter struct {
 
 //NewFilter creates a new filter initialized with zeros
 func NewFilter(height int, width, depth int) *Filter {
-	g := Filter{*newRNVolume(height, width, depth)}
+	if !Odd3Dim(height, width, depth) {
+		panic("Filter must have odd width and heigth")
+	}
+	g := Filter{*NewRNVolume(height, width, depth)}
 	return &g
 }
 
 //NewFilterRandom creates a new filter initialized with random values
 func NewFilterRandom(height int, width, depth int) *Filter {
-	g := Filter{*newRNVolumeRandom(height, width, depth)}
+	if !Odd3Dim(height, width, depth) {
+		panic("Filter must have odd width and heigth")
+	}
+	g := Filter{*NewRNVolumeRandom(height, width, depth)}
 	return &g
 }
 

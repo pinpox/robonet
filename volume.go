@@ -1,4 +1,4 @@
-package main
+package robonet
 
 import (
 	"fmt"
@@ -15,23 +15,23 @@ func (vol rNVolume) Dims() (int, int, int) {
 	i1, i2 := vol.Fields[0].Dims()
 	i3 := len(vol.Fields)
 	return i1, i2, i3
-
 }
 
 //Apply applys the given filter to the whole volume, returnung a Volume with 1 depth
 func (vol rNVolume) Apply(f Filter) rNVolume {
-	//TODO apply the filter to thew volume
 
 	//Check correct output
 	_, _, a := vol.Dims()
 	if a != 1 {
 		panic("should have returned a plane (1dim)")
 	}
+
+	//TODO apply the filter to the volume
 	return vol
 }
 
-//newRNVolume generates a rNVolume of fixed size filled with zeros
-func newRNVolume(h int, w int, d int) *rNVolume {
+//NewRNVolume generates a rNVolume of fixed size filled with zeros
+func NewRNVolume(h int, w int, d int) *rNVolume {
 	v := new(rNVolume)
 	v.Fields = []mat64.Dense{}
 
@@ -41,8 +41,8 @@ func newRNVolume(h int, w int, d int) *rNVolume {
 	return v
 }
 
-//newRNVolumeRandom generates a rNVolume of fixed size filled with values between 0 and 1
-func newRNVolumeRandom(h int, w int, d int) *rNVolume {
+//NewRNVolumeRandom generates a rNVolume of fixed size filled with values between 0 and 1
+func NewRNVolumeRandom(h int, w int, d int) *rNVolume {
 	v := new(rNVolume)
 	v.Fields = []mat64.Dense{}
 
@@ -56,6 +56,13 @@ func newRNVolumeRandom(h int, w int, d int) *rNVolume {
 		v.Fields = append(v.Fields, *a)
 	}
 	return v
+}
+
+//SubVolumePadded returns a part of the original Volume. i and j determine the center of copying, width and height the size of the subvolume.
+//If the size exceeds the underlying volume the submodule is filled(padded with Zeros.
+func (vol rNVolume) SubVolumePadded(i, j, height, width int) rNVolume {
+	//TODO
+	return *new(rNVolume)
 }
 
 func (vol rNVolume) Height() int {
