@@ -41,7 +41,7 @@ func (f Filter) Dims() (int, int, int) {
 //Only filters of the same size as the volume can be applied
 func (f Filter) Apply(in rNVolume) float64 {
 
-	float64 ConvResult
+	ConvResult := 1.0
 
 	if !(f.values.EqualSize(in)) {
 		fmt.Println("Filter size doesn't match input")
@@ -57,8 +57,10 @@ func (f Filter) Apply(in rNVolume) float64 {
 
 func (f Filter) pointReflection (input Filter) Filter{
 	//TO DO
+	return input
 }
 
 func (f Filter) reflection (input Filter) Filter{
 	//TO DO
+	return input
 }
