@@ -41,32 +41,24 @@ func (f Filter) Dims() (int, int, int) {
 //Only filters of the same size as the volume can be applied
 func (f Filter) Apply(in rNVolume) float64 {
 
+	float64 ConvResult
+
 	if !(f.values.EqualSize(in)) {
 		fmt.Println("Filter size doesn't match input")
 		panic("Filter size doesn't match input")
 	}
 
-	//TODO calc
-	//TODO normalize
+	// 1) reflect kernel
+	// 2) multiply pairwise
+	// 3) normalize
 
-	//a := mat64.NewDense(2, 4, []float64{
-	//1, 2, 3, 4,
-	//5, 6, 7, 8,
-	//})
-	//b := mat64.NewDense(4, 3, []float64{
-	//1, 2, 3,
-	//4, 5, 6,
-	//7, 8, 9,
-	//10, 11, 12,
-	//})
-	//var m mat64.Dense
-	////var n mat64.Dense
-	//m.Mul(a, b)
-	////normFactor := n.Sum()
+	return ConvResult
+}
 
-	//fmt.Println("multiplication output")
-	//fmt.Println(mat64.Formatted(&m))
+func (f Filter) pointReflection (input Filter) Filter{
+	//TO DO
+}
 
-	return 1
-
+func (f Filter) reflection (input Filter) Filter{
+	//TO DO
 }
