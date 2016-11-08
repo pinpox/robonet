@@ -1,19 +1,20 @@
 package main
 
 type rNConvLayer struct {
-	Filters []filter
+	Filters []Filter
 }
 
-func (l rNConvLayer) AddFilter(fil *filter) {
+func (l rNConvLayer) AddFilter(fil *Filter) {
 	l.Filters = append(l.Filters, *fil)
 }
 
+//Calculate applys all Filters to a given Volume
 func (l rNConvLayer) calculate(vol rNVolume) *rNVolume {
-	//TODO
 	result := newRNVolume(vol.Height(), vol.Width(), vol.Depth())
-	//for k := range l.filters {
-
-	//}
+	for _, v := range l.Filters {
+		//TODO apply filtes
+		vol = vol.Apply(v)
+	}
 	return result
 }
 

@@ -18,6 +18,18 @@ func (vol rNVolume) Dims() (int, int, int) {
 
 }
 
+//Apply applys the given filter to the whole volume, returnung a Volume with 1 depth
+func (vol rNVolume) Apply(f Filter) rNVolume {
+	//TODO apply the filter to thew volume
+
+	//Check correct output
+	_, _, a := vol.Dims()
+	if a != 1 {
+		panic("should have returned a plane (1dim)")
+	}
+	return vol
+}
+
 //newRNVolume generates a rNVolume of fixed size filled with zeros
 func newRNVolume(h int, w int, d int) *rNVolume {
 	v := new(rNVolume)

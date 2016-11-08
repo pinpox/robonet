@@ -6,32 +6,34 @@ import (
 )
 
 // Filter represets a basic conv filter
-type filter struct {
+type Filter struct {
 	values rNVolume
 }
 
 //NewFilter creates a new filter initialized with zeros
-func NewFilter(height int, width, depth int) *filter {
-	g := filter{*newRNVolume(height, width, depth)}
+func NewFilter(height int, width, depth int) *Filter {
+	g := Filter{*newRNVolume(height, width, depth)}
 	return &g
 }
 
 //NewFilterRandom creates a new filter initialized with random values
-func NewFilterRandom(height int, width, depth int) *filter {
-	g := filter{*newRNVolumeRandom(height, width, depth)}
+func NewFilterRandom(height int, width, depth int) *Filter {
+	g := Filter{*newRNVolumeRandom(height, width, depth)}
 	return &g
 }
 
-func (f filter) Print() {
+//Print shows show the filter's matrix string representation
+func (f Filter) Print() {
 	f.values.Print()
 }
 
-func (f filter) Dims() (int, int, int) {
+//Dims returns the  size of the filter
+func (f Filter) Dims() (int, int, int) {
 	return f.values.Dims()
-
 }
 
-func (f filter) Apply(in rNVolume) float64 {
+//Apply applys the filter to a equally sized chunk of a volume
+func (f Filter) Apply(in rNVolume) float64 {
 
 	if !(f.values.EqualSize(in)) {
 		fmt.Println("Filter size doesn't match input")
