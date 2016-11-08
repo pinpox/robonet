@@ -2,7 +2,6 @@ package robonet
 
 import (
 	"fmt"
-	//"github.com/gonum/matrix/mat64"
 )
 
 // Filter represets a basic conv filter
@@ -21,7 +20,7 @@ func NewFilter(height int, width, depth int) *Filter {
 
 //NewFilterRandom creates a new filter initialized with random values
 func NewFilterRandom(height int, width, depth int) *Filter {
-	if !Odd3Dim(height, width, depth) {
+	if Odd3Dim(height, width, depth) {
 		panic("Filter must have odd width and heigth")
 	}
 	g := Filter{*NewRNVolumeRandom(height, width, depth)}
@@ -39,6 +38,7 @@ func (f Filter) Dims() (int, int, int) {
 }
 
 //Apply applys the filter to a equally sized chunk of a volume
+//Only filters of the same size as the volume can be applied
 func (f Filter) Apply(in rNVolume) float64 {
 
 	if !(f.values.EqualSize(in)) {
