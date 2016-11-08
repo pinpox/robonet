@@ -1,10 +1,28 @@
-test-go-1.4:
-  image: golang:1.4
-  services:
-    - postgres:9.4
-    - truongsinh/rethinkdb:2.1.3
+# See docs/examples
+# http://doc.gitlab.com/ce/ci/quick_start/README.html
+# http://doc.gitlab.com/ce/ci/yaml/README.html
+
+# GitLab CI template for Go tests. Note this installs
+# a new working copy of Go in a non-standard path such
+# that sudo/root is not needed for the install stage.
+
+# note that this particular install-environment stage
+# is overly verbose in order to debug anything tricky
+# or weird in your environment - feel free to trim it 
+# down as needed
+
+stages:
+  - build
+  - test
+
+build-my-project:
+  stage: build
+  script:
+    - cd $(pwd)
+    - go build
+
+test-my-project:
   stage: test
   script:
-    - git submodule update --init
-    - go run sql/latest_schema.sql.go
-    - go test -race -p 1 smarpshare/...
+    - cd $(pwd)
+    - go test
