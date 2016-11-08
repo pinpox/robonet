@@ -1,0 +1,10 @@
+test-go-1.4:
+  image: golang:1.4
+  services:
+    - postgres:9.4
+    - truongsinh/rethinkdb:2.1.3
+  stage: test
+  script:
+    - git submodule update --init
+    - go run sql/latest_schema.sql.go
+    - go test -race -p 1 smarpshare/...
