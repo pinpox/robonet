@@ -11,6 +11,13 @@ type rNVolume struct {
 	Fields []mat64.Dense
 }
 
+func (vol rNVolume) Dims() (int, int, int) {
+	i1, i2 := vol.Fields[0].Dims()
+	i3 := len(vol.Fields)
+	return i1, i2, i3
+
+}
+
 //newRNVolume generates a rNVolume of fixed size filled with zeros
 func newRNVolume(h int, w int, d int) *rNVolume {
 	v := new(rNVolume)
@@ -39,24 +46,31 @@ func newRNVolumeRandom(h int, w int, d int) *rNVolume {
 	return v
 }
 
-func (v rNVolume) Height() int {
-	return len(v.Fields)
+func (vol rNVolume) Height() int {
+	return len(vol.Fields)
 }
 
-func (v rNVolume) Print() {
+func (vol rNVolume) Print() {
 
-	for i := range v.Fields {
-		fa := mat64.Formatted(&v.Fields[i], mat64.Prefix(" "))
+	for i := range vol.Fields {
+		fa := mat64.Formatted(&vol.Fields[i], mat64.Prefix(" "))
 		fmt.Printf("Layer %v:\n\n %v\n\n", i, fa)
 	}
 }
 
-func (v *rNVolume) Width() int {
-	_, c := v.Fields[0].Dims()
+func (vol *rNVolume) Width() int {
+	_, c := vol.Fields[0].Dims()
 	return c
 }
 
-func (v rNVolume) Depth() int {
-	r, _ := v.Fields[0].Dims()
+func (vol rNVolume) Depth() int {
+	r, _ := vol.Fields[0].Dims()
 	return r
+}
+
+//Equal3Dim checks if the size of two volumes are the same
+func (vol rNVolume) EqualSize(a rNVolume) bool {
+	i1, i2, i3 := vol.Dims()
+	e1, e2, e3 := a.Dims()
+	return Equal3Dim(i1, i2, i3, e1, e2, e3)
 }

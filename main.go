@@ -2,16 +2,17 @@ package main
 
 import (
 	"fmt"
-	"github.com/gonum/matrix/mat64"
+	//"github.com/gonum/matrix/mat64"
 )
 
 func main() {
 
-	inputVol := rNVolume{
-		[]mat64.Dense{
-			*mat64.NewDense(4, 4, nil),
-			*mat64.NewDense(4, 4, nil),
-			*mat64.NewDense(4, 4, nil)}}
+	inputVol := *newRNVolumeRandom(4, 4, 3)
+	//rNVolume{
+	//[]mat64.Dense{
+	//*mat64.NewDense(4, 4, nil),
+	//*mat64.NewDense(4, 4, nil),
+	//*mat64.NewDense(4, 4, nil)}}
 
 	fmt.Println("input was")
 	inputVol.Print()
