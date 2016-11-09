@@ -36,7 +36,7 @@ func NewRNVolume(w, h, d int) *rNVolume {
 	v.Fields = []mat64.Dense{}
 
 	for i := 0; i < d; i++ {
-		v.Fields = append(v.Fields, *mat64.NewDense(h, w, nil))
+		v.Fields = append(v.Fields, *mat64.NewDense(w, h, nil))
 	}
 	return v
 }
