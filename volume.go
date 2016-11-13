@@ -88,7 +88,23 @@ func (vol rNVolume) SubVolumePadded(i, j, width, height int) rNVolume {
 	return *sub
 }
 func (vol rNVolume) Equals(in rNVolume) bool {
-	return false //TODO
+	if !vol.EqualSize(in) {
+		return false
+	}
+
+	d1, d2, d3 := vol.Dims()
+
+	for i1 := 0; i1 < d1; i1++ {
+		for i2 := 0; i2 < d2; i2++ {
+			for i3 := 0; i3 < d3; i3++ {
+				if vol.GetAt(i1, i2, i3) != in.GetAt(i1, i2, i3) {
+					return false
+				}
+			}
+		}
+	}
+
+	return true
 }
 
 func (vol rNVolume) GetAt(w, h, d int) float64 {
