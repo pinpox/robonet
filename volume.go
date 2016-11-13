@@ -20,13 +20,14 @@ func (vol rNVolume) Dims() (int, int, int) {
 //Apply applys the given filter to the whole volume, returnung a Volume with 1 depth
 func (vol rNVolume) Apply(f Filter) rNVolume {
 
+	//TODO apply the filter to the volume
+
 	//Check correct output
 	_, _, a := vol.Dims()
 	if a != 1 {
 		panic("should have returned a plane (1dim)")
 	}
 
-	//TODO apply the filter to the volume
 	return vol
 }
 
@@ -85,6 +86,9 @@ func (vol rNVolume) SubVolumePadded(i, j, width, height int) rNVolume {
 		}
 	}
 	return *sub
+}
+func (vol rNVolume) Equals(in rNVolume) bool {
+	return false //TODO
 }
 
 func (vol rNVolume) GetAt(w, h, d int) float64 {
