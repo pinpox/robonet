@@ -12,9 +12,9 @@ type rNVolume struct {
 }
 
 func (vol rNVolume) Dims() (int, int, int) {
-	i1, i2 := vol.Fields[0].Dims()
-	i3 := len(vol.Fields)
-	return i1, i2, i3
+	r, c := vol.Fields[0].Dims()
+	d := len(vol.Fields)
+	return r, c, d
 }
 
 //Apply applys the given filter to the whole volume, returnung a Volume with 1 depth
@@ -25,66 +25,79 @@ func (vol rNVolume) Apply(f Filter) rNVolume {
 	//Check correct output
 	_, _, a := vol.Dims()
 	if a != 1 {
-		panic("should have returned a plane (1dim)")
+		panic("should have returned a plane (2dim)")
 	}
 
 	return vol
 }
 
 //NewRNVolume generates a rNVolume of fixed size filled with zeros
-func NewRNVolume(w, h, d int) *rNVolume {
+func NewRNVolume(r, c, d int) *rNVolume {
 	v := new(rNVolume)
 	v.Fields = []mat64.Dense{}
 
 	for i := 0; i < d; i++ {
-		v.Fields = append(v.Fields, *mat64.NewDense(w, h, nil))
+		v.Fields = append(v.Fields, *mat64.NewDense(r, c, nil))
 	}
 	return v
 }
 
 //NewRNVolumeRandom generates a rNVolume of fixed size filled with values between 0 and 1
-func NewRNVolumeRandom(w, h, d int) *rNVolume {
+func NewRNVolumeRandom(r, c, d int) *rNVolume {
 	v := new(rNVolume)
 	v.Fields = []mat64.Dense{}
 
-	data := make([]float64, w*h)
-	for i := range data {
-		data[i] = rand.Float64()
-	}
-	a := mat64.NewDense(w, h, data)
+	for j := 0; j < d; j++ {
 
-	for i := 0; i < d; i++ {
+		data := make([]float64, r*c)
+		for i := range data {
+			data[i] = rand.Float64()
+		}
+		a := mat64.NewDense(r, c, data)
+
 		v.Fields = append(v.Fields, *a)
 	}
 	return v
 }
 
-//SubVolumePadded returns a part of the original Volume. i and j determine the center of copying, width and height the size of the subvolume.
+//SubVolumePadded returns a part of the original Volume. cR and cC determine the center of copying, r and c the size of the subvolume.
 //If the size exceeds the underlying volume the submodule is filled(padded with Zeros.
-func (vol rNVolume) SubVolumePadded(i, j, width, height int) rNVolume {
+func (vol rNVolume) SubVolumePadded(cR, cC, r, c int) rNVolume {
 
-	sub := NewRNVolume(height, width, len(vol.Fields))
+	if r%2 == 0 || c%2 == 0 {
+		panic("Even dimensions not allowed for subvolumes")
+	}
 
-	h, w, d := vol.Dims()
+	sub := NewRNVolume(r, c, vol.Depth())
 
-	for dl := 0; dl < d; dl++ { //Loop over depth
-		for hl := 0; hl < height; hl++ { //Loop over segments height
-			for wl := 0; wl < width; wl++ { //Loop over segments width
+	halfR := (c - 1) / 2
+	halfC := (r - 1) / 2
 
-				wg := i - wl //TODO
-				hg := j - h  //TODO
+	fmt.Println("subvol ", cR, cC, r, c, " from")
+	vol.Print()
+
+	for ir := 0; ir < sub.Rows(); ir++ {
+		for ic := 0; ic < sub.Collumns(); ic++ {
+			for id := 0; id < sub.Depth(); id++ {
 
 				val := 0.0
-
-				if wg < 0 || hg < 0 || wg > w || hg > h {
-					//set to padding, 0
+				//dim1, dim2, _ := vol.Dims()
+				if ir-halfR < 0 || ir-halfR > vol.Rows() || ic-halfC < 0 || ic-halfC > vol.Collumns() {
+					val = 0.0
+					//fmt.Println("Getting ", ir-halfR-1, ",", ic-halfC-1, " from ", dim1, "x", dim2, "x", " val is 0")
 				} else {
-					val = vol.GetAt(wg, hg, dl)
+					//fmt.Println("Getting ", ir-halfR-1, ",", ic-halfC-1, " from ", dim1, "x", dim2, "x", " val gets pulled")
+					val = vol.GetAt(ir+(cR-halfR), ic+(cC-halfC), id)
+					//TODO
 				}
-				sub.SetAt(wl, hl, dl, val)
+
+				sub.SetAt(ir, ic, id, val)
+
 			}
 		}
 	}
+
+	sub.Print()
 	return *sub
 }
 func (vol rNVolume) Equals(in rNVolume) bool {
@@ -92,11 +105,11 @@ func (vol rNVolume) Equals(in rNVolume) bool {
 		return false
 	}
 
-	d1, d2, d3 := vol.Dims()
+	r, c, d := vol.Dims()
 
-	for i1 := 0; i1 < d1; i1++ {
-		for i2 := 0; i2 < d2; i2++ {
-			for i3 := 0; i3 < d3; i3++ {
+	for i1 := 0; i1 < r; i1++ {
+		for i2 := 0; i2 < c; i2++ {
+			for i3 := 0; i3 < d; i3++ {
 				if vol.GetAt(i1, i2, i3) != in.GetAt(i1, i2, i3) {
 					return false
 				}
@@ -123,21 +136,22 @@ func (vol rNVolume) Print() {
 	}
 }
 
-//Width of the Volume
-func (vol *rNVolume) Width() int {
-	_, c := vol.Fields[0].Dims()
-	return c
+// Rows of the Volume
+func (vol rNVolume) Rows() int {
+	r, _, _ := vol.Dims()
+	return r
 }
 
-//Height of the Volume
-func (vol rNVolume) Height() int {
-	return len(vol.Fields)
+// Collumns of the Volume
+func (vol *rNVolume) Collumns() int {
+	_, c, _ := vol.Dims()
+	return c
 }
 
 //Depth of the Volume
 func (vol rNVolume) Depth() int {
-	r, _ := vol.Fields[0].Dims()
-	return r
+	_, _, d := vol.Dims()
+	return d
 }
 
 //EqualSize checks if the size of two volumes are the same

@@ -55,12 +55,12 @@ func (f Filter) Apply(in rNVolume) float64 {
 	return ConvResult
 }
 
-func (f Filter) pointReflection (input Filter) Filter{
-	//TO DO
+func (f Filter) pointReflection(input Filter) Filter {
+	//TODO
 	return input
 }
 
-func (f Filter) reflection (input Filter) Filter{
-	//TO DO
+func (f Filter) reflection(input Filter) Filter {
+	//TODO
 	return input
 }

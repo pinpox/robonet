@@ -245,61 +245,61 @@ func TestSubVolumePadded(t *testing.T) {
 
 	if !res1.Equals(subVol1) {
 		t.Error("Expected", subVol1, ", got ", res1)
-		subVol1.Print()
-		res1.Print()
+		//subVol1.Print()
+		//res1.Print()
 	}
 
 	if !res2.Equals(subVol2) {
 		t.Error("Expected", subVol2, ", got ", res2)
-		subVol2.Print()
-		res2.Print()
+		//subVol2.Print()
+		//res2.Print()
 	}
 
 	if !res3.Equals(subVol3) {
 		t.Error("Expected", subVol3, ", got ", res3)
-		subVol3.Print()
-		res3.Print()
+		//subVol3.Print()
+		//res3.Print()
 	}
 
 	if !res4.Equals(subVol4) {
 		t.Error("Expected", subVol4, ", got ", res4)
-		subVol4.Print()
-		res4.Print()
+		//subVol4.Print()
+		//res4.Print()
 	}
 
 	if !res5.Equals(subVol5) {
 		t.Error("Expected", subVol5, ", got ", res5)
-		subVol5.Print()
-		res5.Print()
+		//subVol5.Print()
+		//res5.Print()
 	}
 
 	if !res6.Equals(subVol6) {
 		t.Error("Expected", subVol6, ", got ", res6)
-		subVol6.Print()
-		res6.Print()
+		//subVol6.Print()
+		//res6.Print()
 	}
 
 	if !res7.Equals(subVol7) {
 		t.Error("Expected", subVol7, ", got ", res7)
-		subVol7.Print()
-		res7.Print()
+		//subVol7.Print()
+		//res7.Print()
 	}
 
 	if !res8.Equals(subVol8) {
 		t.Error("Expected", subVol8, ", got ", res8)
-		subVol8.Print()
-		res8.Print()
+		//subVol8.Print()
+		//res8.Print()
 	}
 
 	if !res9.Equals(subVol9) {
 		t.Error("Expected", subVol9, ", got ", res9)
-		subVol9.Print()
-		res9.Print()
+		//subVol9.Print()
+		//res9.Print()
 	}
 
 	if !res10.Equals(subVol10) {
 		t.Error("Expected", subVol10, ", got ", res10)
-		subVol10.Print()
-		res10.Print()
+		//subVol10.Print()
+		//res10.Print()
 	}
 }
