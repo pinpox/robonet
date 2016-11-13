@@ -1,5 +1,6 @@
 package robonet
 
+import "fmt"
 import "testing"
 import "github.com/gonum/matrix/mat64"
 
@@ -78,7 +79,6 @@ func TestSubVolumePadded(t *testing.T) {
 		0, 21, 22}
 
 	var subVol1 = rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
-
 	sub1 = []float64{
 		0, 0, 0,
 		0, 1, 2,
@@ -112,18 +112,6 @@ func TestSubVolumePadded(t *testing.T) {
 		22, 23, 0}
 
 	var subVol3 = rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
-
-	// 0, 1, 2
-	// 3, 4, 5
-	// 6, 7, 8
-
-	// 9, 10, 11
-	// 12, 13,14
-	// 15,16, 17
-
-	//18, 19, 20
-	//21, 22, 23
-	//24, 25, 26
 
 	sub1 = []float64{
 		0, 0, 1,
@@ -159,8 +147,8 @@ func TestSubVolumePadded(t *testing.T) {
 		0, 0, 0}
 
 	sub3 = []float64{
-		21, 22, 0,
-		24, 25, 0,
+		22, 23, 0,
+		25, 26, 0,
 		0, 0, 0}
 
 	var subVol6 = rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
@@ -232,74 +220,169 @@ func TestSubVolumePadded(t *testing.T) {
 
 	var subVol10 = rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 5, sub1), *mat64.NewDense(3, 5, sub2), *mat64.NewDense(3, 5, sub3)}}
 
+	sub1 = []float64{
+		0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 1, 2, 0, 0,
+		0, 0, 3, 4, 5, 0, 0,
+		0, 0, 6, 7, 8, 0, 0,
+		0, 0, 0, 0, 0, 0, 0}
+
+	sub2 = []float64{
+		0, 0, 0, 0, 0, 0, 0,
+		0, 0, 9, 10, 11, 0, 0,
+		0, 0, 12, 13, 14, 0, 0,
+		0, 0, 15, 16, 17, 0, 0,
+		0, 0, 0, 0, 0, 0, 0}
+
+	sub3 = []float64{
+		0, 0, 0, 0, 0, 0, 0,
+		0, 0, 18, 19, 20, 0, 0,
+		0, 0, 21, 22, 23, 0, 0,
+		0, 0, 24, 25, 26, 0, 0,
+		0, 0, 0, 0, 0, 0, 0}
+
+	var subVol11 = rNVolume{Fields: []mat64.Dense{*mat64.NewDense(5, 7, sub1), *mat64.NewDense(5, 7, sub2), *mat64.NewDense(5, 7, sub3)}}
+
+	sub1 = []float64{
+		0, 0, 1, 2, 0, 0, 0,
+		0, 3, 4, 5, 0, 0, 0,
+		0, 6, 7, 8, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0}
+
+	sub2 = []float64{
+		0, 9, 10, 11, 0, 0, 0,
+		0, 12, 13, 14, 0, 0, 0,
+		0, 15, 16, 17, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0}
+
+	sub3 = []float64{
+		0, 18, 19, 20, 0, 0, 0,
+		0, 21, 22, 23, 0, 0, 0,
+		0, 24, 25, 26, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0}
+
+	var subVol12 = rNVolume{Fields: []mat64.Dense{*mat64.NewDense(5, 7, sub1), *mat64.NewDense(5, 7, sub2), *mat64.NewDense(5, 7, sub3)}}
+
 	res1 := testVol.SubVolumePadded(0, 0, 3, 3)
-	res2 := testVol.SubVolumePadded(1, 0, 3, 3)
-	res3 := testVol.SubVolumePadded(2, 0, 3, 3)
-	res4 := testVol.SubVolumePadded(0, 1, 3, 3)
+	res2 := testVol.SubVolumePadded(0, 1, 3, 3)
+	res3 := testVol.SubVolumePadded(0, 2, 3, 3)
+	res4 := testVol.SubVolumePadded(1, 0, 3, 3)
 	res5 := testVol.SubVolumePadded(1, 1, 3, 3)
 	res6 := testVol.SubVolumePadded(2, 2, 3, 3)
 	res7 := testVol.SubVolumePadded(0, 0, 1, 1)
 	res8 := testVol.SubVolumePadded(1, 1, 5, 5)
-	res9 := testVol.SubVolumePadded(2, 2, 5, 3)
-	res10 := testVol.SubVolumePadded(2, 2, 3, 5)
+	res9 := testVol.SubVolumePadded(1, 1, 5, 3)
+	res10 := testVol.SubVolumePadded(1, 1, 3, 5)
+	res11 := testVol.SubVolumePadded(1, 1, 5, 7)
+	res12 := testVol.SubVolumePadded(2, 2, 5, 7)
+
+	// 0, 1, 2
+	// 3, 4, 5
+	// 6, 7, 8
+
+	// 9, 10, 11
+	// 12, 13,14
+	// 15,16, 17
+
+	//18, 19, 20
+	//21, 22, 23
+	//24, 25, 26
 
 	if !res1.Equals(subVol1) {
 		t.Error("Expected", subVol1, ", got ", res1)
-		//subVol1.Print()
-		//res1.Print()
+		fmt.Println("Expected 1")
+		subVol1.Print()
+		fmt.Println("got")
+		res1.Print()
 	}
-
 	if !res2.Equals(subVol2) {
 		t.Error("Expected", subVol2, ", got ", res2)
-		//subVol2.Print()
-		//res2.Print()
+		fmt.Println("Expected 2")
+		subVol2.Print()
+		fmt.Println("got")
+		res2.Print()
 	}
 
 	if !res3.Equals(subVol3) {
 		t.Error("Expected", subVol3, ", got ", res3)
-		//subVol3.Print()
-		//res3.Print()
+		fmt.Println("Expected 3")
+		subVol3.Print()
+		fmt.Println("got")
+		res3.Print()
 	}
 
 	if !res4.Equals(subVol4) {
 		t.Error("Expected", subVol4, ", got ", res4)
-		//subVol4.Print()
-		//res4.Print()
+		fmt.Println("Expected 4")
+		subVol4.Print()
+		fmt.Println("got")
+		res4.Print()
 	}
 
 	if !res5.Equals(subVol5) {
 		t.Error("Expected", subVol5, ", got ", res5)
-		//subVol5.Print()
-		//res5.Print()
+		fmt.Println("Expected 5")
+		subVol5.Print()
+		fmt.Println("got")
+		res5.Print()
 	}
 
 	if !res6.Equals(subVol6) {
 		t.Error("Expected", subVol6, ", got ", res6)
-		//subVol6.Print()
-		//res6.Print()
+		fmt.Println("Expected 6")
+		subVol6.Print()
+		fmt.Println("got")
+		res6.Print()
 	}
 
 	if !res7.Equals(subVol7) {
 		t.Error("Expected", subVol7, ", got ", res7)
-		//subVol7.Print()
-		//res7.Print()
+		fmt.Println("Expected 7")
+		subVol7.Print()
+		fmt.Println("got")
+		res7.Print()
 	}
 
 	if !res8.Equals(subVol8) {
 		t.Error("Expected", subVol8, ", got ", res8)
-		//subVol8.Print()
-		//res8.Print()
+		fmt.Println("Expected 8")
+		subVol8.Print()
+		fmt.Println("got")
+		res8.Print()
 	}
 
 	if !res9.Equals(subVol9) {
 		t.Error("Expected", subVol9, ", got ", res9)
-		//subVol9.Print()
-		//res9.Print()
+		fmt.Println("Expected 9")
+		subVol9.Print()
+		fmt.Println("got")
+		res9.Print()
 	}
 
 	if !res10.Equals(subVol10) {
 		t.Error("Expected", subVol10, ", got ", res10)
-		//subVol10.Print()
-		//res10.Print()
+		fmt.Println("Expected 10")
+		subVol10.Print()
+		fmt.Println("got")
+		res10.Print()
+	}
+
+	if !res11.Equals(subVol11) {
+		t.Error("Expected", subVol11, ", got ", res11)
+		fmt.Println("Expected 11")
+		subVol11.Print()
+		fmt.Println("got")
+		res11.Print()
+	}
+
+	if !res12.Equals(subVol12) {
+		t.Error("Expected", subVol12, ", got ", res12)
+		fmt.Println("Expected 12")
+		subVol12.Print()
+		fmt.Println("got")
+		res12.Print()
 	}
 }

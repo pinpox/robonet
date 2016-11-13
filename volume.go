@@ -70,25 +70,22 @@ func (vol rNVolume) SubVolumePadded(cR, cC, r, c int) rNVolume {
 
 	sub := NewRNVolume(r, c, vol.Depth())
 
-	halfR := (c - 1) / 2
-	halfC := (r - 1) / 2
-
-	fmt.Println("subvol ", cR, cC, r, c, " from")
-	vol.Print()
-
 	for ir := 0; ir < sub.Rows(); ir++ {
 		for ic := 0; ic < sub.Collumns(); ic++ {
 			for id := 0; id < sub.Depth(); id++ {
 
 				val := 0.0
-				//dim1, dim2, _ := vol.Dims()
-				if ir-halfR < 0 || ir-halfR > vol.Rows() || ic-halfC < 0 || ic-halfC > vol.Collumns() {
+
+				offsetR := ((vol.Rows() - 1) / 2) - cR
+				offsetC := ((vol.Collumns() - 1) / 2) - cC
+
+				cordR := ir + ((vol.Rows() - r) / 2) - offsetR
+				cordC := ic + ((vol.Collumns() - c) / 2) - offsetC
+
+				if cordR < 0 || cordR > vol.Rows()-1 || cordC < 0 || cordC > vol.Collumns()-1 {
 					val = 0.0
-					//fmt.Println("Getting ", ir-halfR-1, ",", ic-halfC-1, " from ", dim1, "x", dim2, "x", " val is 0")
 				} else {
-					//fmt.Println("Getting ", ir-halfR-1, ",", ic-halfC-1, " from ", dim1, "x", dim2, "x", " val gets pulled")
-					val = vol.GetAt(ir+(cR-halfR), ic+(cC-halfC), id)
-					//TODO
+					val = vol.GetAt(cordR, cordC, id)
 				}
 
 				sub.SetAt(ir, ic, id, val)
@@ -97,7 +94,6 @@ func (vol rNVolume) SubVolumePadded(cR, cC, r, c int) rNVolume {
 		}
 	}
 
-	sub.Print()
 	return *sub
 }
 func (vol rNVolume) Equals(in rNVolume) bool {
