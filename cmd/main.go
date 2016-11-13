@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	//Volume and Filter 
+	//Volume and Kernel
 
 	inputVol := *robonet.NewRNVolumeRandom(4, 4, 3)
 
@@ -16,15 +16,15 @@ func main() {
 	fmt.Println("Create a new Layer")
 	lay := new(robonet.RNConvLayer)
 
-	fmt.Println("add a filter 1")
-	filter1 := robonet.NewFilterRandom(3, 3, 3)
-	filter1.Print()
-	lay.AddFilter(filter1)
+	fmt.Println("add a kernel 1")
+	kernel1 := robonet.NewKernelRandom(3, 3, 3)
+	kernel1.Print()
+	lay.AddKernel(kernel1)
 
-	fmt.Println("add a filter 2")
-	filter2 := robonet.NewFilterRandom(3, 3, 2)
-	filter2.Print()
-	lay.AddFilter(filter2)
+	fmt.Println("add a kernel 2")
+	kernel2 := robonet.NewKernelRandom(3, 3, 2)
+	kernel2.Print()
+	lay.AddKernel(kernel2)
 
 	fmt.Println("calculate output")
 	outputVol := lay.Calculate(inputVol)

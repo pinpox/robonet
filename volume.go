@@ -17,10 +17,10 @@ func (vol rNVolume) Dims() (int, int, int) {
 	return r, c, d
 }
 
-//Apply applys the given filter to the whole volume, returnung a Volume with 1 depth
-func (vol rNVolume) Apply(f Filter) rNVolume {
+//Apply applys the given kernel to the whole volume, returnung a Volume with 1 depth
+func (vol rNVolume) Apply(f Kernel) rNVolume {
 
-	//TODO apply the filter to the volume
+	//TODO apply the kernel to the volume
 
 	//Check correct output
 	_, _, a := vol.Dims()
