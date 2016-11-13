@@ -27,12 +27,12 @@ func TestEqual3Dim(t *testing.T) {
 
 func TestOdd3Dim(t *testing.T) {
 	if !Odd3Dim(1, 1, 1) {
-		t.Error("Expected true, got", Odd3Dim(1, 1, 1))
+		t.Error("Expected false, got", Odd3Dim(1, 1, 1))
 	}
 	if Odd3Dim(2, 2, 1) {
-		t.Error("Expected false, got", Odd3Dim(2, 2, 1))
+		t.Error("Expected true, got", Odd3Dim(2, 2, 1))
 	}
-	if Odd3Dim(2, 1, 1) {
+	if !Odd3Dim(2, 1, 1) {
 		t.Error("Expected false, got", Odd3Dim(2, 1, 1))
 	}
 }

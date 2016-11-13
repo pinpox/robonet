@@ -6,8 +6,8 @@ type RNConvLayer struct {
 }
 
 //AddKernel adds a kernel to a layer
-func (l RNConvLayer) AddKernel(fil *Kernel) {
-	l.Kernels = append(l.Kernels, *fil)
+func (l *RNConvLayer) AddKernel(fil Kernel) {
+	l.Kernels = append(l.Kernels, fil) //TODO fix this
 }
 
 //Calculate applys all Kernels to a given Volume

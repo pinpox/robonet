@@ -10,17 +10,17 @@ type Kernel struct {
 }
 
 //NewKernel creates a new kernel initialized with zeros
-func NewKernel(height int, width, depth int) *Kernel {
+func NewKernel(height int, width, depth int) Kernel {
 	if !Odd3Dim(height, width, depth) {
 		panic("Kernel must have odd width and heigth")
 	}
 	g := Kernel{*NewRNVolume(height, width, depth)}
-	return &g
+	return g
 }
 
 //NewKernelRandom creates a new kernel initialized with random values
 func NewKernelRandom(height int, width, depth int) *Kernel {
-	if Odd3Dim(height, width, depth) {
+	if !Odd3Dim(height, width, depth) {
 		panic("Kernel must have odd width and heigth")
 	}
 	g := Kernel{*NewRNVolumeRandom(height, width, depth)}

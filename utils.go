@@ -16,5 +16,5 @@ func Equal3Dim(e1, e2, e3, i1, i2, i3 int) bool {
 
 //Odd3Dim checks if the height and width are odd
 func Odd3Dim(i1, i2, i3 int) bool {
-	return (i1%2 == 0 && i2%2 == 0)
+	return !(i1%2 == 0 && i2%2 == 0)
 }

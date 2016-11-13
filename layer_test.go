@@ -11,13 +11,15 @@ import "testing"
 
 func TestAddKernel(t *testing.T) {
 
-	layer := new(RNConvLayer)
+	//layer := new(RNConvLayer)
 
-	kernel := new(Kernel)
+	layer := RNConvLayer{}
 
-	layer.AddKernel(kernel)
-	layer.AddKernel(kernel)
-	layer.AddKernel(kernel)
+	//layer := RNConvLayer{Kernels: []Kernel{*NewKernelRandom(3, 3, 3), *NewKernel(3, 3, 3)}}
+
+	layer.AddKernel(NewKernel(3, 3, 3))
+	layer.AddKernel(NewKernel(3, 3, 3))
+	layer.AddKernel(NewKernel(3, 3, 3))
 
 	if len(layer.Kernels) != 3 {
 		t.Error("Expected ", 3, ", got ", len(layer.Kernels))

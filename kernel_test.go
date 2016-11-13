@@ -14,7 +14,7 @@ func TestPrint(t *testing.T) {
 	//TODO
 }
 
-func TestDims(t *testing.T) {
+func TestFilterDims(t *testing.T) {
 	//TODO
 }
 
