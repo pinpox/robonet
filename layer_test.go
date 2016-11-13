@@ -11,11 +11,7 @@ import "testing"
 
 func TestAddKernel(t *testing.T) {
 
-	//layer := new(RNConvLayer)
-
 	layer := RNConvLayer{}
-
-	//layer := RNConvLayer{Kernels: []Kernel{*NewKernelRandom(3, 3, 3), *NewKernel(3, 3, 3)}}
 
 	layer.AddKernel(NewKernel(3, 3, 3))
 	layer.AddKernel(NewKernel(3, 3, 3))

@@ -11,14 +11,14 @@ type rNVolume struct {
 	Fields []mat64.Dense
 }
 
-func (vol rNVolume) Dims() (int, int, int) {
+func (vol *rNVolume) Dims() (int, int, int) {
 	r, c := vol.Fields[0].Dims()
 	d := len(vol.Fields)
 	return r, c, d
 }
 
 //Apply applys the given kernel to the whole volume, returnung a Volume with 1 depth
-func (vol rNVolume) Apply(f Kernel) rNVolume {
+func (vol *rNVolume) Apply(f Kernel) rNVolume {
 
 	//TODO apply the kernel to the volume
 
@@ -28,7 +28,7 @@ func (vol rNVolume) Apply(f Kernel) rNVolume {
 		panic("should have returned a plane (2dim)")
 	}
 
-	return vol
+	return *vol
 }
 
 //NewRNVolume generates a rNVolume of fixed size filled with zeros
@@ -62,7 +62,7 @@ func NewRNVolumeRandom(r, c, d int) *rNVolume {
 
 //SubVolumePadded returns a part of the original Volume. cR and cC determine the center of copying, r and c the size of the subvolume.
 //If the size exceeds the underlying volume the submodule is filled(padded with Zeros.
-func (vol rNVolume) SubVolumePadded(cR, cC, r, c int) rNVolume {
+func (vol *rNVolume) SubVolumePadded(cR, cC, r, c int) rNVolume {
 
 	if r%2 == 0 || c%2 == 0 {
 		panic("Even dimensions not allowed for subvolumes")
@@ -96,7 +96,7 @@ func (vol rNVolume) SubVolumePadded(cR, cC, r, c int) rNVolume {
 
 	return *sub
 }
-func (vol rNVolume) Equals(in rNVolume) bool {
+func (vol *rNVolume) Equals(in rNVolume) bool {
 	if !vol.EqualSize(in) {
 		return false
 	}
@@ -116,15 +116,15 @@ func (vol rNVolume) Equals(in rNVolume) bool {
 	return true
 }
 
-func (vol rNVolume) GetAt(r, c, d int) float64 {
+func (vol *rNVolume) GetAt(r, c, d int) float64 {
 	return vol.Fields[d].At(r, c)
 }
 
-func (vol rNVolume) SetAt(r, c, d int, val float64) {
+func (vol *rNVolume) SetAt(r, c, d int, val float64) {
 	vol.Fields[d].Set(r, c, val)
 }
 
-func (vol rNVolume) Print() {
+func (vol *rNVolume) Print() {
 
 	for i := range vol.Fields {
 		fa := mat64.Formatted(&vol.Fields[i], mat64.Prefix(" "))
@@ -133,7 +133,7 @@ func (vol rNVolume) Print() {
 }
 
 // Rows of the Volume
-func (vol rNVolume) Rows() int {
+func (vol *rNVolume) Rows() int {
 	r, _, _ := vol.Dims()
 	return r
 }
@@ -145,13 +145,13 @@ func (vol *rNVolume) Collumns() int {
 }
 
 //Depth of the Volume
-func (vol rNVolume) Depth() int {
+func (vol *rNVolume) Depth() int {
 	_, _, d := vol.Dims()
 	return d
 }
 
 //EqualSize checks if the size of two volumes are the same
-func (vol rNVolume) EqualSize(a rNVolume) bool {
+func (vol *rNVolume) EqualSize(a rNVolume) bool {
 	i1, i2, i3 := vol.Dims()
 	e1, e2, e3 := a.Dims()
 	return Equal3Dim(i1, i2, i3, e1, e2, e3)

@@ -19,12 +19,12 @@ func main() {
 	fmt.Println("add a kernel 1")
 	kernel1 := robonet.NewKernelRandom(3, 3, 3)
 	kernel1.Print()
-	lay.AddKernel(kernel1)
+	lay.AddKernel(*kernel1)
 
 	fmt.Println("add a kernel 2")
 	kernel2 := robonet.NewKernelRandom(3, 3, 2)
 	kernel2.Print()
-	lay.AddKernel(kernel2)
+	lay.AddKernel(*kernel2)
 
 	fmt.Println("calculate output")
 	outputVol := lay.Calculate(inputVol)

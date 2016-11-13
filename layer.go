@@ -11,7 +11,7 @@ func (l *RNConvLayer) AddKernel(fil Kernel) {
 }
 
 //Calculate applys all Kernels to a given Volume
-func (l RNConvLayer) Calculate(vol rNVolume) rNVolume {
+func (l *RNConvLayer) Calculate(vol rNVolume) rNVolume {
 	//result := newRNVolume(vol.Height(), vol.Width(), vol.Depth())
 	for _, v := range l.Kernels {
 		vol = vol.Apply(v)
