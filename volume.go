@@ -107,14 +107,14 @@ func (vol rNVolume) Equals(in rNVolume) bool {
 	return true
 }
 
-func (vol rNVolume) GetAt(w, h, d int) float64 {
-	//TODO
-	return 0
+func (vol rNVolume) GetAt(r, c, d int) float64 {
+	return vol.Fields[d].At(r, c)
 }
 
-func (vol rNVolume) SetAt(w, h, d int, val float64) {
-	//TODO
+func (vol rNVolume) SetAt(r, c, d int, val float64) {
+	vol.Fields[d].Set(r, c, val)
 }
+
 func (vol rNVolume) Print() {
 
 	for i := range vol.Fields {
