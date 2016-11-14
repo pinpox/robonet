@@ -385,4 +385,26 @@ func TestSubVolumePadded(t *testing.T) {
 		fmt.Println("got")
 		res12.Print()
 	}
+	/*}
+	  func TestVolumeApply(t *testing.T) {
+
+	  	//Create new vol
+	  	//Creeat kernl
+	  	//apply kernl
+	  	//test dims
+	  	//test nums
+
+	  	ker := NewKernel(3, 3, 3)
+	  	res := testVol.Apply(ker)
+
+	  	resExp := nil //TODO
+
+	  	if !res.Equals(resExp) {
+	  		t.Error("Result incorrect")
+	  		fmt.Println("Expected")
+	  		resExp.Print()
+	  		fmt.Println("Result")
+	  		res.Print()
+	  	}
+	*/
 }

@@ -18,3 +18,10 @@ func Equal3Dim(e1, e2, e3, i1, i2, i3 int) bool {
 func Odd3Dim(i1, i2, i3 int) bool {
 	return !(i1%2 == 0 && i2%2 == 0)
 }
+
+func EqualVolDim(v1, v2 rNVolume) bool {
+	i1, i2, i3 := v1.Dims()
+	e1, e2, e3 := v2.Dims()
+
+	return Equal3Dim(i1, i2, i3, e1, e2, e3)
+}
