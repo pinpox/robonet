@@ -2,6 +2,7 @@ package robonet
 
 import (
 	"fmt"
+	_"github.com/gonum/matrix/mat64"
 )
 
 // Kernel represets a basic conv kernel
@@ -47,8 +48,8 @@ func NewKernel(r, c, d int) Kernel {
 	return g
 }
 
-func (k *Kernel) Equals(in Kernel) bool {
-	return k.values.Equals(in.values)
+func (kern *Kernel) Equals(in Kernel) bool {
+	return kern.values.Equals(in.values)
 }
 
 //NewKernelRandom creates a new kernel initialized with random values
@@ -61,29 +62,50 @@ func NewKernelRandom(r, c, d int) *Kernel {
 }
 
 //Print shows show the kernel's matrix string representation
-func (f Kernel) Print() {
-	f.values.Print()
+func (kern Kernel) Print() {
+	kern.values.Print()
 }
 
 //Dims returns the  size of the kernel
-func (f Kernel) Dims() (int, int, int) {
-	return f.values.Dims()
+func (kern Kernel) Dims() (int, int, int) {
+	return kern.values.Dims()
 }
 
 //Apply applys the kernel to a equally sized chunk of a volume
 //Only kernels of the same size as the volume can be applied
-func (f Kernel) Apply(in rNVolume) float64 {
+func (kern Kernel) Apply(in rNVolume) float64 {
 
-	ConvResult := 1.0
+	ConvResult := 0.0
+	r,c,d:=kern.Dims()
 
-	if !(f.values.EqualSize(in)) {
+	if !(kern.values.EqualSize(in)) {
 		fmt.Println("Kernel size doesn't match input")
 		panic("Kernel size doesn't match input")
 	}
 
 	// 1) reflect kernel
+	kernRef:=kern
+	kernRef.PointReflect()
 	// 2) multiply pairwise
-	// 3) normalize
+
+		res := NewRNVolume(r,c,d)
+
+		*res=kern.values
+
+		res.MulElem2(in)
+
+
+
+	for i := 0; i < r; i++ {
+		for j := 0; j < c; j++ {
+			for k := 0; k < d; k++ {
+				ConvResult += res.GetAt(i,j,k)
+			}
+		}
+}
+
+	// 3) normalize??
+
 
 	return ConvResult
 }
@@ -92,13 +114,11 @@ func (f Kernel) Apply(in rNVolume) float64 {
 
 
 
-// func (f *Kernel) PointReflect() {
-// 	f.values.PointReflect()
 
+func (kern *Kernel) PointReflect() {
+	kern.values.PointReflect()
+}
 
-
-// }
-
-func (f *Kernel) Reflect() {
-	f.values.Reflect()
+func (kern *Kernel) Reflect() {
+	kern.values.Reflect()
 }

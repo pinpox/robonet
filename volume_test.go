@@ -423,12 +423,22 @@ func TestVolumeReflect(t *testing.T) {
 	kern1 := NewKernel(3,3,3)
 	kern1.SetAll(testVol1)
 
+	layer1 = []float64{0, 1, 2, 3, 4, 5,6 ,7 ,8, 9, 10, 11, 12, 13, 14}
+	layer2 = []float64{15,16,17,18,19,20,21,22,23,24,25,26,27,28,29}
+	testVol2 := rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 5, layer1), *mat64.NewDense(3, 5, layer2)}}
+
+	kern2 := NewKernel(3,5,2)
+	kern2.SetAll(testVol2)
+
 	//Result
 	layer1 = []float64{2, 1, 0, 5, 4, 3, 8, 7, 6}
 	layer2 = []float64{11, 10, 9, 14, 13, 12, 17, 16 ,15}
 	layer3 = []float64{20,19,18,23,22,21,26,25,24}
 	testVol1Reflected := rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
 
+	layer1 = []float64{4,3,2,1,0,9,8,7,6,5,14,13,12,11,10}
+	layer2 = []float64{19,18,17,16,15,24,23,22,21,20,29,28,27,26,25}
+	testVol2Reflected := rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 5, layer1), *mat64.NewDense(3, 5, layer2)}}
 	//Compare
 	testVol1.Reflect()
 	if !(testVol1Reflected.Equals(testVol1)) {
@@ -436,6 +446,74 @@ func TestVolumeReflect(t *testing.T) {
 		t.Error("Reflect () Expected" , testVol1Reflected , " got" , testVol1)
 		testVol1Reflected.Print()
 		testVol1.Print()
+	}
+
+	testVol2.Reflect()
+	if !(testVol2Reflected.Equals(testVol2)) {
+
+		t.Error("Reflect () Expected" , testVol2Reflected , " got" , testVol2)
+		testVol2Reflected.Print()
+		testVol2.Print()
+	}
+}
+
+func TestVolumePointReflect(t *testing.T) {
+
+	//Input
+	layer1 := []float64{0, 1, 2, 3, 4, 5, 6, 7, 8}
+	layer2 := []float64{9, 10, 11, 12, 13, 14, 15, 16, 17}
+	layer3 := []float64{18, 19, 20, 21, 22, 23, 24, 25, 26}
+	testVol1 := rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
+
+	kern1 := NewKernel(3,3,3)
+	kern1.SetAll(testVol1)
+
+	layer1 = []float64{0, 1, 2, 3, 4, 5,6 ,7 ,8, 9, 10, 11, 12, 13, 14}
+	layer2 = []float64{15,16,17,18,19,20,21,22,23,24,25,26,27,28,29}
+	testVol2 := rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 5, layer1), *mat64.NewDense(3, 5, layer2)}}
+
+	kern2 := NewKernel(3,5,2)
+	kern2.SetAll(testVol2)
+
+	//Result
+	layer1 = []float64{0,3,6,1,4,7,2,5,8}
+	layer2 = []float64{9,12,15,10,13,16,11,14,17}
+	layer3 = []float64{18,21,24,19,22,25,20,23,26}
+	testVol1PointReflected := rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
+
+
+	layer1 = []float64{0,5,10,1,6,11,2,7,12,3,8,13,4,9,14}
+	layer2 = []float64{15,20,25,16,21,26,17,22,27,18,23,28,19,24,29}
+	testVol2PointReflected := rNVolume{Fields: []mat64.Dense{*mat64.NewDense(5, 3, layer1), *mat64.NewDense(5, 3, layer2)}}
+	//Compare
+	testVol1.PointReflect()
+	if !(testVol1PointReflected.Equals(testVol1)) {
+
+		t.Error("Reflect () Expected" , testVol1PointReflected , " got" , testVol1)
+		testVol1PointReflected.Print()
+		testVol1.Print()
+	}
+
+	testVol2.PointReflect()
+	if !(testVol2PointReflected.Equals(testVol2)) {
+
+		t.Error("Reflect () Expected" , testVol2PointReflected , " got" , testVol2)
+		testVol2PointReflected.Print()
+		testVol2.Print()
+	}
+
+	func TestVolumeApply(t *testing.T) {
+
+		//TODO
+
+ //    layer1 = []float64{0,3,6,1,4,7,2,5,8}
+	// layer2 = []float64{9,12,15,10,13,16,11,14,17}
+	// layer3 = []float64{18,21,24,19,22,25,20,23,26}
+	// testVol := rNVolume{Fields: []mat64.Dense{*mat64.NewDense(5, 5, layer1), *mat64.NewDense(5, 5, layer2), *mat64.NewDense(5, 5, layer3)}}
+
+
+
+
 	}
 }
 

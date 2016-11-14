@@ -18,17 +18,22 @@ func (vol *rNVolume) Dims() (int, int, int) {
 }
 
 //Apply applys the given kernel to the whole volume, returnung a Volume with 1 depth
-func (vol *rNVolume) Apply(f Kernel) rNVolume {
+func (vol *rNVolume) Apply(f Kernel) {
 
-	//TODO apply the kernel to the volume
+	r,c,d := vol.Dims()
+	r2,c2,d2 = Kernel.Dims()
 
-	//Check correct output
-	_, _, a := vol.Dims()
-	if a != 1 {
-		panic("should have returned a plane (2dim)")
+	res := NewRNVolume(r,c,1)
+
+	for i := 0; i < r; i++ {
+		for j := 0; j < c; j++ {
+			res.SetAt(r,c,0, vol.SubVolumePadded(i,j,r2,d2))
+		}
 	}
 
-	return *vol
+	//TODO normalize
+
+	 *vol=*res
 }
 
 //NewRNVolume generates a rNVolume of fixed size filled with zeros
@@ -158,8 +163,17 @@ func (vol *rNVolume) EqualSize(a rNVolume) bool {
 }
 
 func (vol *rNVolume) PointReflect() {
-	//Transpose
-
+	r,c,d := vol.Dims()
+	temp := NewRNVolume(c,r,d)
+	
+	for id := 0; id < d; id++{
+		for ir := 0; ir < r; ir++{
+			for ic := 0; ic < c; ic++{
+	 			temp.SetAt(ic,ir,id, vol.GetAt(ir, ic, id))
+	 		}
+		}
+	}
+	*vol=*temp
 }
 
 func (vol *rNVolume) Reflect(){
@@ -176,3 +190,25 @@ func (vol *rNVolume) Reflect(){
 	}
 	*vol=*temp
 }
+
+
+func (vol *rNVolume) MulElem2 (v1 rNVolume) {
+	r,c,d := vol.Dims()
+
+	res := NewRNVolume(r,c,d)
+
+	for i := 0; i < r; i++ {
+		for j := 0; j< c; j++ {
+			for k := 0; k < d; k++ {
+				res.SetAt(i,j,k, vol.GetAt(i,j,k) * v1.GetAt(i,j,k))
+			
+			}
+		}
+	}
+
+	*vol=*res
+
+}
+
+
+
