@@ -158,17 +158,21 @@ func (vol *rNVolume) EqualSize(a rNVolume) bool {
 }
 
 func (vol *rNVolume) PointReflect() {
-	
+	//Transpose
+
 }
 
-func (vol  *rNVolume) Reflect() {
-	//Kernel output
-
-	//r,c,d := input.Dims()
+func (vol *rNVolume) Reflect(){
 	
-	// for (int r= 0; r<input.Dims(); r++){
-	// 	output
-
-	// }
-
+	r,c,d := vol.Dims()
+	temp := NewRNVolume(r,c,d)
+	
+	for id := 0; id < d; id++{
+		for ir := 0; ir < r; ir++{
+			for ic := 0; ic < c; ic++{
+	 			temp.SetAt(ir,ic,id, vol.GetAt(ir, c-(ic+1),id))
+	 		}
+		}
+	}
+	*vol=*temp
 }

@@ -88,10 +88,13 @@ func (f Kernel) Apply(in rNVolume) float64 {
 
 
 
-func (f *Kernel) PointReflect() {
-	f.values.PointReflect()
-}
+// func (f *Kernel) PointReflect() {
+// 	f.values.PointReflect()
 
-func (f *Kernel) Reflect() {
-	f.values.Reflect()
-}
+
+	
+// }
+
+// func (f *Kernel) Reflect() {
+// 	f.values.Reflect()
+// }
