@@ -412,7 +412,7 @@ func TestSubVolumePadded(t *testing.T) {
 
 
 
-func TestReflect(t *testing.T) {
+func TestVolumeReflect(t *testing.T) {
 
 	//Input
 	layer1 := []float64{0, 1, 2, 3, 4, 5, 6, 7, 8}

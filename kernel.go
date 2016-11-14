@@ -47,6 +47,10 @@ func NewKernel(r, c, d int) Kernel {
 	return g
 }
 
+func (k *Kernel) Equals(in Kernel) bool {
+	return k.values.Equals(in.values)
+}
+
 //NewKernelRandom creates a new kernel initialized with random values
 func NewKernelRandom(r, c, d int) *Kernel {
 	if !Odd3Dim(r, c, d) {
@@ -92,9 +96,9 @@ func (f Kernel) Apply(in rNVolume) float64 {
 // 	f.values.PointReflect()
 
 
-	
+
 // }
 
-// func (f *Kernel) Reflect() {
-// 	f.values.Reflect()
-// }
+func (f *Kernel) Reflect() {
+	f.values.Reflect()
+}
