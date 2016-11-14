@@ -9,21 +9,50 @@ type Kernel struct {
 	values rNVolume
 }
 
+func (kern *Kernel) GetAt(r, c, d int) float64 {
+	return kern.values.GetAt(r,c,d)
+}
+
+func (kern *Kernel) SetAt(r, c, d int, val float64) {
+	kern.values.SetAt(r, c, d, val)
+}
+
+
+func (kern *Kernel) SetAll(v rNVolume) {
+
+	r,c,d := kern.Dims()
+	if !EqualVolDim(kern.Vol(), v) {
+			panic("Volumedimensions do not match!")
+	}
+	for i := 0; i < r; i++ {
+		for j := 0; j < c; j++ {
+			for k:= 0; k < d; k++ {
+				kern.values.SetAt(i,j,k, v.GetAt(i,j,k))
+			}
+		}
+	}
+}
+
+func  (kern *Kernel) Vol() rNVolume {
+	return kern.values
+}
+
+
 //NewKernel creates a new kernel initialized with zeros
-func NewKernel(height int, width, depth int) Kernel {
-	if !Odd3Dim(height, width, depth) {
+func NewKernel(r, c, d int) Kernel {
+	if !Odd3Dim(r, c, d) {
 		panic("Kernel must have odd width and heigth")
 	}
-	g := Kernel{*NewRNVolume(height, width, depth)}
+	g := Kernel{*NewRNVolume(r, c, d)}
 	return g
 }
 
 //NewKernelRandom creates a new kernel initialized with random values
-func NewKernelRandom(height int, width, depth int) *Kernel {
-	if !Odd3Dim(height, width, depth) {
+func NewKernelRandom(r, c, d int) *Kernel {
+	if !Odd3Dim(r, c, d) {
 		panic("Kernel must have odd width and heigth")
 	}
-	g := Kernel{*NewRNVolumeRandom(height, width, depth)}
+	g := Kernel{*NewRNVolumeRandom(r, c, d)}
 	return &g
 }
 
@@ -55,12 +84,14 @@ func (f Kernel) Apply(in rNVolume) float64 {
 	return ConvResult
 }
 
-func (f Kernel) pointReflection(input Kernel) Kernel {
-	//TODO
-	return input
+
+
+
+
+func (f *Kernel) PointReflect() {
+	f.values.PointReflect()
 }
 
-func (f Kernel) reflection(input Kernel) Kernel {
-	//TODO
-	return input
+func (f *Kernel) Reflect() {
+	f.values.Reflect()
 }

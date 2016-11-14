@@ -156,3 +156,19 @@ func (vol *rNVolume) EqualSize(a rNVolume) bool {
 	e1, e2, e3 := a.Dims()
 	return Equal3Dim(i1, i2, i3, e1, e2, e3)
 }
+
+func (vol *rNVolume) PointReflect() {
+	
+}
+
+func (vol  *rNVolume) Reflect() {
+	//Kernel output
+
+	//r,c,d := input.Dims()
+	
+	// for (int r= 0; r<input.Dims(); r++){
+	// 	output
+
+	// }
+
+}
