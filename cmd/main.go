@@ -14,7 +14,7 @@ func main() {
 	inputVol.Print()
 
 	fmt.Println("Create a new Layer")
-	lay := new(robonet.RNConvLayer)
+	lay := new(robonet.ConvLayer)
 
 	fmt.Println("add a kernel 1")
 	kernel1 := robonet.NewKernelRandom(3, 3, 3)
