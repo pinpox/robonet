@@ -8,7 +8,7 @@ import (
 func main() {
 	//Volume and Kernel
 
-	inputVol := *robonet.NewRNVolumeRandom(4, 4, 3)
+	inputVol := *robonet.NewVolumeRandom(4, 4, 3)
 
 	//fmt.Println("input was")
 	//inputVol.Print()
