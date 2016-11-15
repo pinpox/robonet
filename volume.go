@@ -11,6 +11,16 @@ type Volume struct {
 	Fields []mat64.Dense
 }
 
+//SetAll sets all values of the volume from another equal-sized volume
+func (vol *Volume) SetAll(v Volume) {
+
+	if !EqualVolDim(*vol, v) {
+		panic("Volumedimensions do not match!")
+	}
+
+	*vol = v
+}
+
 //Dims returns the Dimensions of a Volume
 func (vol *Volume) Dims() (int, int, int) {
 	r, c := vol.Fields[0].Dims()
