@@ -14,7 +14,7 @@ func (l *RNConvLayer) AddKernel(fil Kernel) {
 func (l *RNConvLayer) Calculate(vol rNVolume) rNVolume {
 	//result := newRNVolume(vol.Height(), vol.Width(), vol.Depth())
 	for _, v := range l.Kernels {
-		vol = vol.Apply(v)
+		vol.Apply(v)
 	}
 	return vol
 }
