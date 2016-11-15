@@ -34,10 +34,41 @@ func SigmoidFast(x float64) float64
 SigmoidFast calcultes the value for activation using a fast sigmoid
 approximation
 
+#### type ConvLayer
+
+```go
+type ConvLayer struct {
+}
+```
+
+ConvLayer basic type for a convolutional layer
+
+#### func (*ConvLayer) AddKernel
+
+```go
+func (l *ConvLayer) AddKernel(kern Kernel, strideR, strideC int)
+```
+AddKernel adds a kernel to a layer
+
+#### func (*ConvLayer) Calculate
+
+```go
+func (l *ConvLayer) Calculate(vol Volume) Volume
+```
+Calculate applys all Kernels to a given Volume
+
+#### func (ConvLayer) Kernels
+
+```go
+func (l ConvLayer) Kernels() []Kernel
+```
+Kernels returns the kernels of the layer
+
 #### type Kernel
 
 ```go
 type Kernel struct {
+	Volume
 }
 ```
 
@@ -65,68 +96,12 @@ func (kern Kernel) Apply(in Volume) float64
 Apply applys the kernel to a equally sized chunk of a volume Only kernels of the
 same size as the volume can be applied
 
-#### func (Kernel) Dims
-
-```go
-func (kern Kernel) Dims() (int, int, int)
-```
-Dims returns the size of the kernel
-
 #### func (*Kernel) Equals
 
 ```go
 func (kern *Kernel) Equals(in Kernel) bool
 ```
 Equals compares to kernels
-
-#### func (*Kernel) GetAt
-
-```go
-func (kern *Kernel) GetAt(r, c, d int) float64
-```
-GetAt returns the value of the volume of the kernel at a given position
-
-#### func (*Kernel) PointReflect
-
-```go
-func (kern *Kernel) PointReflect()
-```
-PointReflect calculates the pointreflection of the kernel's volume
-
-#### func (Kernel) Print
-
-```go
-func (kern Kernel) Print()
-```
-Print shows show the kernel's matrix string representation
-
-#### func (*Kernel) Reflect
-
-```go
-func (kern *Kernel) Reflect()
-```
-Reflect calculates the reflection of the kernel's volume
-
-#### func (*Kernel) SetAll
-
-```go
-func (kern *Kernel) SetAll(v Volume)
-```
-SetAll sets all values of the kernel's volume from another equal-sized volume
-
-#### func (*Kernel) SetAt
-
-```go
-func (kern *Kernel) SetAt(r, c, d int, val float64)
-```
-SetAt sets the value of the volume of the kernel at a given position
-
-#### func (*Kernel) Vol
-
-```go
-func (kern *Kernel) Vol() Volume
-```
-Vol returns the underlying volume of a kernel
 
 #### type Layer
 
@@ -136,30 +111,6 @@ type Layer interface {
 ```
 
 Layer represents the general type of all layer types
-
-#### type RNConvLayer
-
-```go
-type RNConvLayer struct {
-	Kernels []Kernel
-}
-```
-
-RNConvLayer basic type for a convolutional layer
-
-#### func (*RNConvLayer) AddKernel
-
-```go
-func (l *RNConvLayer) AddKernel(kern Kernel)
-```
-AddKernel adds a kernel to a layer
-
-#### func (*RNConvLayer) Calculate
-
-```go
-func (l *RNConvLayer) Calculate(vol Volume) Volume
-```
-Calculate applys all Kernels to a given Volume
 
 #### type Volume
 
@@ -189,7 +140,7 @@ and 1
 #### func (*Volume) Apply
 
 ```go
-func (vol *Volume) Apply(f Kernel)
+func (vol *Volume) Apply(kern Kernel, strideR, strideC int)
 ```
 Apply applys the given kernel to the whole volume, returnung a Volume with 1
 depth
@@ -277,6 +228,13 @@ Reflect calculates the reflectio of a volume (left-right)
 func (vol *Volume) Rows() int
 ```
 Rows of the Volume
+
+#### func (*Volume) SetAll
+
+```go
+func (vol *Volume) SetAll(v Volume)
+```
+SetAll sets all values of the volume from another equal-sized volume
 
 #### func (*Volume) SetAt
 
