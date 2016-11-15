@@ -4,7 +4,7 @@ import "testing"
 
 func TestAddKernel(t *testing.T) {
 
-	layer := RNConvLayer{}
+	layer := ConvLayer{}
 
 	layer.AddKernel(NewKernel(3, 3, 3), 1, 1)
 	layer.AddKernel(NewKernel(3, 3, 3), 2, 1)
