@@ -9,32 +9,6 @@ type Kernel struct {
 	Volume
 }
 
-//GetAt returns the value of the volume of the kernel at a given position
-func (kern *Kernel) GetAt(r, c, d int) float64 {
-	return kern.GetAt(r, c, d)
-}
-
-//SetAt sets the value of the volume of the kernel at a given position
-func (kern *Kernel) SetAt(r, c, d int, val float64) {
-	kern.SetAt(r, c, d, val)
-}
-
-//SetAll sets all values of the kernel's volume from another equal-sized volume
-func (kern *Kernel) SetAll(v Volume) {
-
-	r, c, d := kern.Dims()
-	if !EqualVolDim(kern.Volume, v) {
-		panic("Volumedimensions do not match!")
-	}
-	for i := 0; i < r; i++ {
-		for j := 0; j < c; j++ {
-			for k := 0; k < d; k++ {
-				kern.SetAt(i, j, k, v.GetAt(i, j, k))
-			}
-		}
-	}
-}
-
 //NewKernel creates a new kernel initialized with zeros
 func NewKernel(r, c, d int) Kernel {
 	if !Odd3Dim(r, c, d) {
@@ -65,7 +39,7 @@ func (kern Kernel) Apply(in Volume) float64 {
 	ConvResult := 0.0
 	r, c, d := kern.Dims()
 
-	if !(kern.values.EqualSize(in)) {
+	if !(kern.Volume.EqualSize(in)) {
 		fmt.Println("Kernel size doesn't match input")
 		panic("Kernel size doesn't match input")
 	}
@@ -77,7 +51,7 @@ func (kern Kernel) Apply(in Volume) float64 {
 
 	res := NewRNVolume(r, c, d)
 
-	*res = kern.values
+	*res = kern.Volume
 
 	res.MulElem2(in)
 
@@ -92,14 +66,4 @@ func (kern Kernel) Apply(in Volume) float64 {
 	// 3) normalize??
 
 	return ConvResult
-}
-
-//PointReflect calculates the pointreflection of the kernel's volume
-func (kern *Kernel) PointReflect() {
-	kern.values.PointReflect()
-}
-
-//Reflect calculates the reflection of the kernel's volume
-func (kern *Kernel) Reflect() {
-	kern.values.Reflect()
 }

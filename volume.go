@@ -8,11 +8,8 @@ import (
 
 // Volume is a basic type to hold the layer's information
 type Volume struct {
-	Fields
+	Fields []mat64.Dense
 }
-
-//Fields is a array holding the volume's planes 2dimeinsional matrices
-type Fields []mat64.Dense
 
 //SetAll sets all values of the volume from another equal-sized volume
 func (vol *Volume) SetAll(v Volume) {
