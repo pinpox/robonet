@@ -84,12 +84,14 @@ Equals compares to kernels
 ```go
 func (kern *Kernel) GetAt(r, c, d int) float64
 ```
+GetAt returns the value of the volume of the kernel at a given position
 
 #### func (*Kernel) PointReflect
 
 ```go
 func (kern *Kernel) PointReflect()
 ```
+PointReflect calculates the pointreflection of the kernel's volume
 
 #### func (Kernel) Print
 
@@ -103,18 +105,21 @@ Print shows show the kernel's matrix string representation
 ```go
 func (kern *Kernel) Reflect()
 ```
+Reflect calculates the reflection of the kernel's volume
 
 #### func (*Kernel) SetAll
 
 ```go
 func (kern *Kernel) SetAll(v Volume)
 ```
+SetAll sets all values of the kernel's volume from another equal-sized volume
 
 #### func (*Kernel) SetAt
 
 ```go
 func (kern *Kernel) SetAt(r, c, d int, val float64)
 ```
+SetAt sets the value of the volume of the kernel at a given position
 
 #### func (*Kernel) Vol
 
