@@ -38,10 +38,15 @@ approximation
 
 ```go
 type ConvLayer struct {
+	Layer
 }
 ```
 
-ConvLayer basic type for a convolutional layer
+ConvLayer basic type for a convolutional layer The layer will compute the output
+of neurons that are connected to local regions in the input, each computing a
+dot product between their weights and a small region they are connected to in
+the input volume. This may result in volume such as [32x32x12] if we decided to
+use 12 filters.
 
 #### func (*ConvLayer) AddKernel
 
@@ -63,6 +68,38 @@ Calculate applys all Kernels to a given Volume
 func (l ConvLayer) Kernels() []Kernel
 ```
 Kernels returns the kernels of the layer
+
+#### type FCLayer
+
+```go
+type FCLayer struct {
+	Layer
+}
+```
+
+FCLayer (i.e. fully-connected) layer will compute the class scores, resulting in
+volume of size [1x1x10], where each of the 10 numbers correspond to a class
+score, such as among the 10 categories of CIFAR-10. As with ordinary Neural
+Networks and as the name implies, each neuron in this layer will be connected to
+all the numbers in the previous volume.
+
+#### type InputLayer
+
+```go
+type InputLayer struct {
+	Layer
+}
+```
+
+InputLayer [32x32x3] will hold the raw pixel values of the image, in this case
+an image of width 32, height 32, and with three color channels R,G,B.
+
+#### func (*InputLayer) SetInput
+
+```go
+func (l *InputLayer) SetInput(in Volume)
+```
+SetInput sets the input of a input layer
 
 #### type Kernel
 
@@ -111,6 +148,62 @@ type Layer interface {
 ```
 
 Layer represents the general type of all layer types
+
+#### type Net
+
+```go
+type Net struct {
+}
+```
+
+Net is the basic type for Conv nets
+
+#### func (*Net) AddLayer
+
+```go
+func (net *Net) AddLayer(lay Layer)
+```
+AddLayer adds another layer to the net
+
+#### func (Net) Calculate
+
+```go
+func (net Net) Calculate() Volume
+```
+Calculate calcuates te output
+
+#### type NormLayer
+
+```go
+type NormLayer struct {
+	Layer
+}
+```
+
+NormLayer is a normalisation layer
+
+#### type PoolLayer
+
+```go
+type PoolLayer struct {
+	Layer
+}
+```
+
+PoolLayer will perform a downsampling operation along the spatial dimensions
+(width, height), resulting in volume such as [16x16x12].
+
+#### type ReluLayer
+
+```go
+type ReluLayer struct {
+	Layer
+}
+```
+
+ReluLayer will apply an elementwise activation function, such as the
+max(0,x)max(0,x) thresholding at zero. This leaves the size of the volume
+unchanged ([32x32x12]).
 
 #### type Volume
 
