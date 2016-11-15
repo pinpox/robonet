@@ -2,7 +2,7 @@ package robonet
 
 import (
 	"fmt"
-	_"github.com/gonum/matrix/mat64"
+	_ "github.com/gonum/matrix/mat64"
 )
 
 // Kernel represets a basic conv kernel
@@ -11,33 +11,31 @@ type Kernel struct {
 }
 
 func (kern *Kernel) GetAt(r, c, d int) float64 {
-	return kern.values.GetAt(r,c,d)
+	return kern.values.GetAt(r, c, d)
 }
 
 func (kern *Kernel) SetAt(r, c, d int, val float64) {
 	kern.values.SetAt(r, c, d, val)
 }
 
-
 func (kern *Kernel) SetAll(v rNVolume) {
 
-	r,c,d := kern.Dims()
+	r, c, d := kern.Dims()
 	if !EqualVolDim(kern.Vol(), v) {
-			panic("Volumedimensions do not match!")
+		panic("Volumedimensions do not match!")
 	}
 	for i := 0; i < r; i++ {
 		for j := 0; j < c; j++ {
-			for k:= 0; k < d; k++ {
-				kern.values.SetAt(i,j,k, v.GetAt(i,j,k))
+			for k := 0; k < d; k++ {
+				kern.values.SetAt(i, j, k, v.GetAt(i, j, k))
 			}
 		}
 	}
 }
 
-func  (kern *Kernel) Vol() rNVolume {
+func (kern *Kernel) Vol() rNVolume {
 	return kern.values
 }
-
 
 //NewKernel creates a new kernel initialized with zeros
 func NewKernel(r, c, d int) Kernel {
@@ -76,7 +74,7 @@ func (kern Kernel) Dims() (int, int, int) {
 func (kern Kernel) Apply(in rNVolume) float64 {
 
 	ConvResult := 0.0
-	r,c,d:=kern.Dims()
+	r, c, d := kern.Dims()
 
 	if !(kern.values.EqualSize(in)) {
 		fmt.Println("Kernel size doesn't match input")
@@ -84,36 +82,28 @@ func (kern Kernel) Apply(in rNVolume) float64 {
 	}
 
 	// 1) reflect kernel
-	kernRef:=kern
+	kernRef := kern
 	kernRef.PointReflect()
 	// 2) multiply pairwise
 
-		res := NewRNVolume(r,c,d)
+	res := NewRNVolume(r, c, d)
 
-		*res=kern.values
+	*res = kern.values
 
-		res.MulElem2(in)
-
-
+	res.MulElem2(in)
 
 	for i := 0; i < r; i++ {
 		for j := 0; j < c; j++ {
 			for k := 0; k < d; k++ {
-				ConvResult += res.GetAt(i,j,k)
+				ConvResult += res.GetAt(i, j, k)
 			}
 		}
-}
+	}
 
 	// 3) normalize??
 
-
 	return ConvResult
 }
-
-
-
-
-
 
 func (kern *Kernel) PointReflect() {
 	kern.values.PointReflect()

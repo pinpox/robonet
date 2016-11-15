@@ -12,17 +12,23 @@ func Equal3Dim(e1, e2, e3, i1, i2, i3 int) bool
 ```
 Equal3Dim checks if the size of two volumes are the same
 
+#### func  EqualVolDim
+
+```go
+func EqualVolDim(v1, v2 rNVolume) bool
+```
+
 #### func  NewRNVolume
 
 ```go
-func NewRNVolume(w, h, d int) *rNVolume
+func NewRNVolume(r, c, d int) *rNVolume
 ```
 NewRNVolume generates a rNVolume of fixed size filled with zeros
 
 #### func  NewRNVolumeRandom
 
 ```go
-func NewRNVolumeRandom(w, h, d int) *rNVolume
+func NewRNVolumeRandom(r, c, d int) *rNVolume
 ```
 NewRNVolumeRandom generates a rNVolume of fixed size filled with values between
 0 and 1
@@ -42,50 +48,92 @@ func SigmoidFast(x float64) float64
 SigmoidFast calcultes the value for activation using a fast sigmoid
 approximation
 
-#### type Filter
+#### type Kernel
 
 ```go
-type Filter struct {
+type Kernel struct {
 }
 ```
 
-Filter represets a basic conv filter
+Kernel represets a basic conv kernel
 
-#### func  NewFilter
-
-```go
-func NewFilter(height int, width, depth int) *Filter
-```
-NewFilter creates a new filter initialized with zeros
-
-#### func  NewFilterRandom
+#### func  NewKernel
 
 ```go
-func NewFilterRandom(height int, width, depth int) *Filter
+func NewKernel(r, c, d int) Kernel
 ```
-NewFilterRandom creates a new filter initialized with random values
+NewKernel creates a new kernel initialized with zeros
 
-#### func (Filter) Apply
+#### func  NewKernelRandom
 
 ```go
-func (f Filter) Apply(in rNVolume) float64
+func NewKernelRandom(r, c, d int) *Kernel
 ```
-Apply applys the filter to a equally sized chunk of a volume Only filters of the
+NewKernelRandom creates a new kernel initialized with random values
+
+#### func (Kernel) Apply
+
+```go
+func (kern Kernel) Apply(in rNVolume) float64
+```
+Apply applys the kernel to a equally sized chunk of a volume Only kernels of the
 same size as the volume can be applied
 
-#### func (Filter) Dims
+#### func (Kernel) Dims
 
 ```go
-func (f Filter) Dims() (int, int, int)
+func (kern Kernel) Dims() (int, int, int)
 ```
-Dims returns the size of the filter
+Dims returns the size of the kernel
 
-#### func (Filter) Print
+#### func (*Kernel) Equals
 
 ```go
-func (f Filter) Print()
+func (kern *Kernel) Equals(in Kernel) bool
 ```
-Print shows show the filter's matrix string representation
+
+#### func (*Kernel) GetAt
+
+```go
+func (kern *Kernel) GetAt(r, c, d int) float64
+```
+
+#### func (*Kernel) PointReflect
+
+```go
+func (kern *Kernel) PointReflect()
+```
+
+#### func (Kernel) Print
+
+```go
+func (kern Kernel) Print()
+```
+Print shows show the kernel's matrix string representation
+
+#### func (*Kernel) Reflect
+
+```go
+func (kern *Kernel) Reflect()
+```
+
+#### func (*Kernel) SetAll
+
+```go
+func (kern *Kernel) SetAll(v rNVolume)
+```
+
+#### func (*Kernel) SetAt
+
+```go
+func (kern *Kernel) SetAt(r, c, d int, val float64)
+```
+
+#### func (*Kernel) Vol
+
+```go
+func (kern *Kernel) Vol() rNVolume
+```
 
 #### type Layer
 
@@ -100,22 +148,22 @@ Layer represents the general type of all layer types
 
 ```go
 type RNConvLayer struct {
-	Filters []Filter
+	Kernels []Kernel
 }
 ```
 
 RNConvLayer basic type for a convolutional layer
 
-#### func (RNConvLayer) AddFilter
+#### func (*RNConvLayer) AddKernel
 
 ```go
-func (l RNConvLayer) AddFilter(fil *Filter)
+func (l *RNConvLayer) AddKernel(fil Kernel)
 ```
-AddFilter adds a filter to a layer
+AddKernel adds a kernel to a layer
 
-#### func (RNConvLayer) Calculate
+#### func (*RNConvLayer) Calculate
 
 ```go
-func (l RNConvLayer) Calculate(vol rNVolume) rNVolume
+func (l *RNConvLayer) Calculate(vol rNVolume) rNVolume
 ```
-Calculate applys all Filters to a given Volume
+Calculate applys all Kernels to a given Volume
