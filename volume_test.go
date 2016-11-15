@@ -36,6 +36,13 @@ func TestDims(t *testing.T) {
 		}
 	}
 
+	a1 := testVol.Rows()
+	a2 := testVol.Collumns()
+	a3 := testVol.Depth()
+
+	if !Equal3Dim(3, 3, 3, a1, a2, a3) {
+		t.Error("Expected ", 3, 3, 3, ", got ", a1, a2, a3)
+	}
 }
 
 // Check correctly sized volume is created

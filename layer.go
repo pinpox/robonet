@@ -16,10 +16,11 @@ func (l *RNConvLayer) AddKernel(kern Kernel, strideR, strideC int) {
 
 //Calculate applys all Kernels to a given Volume
 func (l *RNConvLayer) Calculate(vol Volume) Volume {
+	//TODO
 	//result := newRNVolume(vol.Height(), vol.Width(), vol.Depth())
-	for i, v := range l.kernels {
-		vol.Apply(v, l.stridesR[i], l.stridesC[i])
-	}
+	//for i, v := range l.kernels {
+	//vol.Apply(v, l.stridesR[i], l.stridesC[i])
+	//}
 	return vol
 }
 

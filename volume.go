@@ -135,6 +135,11 @@ func (vol *Volume) GetAt(r, c, d int) float64 {
 
 //SetAt sets the element of a volume at a given position
 func (vol *Volume) SetAt(r, c, d int, val float64) {
+	if r >= vol.Rows() || c >= vol.Collumns() || d >= vol.Depth() {
+		fmt.Printf("SetAt request out of bounds (RxCxD) = %vx%vx%v requested for (RxCxD) = %vx%vx%vx", r, c, d, vol.Rows(), vol.Collumns(), vol.Depth())
+		panic("setat outof bounds")
+
+	}
 	vol.Fields[d].Set(r, c, val)
 }
 
