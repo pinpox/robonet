@@ -19,16 +19,20 @@ func (vol *Volume) Dims() (int, int, int) {
 }
 
 //Apply applys the given kernel to the whole volume, returnung a Volume with 1 depth
-func (vol *Volume) Apply(f Kernel) {
+func (vol *Volume) Apply(kern Kernel, strideR, strideC int) {
 
 	r, c, _ := vol.Dims()
-	r2, _, d2 := f.Dims()
+	r2, c2, d2 := kern.Dims()
 
-	res := NewRNVolume(r, c, 1)
+	if r%strideR != 0 || c%strideC != 0 {
+		panic("strides not applicable for this volume size")
+	}
 
-	for i := 0; i < r; i++ {
-		for j := 0; j < c; j++ {
-			res.SetAt(r, c, 0, f.Apply(vol.SubVolumePadded(i, j, r2, d2)))
+	res := NewRNVolume(r/strideR, c/strideC, 1)
+
+	for i := 0; i < r2; i++ {
+		for j := 0; j < c2; j++ {
+			res.SetAt(r, c, 0, kern.Apply(vol.SubVolumePadded(i*strideR, j*strideC, r2, d2)))
 		}
 	}
 

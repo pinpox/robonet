@@ -6,12 +6,12 @@ func TestAddKernel(t *testing.T) {
 
 	layer := RNConvLayer{}
 
-	layer.AddKernel(NewKernel(3, 3, 3))
-	layer.AddKernel(NewKernel(3, 3, 3))
-	layer.AddKernel(NewKernel(3, 3, 3))
+	layer.AddKernel(NewKernel(3, 3, 3), 1, 1)
+	layer.AddKernel(NewKernel(3, 3, 3), 2, 1)
+	layer.AddKernel(NewKernel(3, 3, 3), 1, 4)
 
-	if len(layer.Kernels) != 3 {
-		t.Error("Expected ", 3, ", got ", len(layer.Kernels))
+	if len(layer.Kernels()) != 3 {
+		t.Error("Expected ", 3, ", got ", len(layer.Kernels()))
 	}
 }
 
