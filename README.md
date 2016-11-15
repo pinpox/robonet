@@ -17,13 +17,14 @@ Equal3Dim checks if the size of two volumes are the same
 ```go
 func EqualVolDim(v1, v2 Volume) bool
 ```
+EqualVolDim checks if two given volumes have the same dimensions
 
 #### func  Odd3Dim
 
 ```go
 func Odd3Dim(i1, i2, i3 int) bool
 ```
-Odd3Dim checks if the height and width are odd
+Odd3Dim checks if the rows and collumns are odd
 
 #### func  SigmoidFast
 
@@ -76,6 +77,7 @@ Dims returns the size of the kernel
 ```go
 func (kern *Kernel) Equals(in Kernel) bool
 ```
+Equals compares to kernels
 
 #### func (*Kernel) GetAt
 
@@ -119,6 +121,7 @@ func (kern *Kernel) SetAt(r, c, d int, val float64)
 ```go
 func (kern *Kernel) Vol() Volume
 ```
+Vol returns the underlying volume of a kernel
 
 #### type Layer
 
@@ -142,7 +145,7 @@ RNConvLayer basic type for a convolutional layer
 #### func (*RNConvLayer) AddKernel
 
 ```go
-func (l *RNConvLayer) AddKernel(fil Kernel)
+func (l *RNConvLayer) AddKernel(kern Kernel)
 ```
 AddKernel adds a kernel to a layer
 
@@ -205,6 +208,7 @@ Depth of the Volume
 ```go
 func (vol *Volume) Dims() (int, int, int)
 ```
+Dims returns the Dimensions of a Volume
 
 #### func (*Volume) EqualSize
 
@@ -218,42 +222,49 @@ EqualSize checks if the size of two volumes are the same
 ```go
 func (vol *Volume) Equals(in Volume) bool
 ```
+Equals compares the volume to another volume
 
 #### func (*Volume) GetAt
 
 ```go
 func (vol *Volume) GetAt(r, c, d int) float64
 ```
+GetAt returns the element of the volume at a given position
 
 #### func (Volume) Max
 
 ```go
 func (vol Volume) Max() float64
 ```
+Max returns the hightest number in a volume
 
 #### func (*Volume) MulElem2
 
 ```go
 func (vol *Volume) MulElem2(v1 Volume)
 ```
+MulElem2 multiplies the volume with another volume element-wise
 
 #### func (*Volume) PointReflect
 
 ```go
 func (vol *Volume) PointReflect()
 ```
+PointReflect calculates the pointreflection of a volume
 
 #### func (*Volume) Print
 
 ```go
 func (vol *Volume) Print()
 ```
+Print prints the Volume to the console in a pretty format
 
 #### func (*Volume) Reflect
 
 ```go
 func (vol *Volume) Reflect()
 ```
+Reflect calculates the reflectio of a volume (left-right)
 
 #### func (*Volume) Rows
 
@@ -267,6 +278,7 @@ Rows of the Volume
 ```go
 func (vol *Volume) SetAt(r, c, d int, val float64)
 ```
+SetAt sets the element of a volume at a given position
 
 #### func (*Volume) SubVolumePadded
 
