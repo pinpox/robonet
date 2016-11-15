@@ -14,7 +14,7 @@ func NewKernel(r, c, d int) Kernel {
 	if !Odd3Dim(r, c, d) {
 		panic("Kernel must have odd width and heigth")
 	}
-	g := Kernel{*NewRNVolume(r, c, d)}
+	g := Kernel{*NewVolume(r, c, d)}
 	return g
 }
 
@@ -28,7 +28,7 @@ func NewKernelRandom(r, c, d int) *Kernel {
 	if !Odd3Dim(r, c, d) {
 		panic("Kernel must have odd width and heigth")
 	}
-	g := Kernel{*NewRNVolumeRandom(r, c, d)}
+	g := Kernel{*NewVolumeRandom(r, c, d)}
 	return &g
 }
 
@@ -49,7 +49,7 @@ func (kern Kernel) Apply(in Volume) float64 {
 	kernRef.PointReflect()
 	// 2) multiply pairwise
 
-	res := NewRNVolume(r, c, d)
+	res := NewVolume(r, c, d)
 
 	*res = kern.Volume
 

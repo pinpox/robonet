@@ -46,9 +46,9 @@ func TestDims(t *testing.T) {
 }
 
 // Check correctly sized volume is created
-func TestNewRNVolume(t *testing.T) {
+func TestNewVolume(t *testing.T) {
 	for _, v := range volumeSizes {
-		vol := NewRNVolume(v[0], v[1], v[2])
+		vol := NewVolume(v[0], v[1], v[2])
 		i1, i2, i3 := vol.Dims()
 		if !Equal3Dim(i1, i2, i3, v[0], v[1], v[2]) {
 			t.Error("Expected ", v[0], v[1], v[2], ", got ", i1, i2, i3)
@@ -57,9 +57,9 @@ func TestNewRNVolume(t *testing.T) {
 }
 
 // Check correctly sized volume is created
-func TestNewRNVolumeRandom(t *testing.T) {
+func TestNewVolumeRandom(t *testing.T) {
 	for _, v := range volumeSizes {
-		vol := NewRNVolumeRandom(v[0], v[1], v[2])
+		vol := NewVolumeRandom(v[0], v[1], v[2])
 		i1, i2, i3 := vol.Dims()
 		if !Equal3Dim(i1, i2, i3, v[0], v[1], v[2]) {
 			t.Error("Expected ", v[0], v[1], v[2], ", got ", i1, i2, i3)

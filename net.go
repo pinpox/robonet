@@ -13,6 +13,6 @@ func (net *Net) AddLayer(lay Layer) {
 //Calculate calcuates te output
 func (net Net) Calculate() Volume {
 	//TODO
-	return *NewRNVolumeRandom(3, 3, 3)
+	return *NewVolumeRandom(3, 3, 3)
 
 }

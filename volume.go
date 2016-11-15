@@ -38,7 +38,7 @@ func (vol *Volume) Apply(kern Kernel, strideR, strideC int) {
 		panic("strides not applicable for this volume size")
 	}
 
-	res := NewRNVolume(r/strideR, c/strideC, 1)
+	res := NewVolume(r/strideR, c/strideC, 1)
 
 	for i := 0; i < r2; i++ {
 		for j := 0; j < c2; j++ {
@@ -51,8 +51,8 @@ func (vol *Volume) Apply(kern Kernel, strideR, strideC int) {
 	*vol = *res
 }
 
-//NewRNVolume generates a Volume of fixed size filled with zeros
-func NewRNVolume(r, c, d int) *Volume {
+//NewVolume generates a Volume of fixed size filled with zeros
+func NewVolume(r, c, d int) *Volume {
 	v := new(Volume)
 	v.Fields = []mat64.Dense{}
 
@@ -62,8 +62,8 @@ func NewRNVolume(r, c, d int) *Volume {
 	return v
 }
 
-//NewRNVolumeRandom generates a Volume of fixed size filled with values between 0 and 1
-func NewRNVolumeRandom(r, c, d int) *Volume {
+//NewVolumeRandom generates a Volume of fixed size filled with values between 0 and 1
+func NewVolumeRandom(r, c, d int) *Volume {
 	v := new(Volume)
 	v.Fields = []mat64.Dense{}
 
@@ -88,7 +88,7 @@ func (vol *Volume) SubVolumePadded(cR, cC, r, c int) Volume {
 		panic("Even dimensions not allowed for subvolumes")
 	}
 
-	sub := NewRNVolume(r, c, vol.Depth())
+	sub := NewVolume(r, c, vol.Depth())
 
 	for ir := 0; ir < sub.Rows(); ir++ {
 		for ic := 0; ic < sub.Collumns(); ic++ {
@@ -190,7 +190,7 @@ func (vol *Volume) EqualSize(a Volume) bool {
 //PointReflect calculates the pointreflection of a volume
 func (vol *Volume) PointReflect() {
 	r, c, d := vol.Dims()
-	temp := NewRNVolume(c, r, d)
+	temp := NewVolume(c, r, d)
 
 	for id := 0; id < d; id++ {
 		for ir := 0; ir < r; ir++ {
@@ -206,7 +206,7 @@ func (vol *Volume) PointReflect() {
 func (vol *Volume) Reflect() {
 
 	r, c, d := vol.Dims()
-	temp := NewRNVolume(r, c, d)
+	temp := NewVolume(r, c, d)
 
 	for id := 0; id < d; id++ {
 		for ir := 0; ir < r; ir++ {
@@ -222,7 +222,7 @@ func (vol *Volume) Reflect() {
 func (vol *Volume) MulElem2(v1 Volume) {
 	r, c, d := vol.Dims()
 
-	res := NewRNVolume(r, c, d)
+	res := NewVolume(r, c, d)
 
 	for i := 0; i < r; i++ {
 		for j := 0; j < c; j++ {
