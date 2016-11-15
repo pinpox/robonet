@@ -10,25 +10,35 @@ func main() {
 
 	inputVol := *robonet.NewRNVolumeRandom(4, 4, 3)
 
-	fmt.Println("input was")
-	inputVol.Print()
+	//fmt.Println("input was")
+	//inputVol.Print()
+
+	net := new(robonet.Net)
 
 	fmt.Println("Create a new Layer")
-	lay := new(robonet.ConvLayer)
+	layConv := new(robonet.ConvLayer)
 
 	fmt.Println("add a kernel 1")
 	kernel1 := robonet.NewKernelRandom(3, 3, 3)
 	kernel1.Print()
-	lay.AddKernel(*kernel1, 1, 1)
+	layConv.AddKernel(*kernel1, 1, 1)
 
 	fmt.Println("add a kernel 2")
 	kernel2 := robonet.NewKernelRandom(3, 3, 2)
 	kernel2.Print()
-	lay.AddKernel(*kernel2, 1, 1)
+	layConv.AddKernel(*kernel2, 1, 1)
+
+	layIn := new(robonet.InputLayer)
+	layIn.SetInput(inputVol)
+
+	net.AddLayer(layIn)
+	net.AddLayer(layConv)
+	net.AddLayer(new(robonet.PoolLayer))
 
 	fmt.Println("calculate output")
-	outputVol := lay.Calculate(inputVol)
+	out := net.Calculate()
 
 	fmt.Println("output was")
-	outputVol.Print()
+	out.Print()
+
 }

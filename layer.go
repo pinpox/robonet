@@ -32,7 +32,13 @@ type FCLayer struct {
 //InputLayer [32x32x3] will hold the raw pixel values of the image, in this case an image of width 32, height 32, and with three color channels R,G,B.
 type InputLayer struct {
 	Layer
+	input Volume
 	//TODO
+}
+
+//SetInput sets the input of a input layer
+func (l *InputLayer) SetInput(in Volume) {
+	l.input = in
 }
 
 //ReluLayer will apply an elementwise activation function, such as the max(0,x)max(0,x)
