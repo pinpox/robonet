@@ -2,13 +2,6 @@ package robonet
 
 import "testing"
 
-// Check if Correct Dimensions are displayed
-//func TestDims(t *testing.T) {
-//if !Equal3Dim(i1, i2, i3, v[0], v[1], v[2]) {
-//t.Error("Expected ", v[0], v[1], v[2], ", got ", i1, i2, i3)
-//}
-//}
-
 func TestAddKernel(t *testing.T) {
 
 	layer := RNConvLayer{}

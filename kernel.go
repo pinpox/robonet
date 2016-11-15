@@ -33,6 +33,7 @@ func (kern *Kernel) SetAll(v Volume) {
 	}
 }
 
+//Vol returns the underlying volume of a kernel
 func (kern *Kernel) Vol() Volume {
 	return kern.values
 }
@@ -46,6 +47,7 @@ func NewKernel(r, c, d int) Kernel {
 	return g
 }
 
+//Equals compares to kernels
 func (kern *Kernel) Equals(in Kernel) bool {
 	return kern.values.Equals(in.values)
 }

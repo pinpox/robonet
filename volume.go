@@ -11,6 +11,7 @@ type Volume struct {
 	Fields []mat64.Dense
 }
 
+//Dims returns the Dimensions of a Volume
 func (vol *Volume) Dims() (int, int, int) {
 	r, c := vol.Fields[0].Dims()
 	d := len(vol.Fields)
@@ -102,6 +103,7 @@ func (vol *Volume) SubVolumePadded(cR, cC, r, c int) Volume {
 	return *sub
 }
 
+//Equals compares the volume to another volume
 func (vol *Volume) Equals(in Volume) bool {
 	if !vol.EqualSize(in) {
 		return false
@@ -122,14 +124,17 @@ func (vol *Volume) Equals(in Volume) bool {
 	return true
 }
 
+//GetAt returns the element of the volume at a given position
 func (vol *Volume) GetAt(r, c, d int) float64 {
 	return vol.Fields[d].At(r, c)
 }
 
+//SetAt sets the element of a volume at a given position
 func (vol *Volume) SetAt(r, c, d int, val float64) {
 	vol.Fields[d].Set(r, c, val)
 }
 
+//Print prints the Volume to the console in a pretty format
 func (vol *Volume) Print() {
 
 	for i := range vol.Fields {
@@ -163,6 +168,7 @@ func (vol *Volume) EqualSize(a Volume) bool {
 	return Equal3Dim(i1, i2, i3, e1, e2, e3)
 }
 
+//PointReflect calculates the pointreflection of a volume
 func (vol *Volume) PointReflect() {
 	r, c, d := vol.Dims()
 	temp := NewRNVolume(c, r, d)
@@ -177,6 +183,7 @@ func (vol *Volume) PointReflect() {
 	*vol = *temp
 }
 
+//Reflect calculates the reflectio of a volume (left-right)
 func (vol *Volume) Reflect() {
 
 	r, c, d := vol.Dims()
@@ -192,6 +199,7 @@ func (vol *Volume) Reflect() {
 	*vol = *temp
 }
 
+//MulElem2 multiplies the volume with another volume element-wise
 func (vol *Volume) MulElem2(v1 Volume) {
 	r, c, d := vol.Dims()
 
@@ -210,6 +218,7 @@ func (vol *Volume) MulElem2(v1 Volume) {
 
 }
 
+//Max returns the hightest number in a volume
 func (vol Volume) Max() float64 {
 	max := 0.0
 	for i := 0; i < vol.Rows(); i++ {
