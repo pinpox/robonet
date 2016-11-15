@@ -215,19 +215,19 @@ type Volume struct {
 
 Volume is a basic type to hold the layer's information
 
-#### func  NewRNVolume
+#### func  NewVolume
 
 ```go
-func NewRNVolume(r, c, d int) *Volume
+func NewVolume(r, c, d int) *Volume
 ```
-NewRNVolume generates a Volume of fixed size filled with zeros
+NewVolume generates a Volume of fixed size filled with zeros
 
-#### func  NewRNVolumeRandom
+#### func  NewVolumeRandom
 
 ```go
-func NewRNVolumeRandom(r, c, d int) *Volume
+func NewVolumeRandom(r, c, d int) *Volume
 ```
-NewRNVolumeRandom generates a Volume of fixed size filled with values between 0
+NewVolumeRandom generates a Volume of fixed size filled with values between 0
 and 1
 
 #### func (*Volume) Apply
