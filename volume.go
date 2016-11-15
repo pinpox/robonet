@@ -6,19 +6,19 @@ import (
 	"math/rand"
 )
 
-// rNVolume is a basic type to hold the layer's information
-type rNVolume struct {
+// Volume is a basic type to hold the layer's information
+type Volume struct {
 	Fields []mat64.Dense
 }
 
-func (vol *rNVolume) Dims() (int, int, int) {
+func (vol *Volume) Dims() (int, int, int) {
 	r, c := vol.Fields[0].Dims()
 	d := len(vol.Fields)
 	return r, c, d
 }
 
 //Apply applys the given kernel to the whole volume, returnung a Volume with 1 depth
-func (vol *rNVolume) Apply(f Kernel) {
+func (vol *Volume) Apply(f Kernel) {
 
 	r, c, _ := vol.Dims()
 	r2, _, d2 := f.Dims()
@@ -36,9 +36,9 @@ func (vol *rNVolume) Apply(f Kernel) {
 	*vol = *res
 }
 
-//NewRNVolume generates a rNVolume of fixed size filled with zeros
-func NewRNVolume(r, c, d int) *rNVolume {
-	v := new(rNVolume)
+//NewRNVolume generates a Volume of fixed size filled with zeros
+func NewRNVolume(r, c, d int) *Volume {
+	v := new(Volume)
 	v.Fields = []mat64.Dense{}
 
 	for i := 0; i < d; i++ {
@@ -47,9 +47,9 @@ func NewRNVolume(r, c, d int) *rNVolume {
 	return v
 }
 
-//NewRNVolumeRandom generates a rNVolume of fixed size filled with values between 0 and 1
-func NewRNVolumeRandom(r, c, d int) *rNVolume {
-	v := new(rNVolume)
+//NewRNVolumeRandom generates a Volume of fixed size filled with values between 0 and 1
+func NewRNVolumeRandom(r, c, d int) *Volume {
+	v := new(Volume)
 	v.Fields = []mat64.Dense{}
 
 	for j := 0; j < d; j++ {
@@ -67,7 +67,7 @@ func NewRNVolumeRandom(r, c, d int) *rNVolume {
 
 //SubVolumePadded returns a part of the original Volume. cR and cC determine the center of copying, r and c the size of the subvolume.
 //If the size exceeds the underlying volume the submodule is filled(padded with Zeros.
-func (vol *rNVolume) SubVolumePadded(cR, cC, r, c int) rNVolume {
+func (vol *Volume) SubVolumePadded(cR, cC, r, c int) Volume {
 
 	if r%2 == 0 || c%2 == 0 {
 		panic("Even dimensions not allowed for subvolumes")
@@ -102,7 +102,7 @@ func (vol *rNVolume) SubVolumePadded(cR, cC, r, c int) rNVolume {
 	return *sub
 }
 
-func (vol *rNVolume) Equals(in rNVolume) bool {
+func (vol *Volume) Equals(in Volume) bool {
 	if !vol.EqualSize(in) {
 		return false
 	}
@@ -122,15 +122,15 @@ func (vol *rNVolume) Equals(in rNVolume) bool {
 	return true
 }
 
-func (vol *rNVolume) GetAt(r, c, d int) float64 {
+func (vol *Volume) GetAt(r, c, d int) float64 {
 	return vol.Fields[d].At(r, c)
 }
 
-func (vol *rNVolume) SetAt(r, c, d int, val float64) {
+func (vol *Volume) SetAt(r, c, d int, val float64) {
 	vol.Fields[d].Set(r, c, val)
 }
 
-func (vol *rNVolume) Print() {
+func (vol *Volume) Print() {
 
 	for i := range vol.Fields {
 		fa := mat64.Formatted(&vol.Fields[i], mat64.Prefix(" "))
@@ -139,31 +139,31 @@ func (vol *rNVolume) Print() {
 }
 
 // Rows of the Volume
-func (vol *rNVolume) Rows() int {
+func (vol *Volume) Rows() int {
 	r, _, _ := vol.Dims()
 	return r
 }
 
 // Collumns of the Volume
-func (vol *rNVolume) Collumns() int {
+func (vol *Volume) Collumns() int {
 	_, c, _ := vol.Dims()
 	return c
 }
 
 //Depth of the Volume
-func (vol *rNVolume) Depth() int {
+func (vol *Volume) Depth() int {
 	_, _, d := vol.Dims()
 	return d
 }
 
 //EqualSize checks if the size of two volumes are the same
-func (vol *rNVolume) EqualSize(a rNVolume) bool {
+func (vol *Volume) EqualSize(a Volume) bool {
 	i1, i2, i3 := vol.Dims()
 	e1, e2, e3 := a.Dims()
 	return Equal3Dim(i1, i2, i3, e1, e2, e3)
 }
 
-func (vol *rNVolume) PointReflect() {
+func (vol *Volume) PointReflect() {
 	r, c, d := vol.Dims()
 	temp := NewRNVolume(c, r, d)
 
@@ -177,7 +177,7 @@ func (vol *rNVolume) PointReflect() {
 	*vol = *temp
 }
 
-func (vol *rNVolume) Reflect() {
+func (vol *Volume) Reflect() {
 
 	r, c, d := vol.Dims()
 	temp := NewRNVolume(r, c, d)
@@ -192,7 +192,7 @@ func (vol *rNVolume) Reflect() {
 	*vol = *temp
 }
 
-func (vol *rNVolume) MulElem2(v1 rNVolume) {
+func (vol *Volume) MulElem2(v1 Volume) {
 	r, c, d := vol.Dims()
 
 	res := NewRNVolume(r, c, d)
@@ -210,7 +210,7 @@ func (vol *rNVolume) MulElem2(v1 rNVolume) {
 
 }
 
-func (vol rNVolume) Max() float64 {
+func (vol Volume) Max() float64 {
 	max := 0.0
 	for i := 0; i < vol.Rows(); i++ {
 		for j := 0; j < vol.Collumns(); j++ {

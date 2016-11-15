@@ -7,7 +7,7 @@ import (
 
 // Kernel represets a basic conv kernel
 type Kernel struct {
-	values rNVolume
+	values Volume
 }
 
 func (kern *Kernel) GetAt(r, c, d int) float64 {
@@ -18,7 +18,7 @@ func (kern *Kernel) SetAt(r, c, d int, val float64) {
 	kern.values.SetAt(r, c, d, val)
 }
 
-func (kern *Kernel) SetAll(v rNVolume) {
+func (kern *Kernel) SetAll(v Volume) {
 
 	r, c, d := kern.Dims()
 	if !EqualVolDim(kern.Vol(), v) {
@@ -33,7 +33,7 @@ func (kern *Kernel) SetAll(v rNVolume) {
 	}
 }
 
-func (kern *Kernel) Vol() rNVolume {
+func (kern *Kernel) Vol() Volume {
 	return kern.values
 }
 
@@ -71,7 +71,7 @@ func (kern Kernel) Dims() (int, int, int) {
 
 //Apply applys the kernel to a equally sized chunk of a volume
 //Only kernels of the same size as the volume can be applied
-func (kern Kernel) Apply(in rNVolume) float64 {
+func (kern Kernel) Apply(in Volume) float64 {
 
 	ConvResult := 0.0
 	r, c, d := kern.Dims()

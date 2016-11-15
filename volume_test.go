@@ -19,12 +19,12 @@ var volumeSizes = [][]int{
 var data1 = []float64{0, 1, 2, 3, 4, 5, 6, 7, 8}
 var data2 = []float64{9, 10, 11, 12, 13, 14, 15, 16, 17}
 var data3 = []float64{18, 19, 20, 21, 22, 23, 24, 25, 26}
-var testVol = rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, data1), *mat64.NewDense(3, 3, data2), *mat64.NewDense(3, 3, data3)}}
+var testVol = Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, data1), *mat64.NewDense(3, 3, data2), *mat64.NewDense(3, 3, data3)}}
 
 // Check if Correct Dimensions are displayed
 func TestDims(t *testing.T) {
 	for _, v := range volumeSizes {
-		vol := new(rNVolume)
+		vol := new(Volume)
 
 		for i := 0; i < v[2]; i++ {
 			vol.Fields = append(vol.Fields, *mat64.NewDense(v[0], v[1], nil))
@@ -78,7 +78,7 @@ func TestSubVolumePadded(t *testing.T) {
 		0, 18, 19,
 		0, 21, 22}
 
-	var subVol1 = rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
+	var subVol1 = Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
 	sub1 = []float64{
 		0, 0, 0,
 		0, 1, 2,
@@ -94,7 +94,7 @@ func TestSubVolumePadded(t *testing.T) {
 		18, 19, 20,
 		21, 22, 23}
 
-	var subVol2 = rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
+	var subVol2 = Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
 
 	sub1 = []float64{
 		0, 0, 0,
@@ -111,7 +111,7 @@ func TestSubVolumePadded(t *testing.T) {
 		19, 20, 0,
 		22, 23, 0}
 
-	var subVol3 = rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
+	var subVol3 = Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
 
 	sub1 = []float64{
 		0, 0, 1,
@@ -128,13 +128,13 @@ func TestSubVolumePadded(t *testing.T) {
 		0, 21, 22,
 		0, 24, 25}
 
-	var subVol4 = rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
+	var subVol4 = Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
 
 	sub1 = data1
 	sub2 = data2
 	sub3 = data3
 
-	var subVol5 = rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
+	var subVol5 = Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
 
 	sub1 = []float64{
 		4, 5, 0,
@@ -151,12 +151,12 @@ func TestSubVolumePadded(t *testing.T) {
 		25, 26, 0,
 		0, 0, 0}
 
-	var subVol6 = rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
+	var subVol6 = Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
 
 	sub1 = []float64{0}
 	sub2 = []float64{9}
 	sub3 = []float64{18}
-	var subVol7 = rNVolume{Fields: []mat64.Dense{*mat64.NewDense(1, 1, sub1), *mat64.NewDense(1, 1, sub2), *mat64.NewDense(1, 1, sub3)}}
+	var subVol7 = Volume{Fields: []mat64.Dense{*mat64.NewDense(1, 1, sub1), *mat64.NewDense(1, 1, sub2), *mat64.NewDense(1, 1, sub3)}}
 
 	sub1 = []float64{
 		0, 0, 0, 0, 0,
@@ -178,7 +178,7 @@ func TestSubVolumePadded(t *testing.T) {
 		0, 21, 22, 23, 0,
 		0, 24, 25, 26, 0,
 		0, 0, 0, 0, 0}
-	var subVol8 = rNVolume{Fields: []mat64.Dense{*mat64.NewDense(5, 5, sub1), *mat64.NewDense(5, 5, sub2), *mat64.NewDense(5, 5, sub3)}}
+	var subVol8 = Volume{Fields: []mat64.Dense{*mat64.NewDense(5, 5, sub1), *mat64.NewDense(5, 5, sub2), *mat64.NewDense(5, 5, sub3)}}
 
 	sub1 = []float64{
 		0, 0, 0,
@@ -201,7 +201,7 @@ func TestSubVolumePadded(t *testing.T) {
 		24, 25, 26,
 		0, 0, 0}
 
-	var subVol9 = rNVolume{Fields: []mat64.Dense{*mat64.NewDense(5, 3, sub1), *mat64.NewDense(5, 3, sub2), *mat64.NewDense(5, 3, sub3)}}
+	var subVol9 = Volume{Fields: []mat64.Dense{*mat64.NewDense(5, 3, sub1), *mat64.NewDense(5, 3, sub2), *mat64.NewDense(5, 3, sub3)}}
 
 	sub1 = []float64{
 		0, 0, 1, 2, 0,
@@ -218,7 +218,7 @@ func TestSubVolumePadded(t *testing.T) {
 		0, 21, 22, 23, 0,
 		0, 24, 25, 26, 0}
 
-	var subVol10 = rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 5, sub1), *mat64.NewDense(3, 5, sub2), *mat64.NewDense(3, 5, sub3)}}
+	var subVol10 = Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 5, sub1), *mat64.NewDense(3, 5, sub2), *mat64.NewDense(3, 5, sub3)}}
 
 	sub1 = []float64{
 		0, 0, 0, 0, 0, 0, 0,
@@ -241,7 +241,7 @@ func TestSubVolumePadded(t *testing.T) {
 		0, 0, 24, 25, 26, 0, 0,
 		0, 0, 0, 0, 0, 0, 0}
 
-	var subVol11 = rNVolume{Fields: []mat64.Dense{*mat64.NewDense(5, 7, sub1), *mat64.NewDense(5, 7, sub2), *mat64.NewDense(5, 7, sub3)}}
+	var subVol11 = Volume{Fields: []mat64.Dense{*mat64.NewDense(5, 7, sub1), *mat64.NewDense(5, 7, sub2), *mat64.NewDense(5, 7, sub3)}}
 
 	sub1 = []float64{
 		0, 0, 1, 2, 0, 0, 0,
@@ -264,7 +264,7 @@ func TestSubVolumePadded(t *testing.T) {
 		0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0}
 
-	var subVol12 = rNVolume{Fields: []mat64.Dense{*mat64.NewDense(5, 7, sub1), *mat64.NewDense(5, 7, sub2), *mat64.NewDense(5, 7, sub3)}}
+	var subVol12 = Volume{Fields: []mat64.Dense{*mat64.NewDense(5, 7, sub1), *mat64.NewDense(5, 7, sub2), *mat64.NewDense(5, 7, sub3)}}
 
 	res1 := testVol.SubVolumePadded(0, 0, 3, 3)
 	res2 := testVol.SubVolumePadded(0, 1, 3, 3)
@@ -415,14 +415,14 @@ func TestVolumeReflect(t *testing.T) {
 	layer1 := []float64{0, 1, 2, 3, 4, 5, 6, 7, 8}
 	layer2 := []float64{9, 10, 11, 12, 13, 14, 15, 16, 17}
 	layer3 := []float64{18, 19, 20, 21, 22, 23, 24, 25, 26}
-	testVol1 := rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
+	testVol1 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
 
 	kern1 := NewKernel(3, 3, 3)
 	kern1.SetAll(testVol1)
 
 	layer1 = []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14}
 	layer2 = []float64{15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29}
-	testVol2 := rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 5, layer1), *mat64.NewDense(3, 5, layer2)}}
+	testVol2 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 5, layer1), *mat64.NewDense(3, 5, layer2)}}
 
 	kern2 := NewKernel(3, 5, 2)
 	kern2.SetAll(testVol2)
@@ -431,11 +431,11 @@ func TestVolumeReflect(t *testing.T) {
 	layer1 = []float64{2, 1, 0, 5, 4, 3, 8, 7, 6}
 	layer2 = []float64{11, 10, 9, 14, 13, 12, 17, 16, 15}
 	layer3 = []float64{20, 19, 18, 23, 22, 21, 26, 25, 24}
-	testVol1Reflected := rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
+	testVol1Reflected := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
 
 	layer1 = []float64{4, 3, 2, 1, 0, 9, 8, 7, 6, 5, 14, 13, 12, 11, 10}
 	layer2 = []float64{19, 18, 17, 16, 15, 24, 23, 22, 21, 20, 29, 28, 27, 26, 25}
-	testVol2Reflected := rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 5, layer1), *mat64.NewDense(3, 5, layer2)}}
+	testVol2Reflected := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 5, layer1), *mat64.NewDense(3, 5, layer2)}}
 	//Compare
 	testVol1.Reflect()
 	if !(testVol1Reflected.Equals(testVol1)) {
@@ -460,14 +460,14 @@ func TestVolumePointReflect(t *testing.T) {
 	layer1 := []float64{0, 1, 2, 3, 4, 5, 6, 7, 8}
 	layer2 := []float64{9, 10, 11, 12, 13, 14, 15, 16, 17}
 	layer3 := []float64{18, 19, 20, 21, 22, 23, 24, 25, 26}
-	testVol1 := rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
+	testVol1 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
 
 	kern1 := NewKernel(3, 3, 3)
 	kern1.SetAll(testVol1)
 
 	layer1 = []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14}
 	layer2 = []float64{15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29}
-	testVol2 := rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 5, layer1), *mat64.NewDense(3, 5, layer2)}}
+	testVol2 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 5, layer1), *mat64.NewDense(3, 5, layer2)}}
 
 	kern2 := NewKernel(3, 5, 2)
 	kern2.SetAll(testVol2)
@@ -476,11 +476,11 @@ func TestVolumePointReflect(t *testing.T) {
 	layer1 = []float64{0, 3, 6, 1, 4, 7, 2, 5, 8}
 	layer2 = []float64{9, 12, 15, 10, 13, 16, 11, 14, 17}
 	layer3 = []float64{18, 21, 24, 19, 22, 25, 20, 23, 26}
-	testVol1PointReflected := rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
+	testVol1PointReflected := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
 
 	layer1 = []float64{0, 5, 10, 1, 6, 11, 2, 7, 12, 3, 8, 13, 4, 9, 14}
 	layer2 = []float64{15, 20, 25, 16, 21, 26, 17, 22, 27, 18, 23, 28, 19, 24, 29}
-	testVol2PointReflected := rNVolume{Fields: []mat64.Dense{*mat64.NewDense(5, 3, layer1), *mat64.NewDense(5, 3, layer2)}}
+	testVol2PointReflected := Volume{Fields: []mat64.Dense{*mat64.NewDense(5, 3, layer1), *mat64.NewDense(5, 3, layer2)}}
 	//Compare
 	testVol1.PointReflect()
 	if !(testVol1PointReflected.Equals(testVol1)) {
@@ -507,7 +507,7 @@ func TestVolumeApply(t *testing.T) {
 	//    layer1 = []float64{0,3,6,1,4,7,2,5,8}
 	// layer2 = []float64{9,12,15,10,13,16,11,14,17}
 	// layer3 = []float64{18,21,24,19,22,25,20,23,26}
-	// testVol := rNVolume{Fields: []mat64.Dense{*mat64.NewDense(5, 5, layer1), *mat64.NewDense(5, 5, layer2), *mat64.NewDense(5, 5, layer3)}}
+	// testVol := Volume{Fields: []mat64.Dense{*mat64.NewDense(5, 5, layer1), *mat64.NewDense(5, 5, layer2), *mat64.NewDense(5, 5, layer3)}}
 
 }
 
@@ -516,7 +516,7 @@ func TestVolumeMax(t *testing.T) {
 	layer1 := []float64{0, 1, 2, 3, 4, 5, 6, 7, 8}
 	layer2 := []float64{9, 10, 11, 12, 13, 14, 15, 16, 17}
 	layer3 := []float64{18, 19, 20, 21, 22, 23, 24, 25, 26}
-	testVol := rNVolume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
+	testVol := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
 
 	if !(testVol.Max() == 26) {
 		t.Error("expected 29 got ", testVol.Max())
