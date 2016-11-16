@@ -26,6 +26,13 @@ func Odd3Dim(i1, i2, i3 int) bool
 ```
 Odd3Dim checks if the rows and collumns are odd
 
+#### func  SaveVolumeToFile
+
+```go
+func SaveVolumeToFile(path string, vol Volume)
+```
+SaveVolumeToFile saves a volume to a given file
+
 #### func  SigmoidFast
 
 ```go
@@ -38,7 +45,7 @@ approximation
 
 ```go
 type ConvLayer struct {
-	Layer
+	LayerFields
 }
 ```
 
@@ -58,7 +65,7 @@ AddKernel adds a kernel to a layer
 #### func (*ConvLayer) Calculate
 
 ```go
-func (l *ConvLayer) Calculate(vol Volume) Volume
+func (l *ConvLayer) Calculate()
 ```
 Calculate applys all Kernels to a given Volume
 
@@ -73,7 +80,7 @@ Kernels returns the kernels of the layer
 
 ```go
 type FCLayer struct {
-	Layer
+	LayerFields
 }
 ```
 
@@ -83,23 +90,30 @@ score, such as among the 10 categories of CIFAR-10. As with ordinary Neural
 Networks and as the name implies, each neuron in this layer will be connected to
 all the numbers in the previous volume.
 
+#### func (*FCLayer) Calculate
+
+```go
+func (lay *FCLayer) Calculate()
+```
+Calculate method for fully connected layers
+
 #### type InputLayer
 
 ```go
 type InputLayer struct {
-	Layer
+	LayerFields
 }
 ```
 
 InputLayer [32x32x3] will hold the raw pixel values of the image, in this case
 an image of width 32, height 32, and with three color channels R,G,B.
 
-#### func (*InputLayer) SetInput
+#### func (*InputLayer) Calculate
 
 ```go
-func (l *InputLayer) SetInput(in Volume)
+func (lay *InputLayer) Calculate()
 ```
-SetInput sets the input of a input layer
+Calculate method fir inputlaters, sets the ouput to input
 
 #### type Kernel
 
@@ -144,15 +158,43 @@ Equals compares to kernels
 
 ```go
 type Layer interface {
+	Input(Volume)
+	Calculate()
+	Output() Volume
 }
 ```
 
-Layer represents the general type of all layer types
+Layer interface
+
+#### type LayerFields
+
+```go
+type LayerFields struct {
+}
+```
+
+LayerFields basic data fields every layertype should have
+
+#### func (*LayerFields) Input
+
+```go
+func (lf *LayerFields) Input(vol Volume)
+```
+Input is the Default method for Setting the input of a layer
+
+#### func (*LayerFields) Output
+
+```go
+func (lf *LayerFields) Output() Volume
+```
+Output is the default method for retrieving the output of a layer
 
 #### type Net
 
 ```go
 type Net struct {
+	Input  Volume
+	Output Volume
 }
 ```
 
@@ -165,45 +207,67 @@ func (net *Net) AddLayer(lay Layer)
 ```
 AddLayer adds another layer to the net
 
-#### func (Net) Calculate
+#### func (*Net) Calculate
 
 ```go
-func (net Net) Calculate() Volume
+func (net *Net) Calculate()
 ```
-Calculate calcuates te output
+Calculate calcuates te Output
 
 #### type NormLayer
 
 ```go
 type NormLayer struct {
-	Layer
+	LayerFields
 }
 ```
 
 NormLayer is a normalisation layer
 
+#### func (*NormLayer) Calculate
+
+```go
+func (lay *NormLayer) Calculate()
+```
+Calculate applyes the normalisation funktion for every element in the input
+volume
+
 #### type PoolLayer
 
 ```go
 type PoolLayer struct {
-	Layer
+	LayerFields
 }
 ```
 
 PoolLayer will perform a downsampling operation along the spatial dimensions
 (width, height), resulting in volume such as [16x16x12].
 
+#### func (*PoolLayer) Calculate
+
+```go
+func (lay *PoolLayer) Calculate()
+```
+Calculate for Pooling layers
+
 #### type ReluLayer
 
 ```go
 type ReluLayer struct {
-	Layer
+	LayerFields
 }
 ```
 
 ReluLayer will apply an elementwise activation function, such as the
 max(0,x)max(0,x) thresholding at zero. This leaves the size of the volume
 unchanged ([32x32x12]).
+
+#### func (*ReluLayer) Calculate
+
+```go
+func (lay *ReluLayer) Calculate()
+```
+Calculate for ReluLayer
 
 #### type Volume
 
@@ -229,6 +293,13 @@ func NewVolumeRandom(r, c, d int) *Volume
 ```
 NewVolumeRandom generates a Volume of fixed size filled with values between 0
 and 1
+
+#### func  VolumeFromImageFile
+
+```go
+func VolumeFromImageFile(path string) Volume
+```
+VolumeFromImageFile creates a volume from a given file
 
 #### func (*Volume) Apply
 
