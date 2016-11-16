@@ -15,6 +15,21 @@ func TestAddKernel(t *testing.T) {
 	}
 }
 
-func TestCalculate(t *testing.T) {
+func TestNormCalculate(t *testing.T) {
+	//TODO
+}
+
+func TestConvCalculate(t *testing.T) {
+	//TODO
+}
+
+func TestPoolCalculate(t *testing.T) {
+	//TODO
+}
+func TestFCCalculate(t *testing.T) {
+	//TODO
+}
+
+func TestReluCalculate(t *testing.T) {
 	//TODO
 }

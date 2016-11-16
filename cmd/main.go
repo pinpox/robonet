@@ -10,10 +10,11 @@ func main() {
 
 	inputVol := *robonet.NewVolumeRandom(4, 4, 3)
 
-	//fmt.Println("input was")
-	//inputVol.Print()
-
 	net := new(robonet.Net)
+
+	fmt.Println("Setting input")
+	inputVol.Print()
+	net.Input = inputVol
 
 	fmt.Println("Create a new Layer")
 	layConv := new(robonet.ConvLayer)
@@ -29,16 +30,22 @@ func main() {
 	layConv.AddKernel(*kernel2, 1, 1)
 
 	layIn := new(robonet.InputLayer)
-	layIn.SetInput(inputVol)
+
+	net.AddLayer(new(robonet.InputLayer))
+	net.AddLayer(new(robonet.ConvLayer))
+	net.AddLayer(new(robonet.PoolLayer))
+	net.AddLayer(new(robonet.NormLayer))
+	net.AddLayer(new(robonet.FCLayer))
+	net.AddLayer(new(robonet.ReluLayer))
 
 	net.AddLayer(layIn)
 	net.AddLayer(layConv)
 	net.AddLayer(new(robonet.PoolLayer))
 
 	fmt.Println("calculate output")
-	out := net.Calculate()
+	net.Calculate()
 
 	fmt.Println("output was")
-	out.Print()
+	net.Output.Print()
 
 }

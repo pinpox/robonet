@@ -23,9 +23,12 @@ func (vol *Volume) SetAll(v Volume) {
 
 //Dims returns the Dimensions of a Volume
 func (vol *Volume) Dims() (int, int, int) {
-	r, c := vol.Fields[0].Dims()
 	d := len(vol.Fields)
-	return r, c, d
+	if d != 0 {
+		r, c := vol.Fields[0].Dims()
+		return r, c, d
+	}
+	return 0, 0, 0
 }
 
 //Apply applys the given kernel to the whole volume, returnung a Volume with 1 depth
