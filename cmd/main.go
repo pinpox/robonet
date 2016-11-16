@@ -47,5 +47,6 @@ func main() {
 
 	fmt.Println("output was")
 	//net.Output.Print()
+	robonet.SaveVolumeToFile("out.jpg", *robonet.NewVolumeRandom(300, 300, 3))
 
 }

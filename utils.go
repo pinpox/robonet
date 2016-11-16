@@ -1,6 +1,8 @@
 package robonet
 
 import (
+	"image"
+	"image/color"
 	"image/jpeg"
 	"math"
 	"os"
@@ -36,7 +38,6 @@ func VolumeFromImageFile(path string) Volume {
 	if err != nil {
 		panic("could not read")
 	}
-
 	// decode jpeg into image.Image
 	img, err := jpeg.Decode(file)
 	if err != nil {
@@ -55,4 +56,22 @@ func VolumeFromImageFile(path string) Volume {
 		}
 	}
 	return *vol
+}
+
+//SaveVolumeToFile saves a volume to a given file
+func SaveVolumeToFile(path string, vol Volume) {
+
+	if vol.Depth() != 3 {
+		panic("only 3-deep volumes can be saved to images")
+	}
+	toimg, _ := os.Create(path)
+	defer toimg.Close()
+
+	m := image.NewRGBA(image.Rect(0, 0, vol.Collumns(), vol.Rows()))
+	for r := 0; r < vol.Rows(); r++ {
+		for c := 0; c < vol.Collumns(); c++ {
+			m.Set(r, c, color.RGBA{uint8(255 * vol.GetAt(r, c, 0)), uint8(255 * vol.GetAt(r, c, 1)), uint8(255 * vol.GetAt(r, c, 1)), uint8(255)})
+		}
+	}
+	jpeg.Encode(toimg, m, &jpeg.Options{jpeg.DefaultQuality})
 }
