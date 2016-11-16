@@ -1,7 +1,9 @@
 package robonet
 
 import (
+	"image/jpeg"
 	"math"
+	"os"
 )
 
 //SigmoidFast calcultes the value for activation using a fast sigmoid approximation
@@ -25,4 +27,32 @@ func EqualVolDim(v1, v2 Volume) bool {
 	e1, e2, e3 := v2.Dims()
 
 	return Equal3Dim(i1, i2, i3, e1, e2, e3)
+}
+
+//VolumeFromImageFile creates a volume from a given file
+func VolumeFromImageFile(path string) Volume {
+
+	file, err := os.Open(path)
+	if err != nil {
+		panic("could not read")
+	}
+
+	// decode jpeg into image.Image
+	img, err := jpeg.Decode(file)
+	if err != nil {
+		panic("could not decode")
+	}
+	file.Close()
+	vol := NewVolume(img.Bounds().Max.X, img.Bounds().Max.Y, 3)
+
+	for x := 0; x < img.Bounds().Max.X; x++ {
+		for y := 0; y < img.Bounds().Max.Y; y++ {
+			r, g, b, _ := img.At(x, y).RGBA()
+			r, g, b = (r*255)/65535, (g*255)/65535, (b*255)/65535
+			vol.SetAt(x, y, 0, float64(r))
+			vol.SetAt(x, y, 1, float64(g))
+			vol.SetAt(x, y, 2, float64(b))
+		}
+	}
+	return *vol
 }

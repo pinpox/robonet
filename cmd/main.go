@@ -8,7 +8,7 @@ import (
 func main() {
 	//Volume and Kernel
 
-	inputVol := *robonet.NewVolumeRandom(4, 4, 3)
+	inputVol := robonet.VolumeFromImageFile("images/test.jpg")
 
 	net := new(robonet.Net)
 
@@ -46,6 +46,6 @@ func main() {
 	net.Calculate()
 
 	fmt.Println("output was")
-	net.Output.Print()
+	//net.Output.Print()
 
 }
