@@ -1,6 +1,7 @@
 package robonet
 
 import (
+	"golang.org/x/image/tiff"
 	"image"
 	"image/color"
 	"image/jpeg"
@@ -67,11 +68,14 @@ func SaveVolumeToFile(path string, vol Volume) {
 	toimg, _ := os.Create(path)
 	defer toimg.Close()
 
-	m := image.NewRGBA(image.Rect(0, 0, vol.Collumns(), vol.Rows()))
-	for r := 0; r < vol.Rows(); r++ {
-		for c := 0; c < vol.Collumns(); c++ {
-			m.Set(r, c, color.RGBA{uint8(255 * vol.GetAt(r, c, 0)), uint8(255 * vol.GetAt(r, c, 1)), uint8(255 * vol.GetAt(r, c, 1)), uint8(255)})
+	m := image.NewRGBA(image.Rect(0, 0, vol.Rows(), vol.Collumns()))
+	for c := 0; c < vol.Collumns(); c++ {
+		for r := 0; r < vol.Rows(); r++ {
+
+			red, green, blue, alpha := uint8(vol.GetAt(r, c, 0)), uint8(vol.GetAt(r, c, 1)), uint8(vol.GetAt(r, c, 2)), uint8(255)
+			m.Set(r, c, color.RGBA{red, green, blue, alpha})
 		}
 	}
-	jpeg.Encode(toimg, m, &jpeg.Options{jpeg.DefaultQuality})
+	tiff.Encode(toimg, m, nil)
+	//jpeg.Encode(toimg, m, nil)
 }

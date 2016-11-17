@@ -28,4 +28,5 @@ _testmain.go
 
 # external packages folder
 out.jpg
+out.tiff
 vendor/

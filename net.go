@@ -1,5 +1,9 @@
 package robonet
 
+import (
+	"fmt"
+)
+
 //Net is the basic type for Conv nets
 type Net struct {
 	layers []Layer
@@ -17,11 +21,15 @@ func (net *Net) Calculate() {
 
 	res := net.Input
 
-	for _, v := range net.layers {
+	for k, v := range net.layers {
+		fmt.Println("calculating layer ", k)
+		fmt.Printf("input has dims %vx%vx%v \n", res.Rows(), res.Collumns(), res.Depth())
 		v.Input(res)
 		v.Calculate()
 		res = v.Output()
+		fmt.Printf("output has dims %vx%vx%v\n", res.Rows(), res.Collumns(), res.Depth())
 	}
 
+	fmt.Printf("totoal output has dims %vx%vx%v\n", res.Rows(), res.Collumns(), res.Depth())
 	net.Output = res
 }
