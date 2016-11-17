@@ -8,7 +8,7 @@ import (
 func main() {
 	//Volume and Kernel
 
-	inputVol := robonet.VolumeFromImageFile("images/test.jpg")
+	inputVol := robonet.VolumeFromImageFile("images/test2.jpg")
 
 	net := new(robonet.Net)
 
