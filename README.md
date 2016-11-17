@@ -33,6 +33,13 @@ func SaveVolumeToFile(path string, vol Volume)
 ```
 SaveVolumeToFile saves a volume to a given file
 
+#### func  SaveVolumeToFileBW
+
+```go
+func SaveVolumeToFileBW(path string, vol Volume)
+```
+SaveVolumeToFileBW saves a volume to a given file in black and white
+
 #### func  SigmoidFast
 
 ```go
@@ -128,9 +135,16 @@ Kernel represets a basic conv kernel
 #### func  NewKernel
 
 ```go
-func NewKernel(r, c, d int) Kernel
+func NewKernel(r, c, d int) *Kernel
 ```
 NewKernel creates a new kernel initialized with zeros
+
+#### func  NewKernelFilled
+
+```go
+func NewKernelFilled(r, c, d int, fil float64) *Kernel
+```
+NewKernelFilled creates a new kernel initialized with random values
 
 #### func  NewKernelRandom
 
@@ -285,6 +299,14 @@ Volume is a basic type to hold the layer's information
 func NewVolume(r, c, d int) *Volume
 ```
 NewVolume generates a Volume of fixed size filled with zeros
+
+#### func  NewVolumeFilled
+
+```go
+func NewVolumeFilled(r, c, d int, fil float64) *Volume
+```
+NewVolumeFilled generates a Volume of fixed size filled with values between 0
+and 1
 
 #### func  NewVolumeRandom
 
