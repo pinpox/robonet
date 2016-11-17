@@ -10,12 +10,12 @@ type Kernel struct {
 }
 
 //NewKernel creates a new kernel initialized with zeros
-func NewKernel(r, c, d int) Kernel {
+func NewKernel(r, c, d int) *Kernel {
 	if !Odd3Dim(r, c, d) {
 		panic("Kernel must have odd width and heigth")
 	}
 	g := Kernel{*NewVolume(r, c, d)}
-	return g
+	return &g
 }
 
 //Equals compares to kernels
@@ -29,6 +29,15 @@ func NewKernelRandom(r, c, d int) *Kernel {
 		panic("Kernel must have odd width and heigth")
 	}
 	g := Kernel{*NewVolumeRandom(r, c, d)}
+	return &g
+}
+
+//NewKernelFilled creates a new kernel initialized with random values
+func NewKernelFilled(r, c, d int, fil float64) *Kernel {
+	if !Odd3Dim(r, c, d) {
+		panic("Kernel must have odd width and heigth")
+	}
+	g := Kernel{*NewVolumeFilled(r, c, d, fil)}
 	return &g
 }
 

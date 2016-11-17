@@ -83,6 +83,24 @@ func NewVolumeRandom(r, c, d int) *Volume {
 	return v
 }
 
+//NewVolumeFilled generates a Volume of fixed size filled with values between 0 and 1
+func NewVolumeFilled(r, c, d int, fil float64) *Volume {
+	v := new(Volume)
+	v.Fields = []mat64.Dense{}
+
+	for j := 0; j < d; j++ {
+
+		data := make([]float64, r*c)
+		for i := range data {
+			data[i] = fil
+		}
+		a := mat64.NewDense(r, c, data)
+
+		v.Fields = append(v.Fields, *a)
+	}
+	return v
+}
+
 //SubVolumePadded returns a part of the original Volume. cR and cC determine the center of copying, r and c the size of the subvolume.
 //If the size exceeds the underlying volume the submodule is filled(padded with Zeros.
 func (vol *Volume) SubVolumePadded(cR, cC, r, c int) Volume {

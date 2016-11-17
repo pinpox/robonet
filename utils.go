@@ -79,3 +79,24 @@ func SaveVolumeToFile(path string, vol Volume) {
 	tiff.Encode(toimg, m, nil)
 	//jpeg.Encode(toimg, m, nil)
 }
+
+//SaveVolumeToFileBW saves a volume to a given file in black and white
+func SaveVolumeToFileBW(path string, vol Volume) {
+
+	if vol.Depth() != 1 {
+		panic("only 1-deep volumes can be saved to images")
+	}
+	toimg, _ := os.Create(path)
+	defer toimg.Close()
+
+	m := image.NewRGBA(image.Rect(0, 0, vol.Rows(), vol.Collumns()))
+	for c := 0; c < vol.Collumns(); c++ {
+		for r := 0; r < vol.Rows(); r++ {
+
+			red, green, blue, alpha := uint8(vol.GetAt(r, c, 0)), uint8(vol.GetAt(r, c, 0)), uint8(vol.GetAt(r, c, 0)), uint8(255)
+			m.Set(r, c, color.RGBA{red, green, blue, alpha})
+		}
+	}
+	tiff.Encode(toimg, m, nil)
+	//jpeg.Encode(toimg, m, nil)
+}

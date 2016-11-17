@@ -52,7 +52,7 @@ func main() {
 	fmt.Println("output was")
 	net.Output.Print()
 	inputVol.Print()
-	//robonet.SaveVolumeToFile("out.jpg", net.Output)
-	robonet.SaveVolumeToFile("out.tiff", inputVol)
+	robonet.SaveVolumeToFile("out.tiff", net.Output)
+	//robonet.SaveVolumeToFile("out.tiff", inputVol)
 
 }
