@@ -14,22 +14,3 @@ func TestAddKernel(t *testing.T) {
 		t.Error("Expected ", 3, ", got ", len(layer.Kernels()))
 	}
 }
-
-func TestNormCalculate(t *testing.T) {
-	//TODO
-}
-
-func TestConvCalculate(t *testing.T) {
-	//TODO
-}
-
-func TestPoolCalculate(t *testing.T) {
-	//TODO
-}
-func TestFCCalculate(t *testing.T) {
-	//TODO
-}
-
-func TestReluCalculate(t *testing.T) {
-	//TODO
-}
