@@ -1,8 +1,12 @@
 package robonet
 
-import "fmt"
-import "testing"
-import "github.com/gonum/matrix/mat64"
+import (
+	"fmt"
+	"reflect"
+	"testing"
+
+	"github.com/gonum/matrix/mat64"
+)
 
 var volumeSizes = [][]int{
 	{1, 1, 1},
@@ -392,28 +396,6 @@ func TestSubVolumePadded(t *testing.T) {
 		fmt.Println("got")
 		res12.Print()
 	}
-	/*}
-	  func TestVolumeApply(t *testing.T) {
-
-	  	//Create new vol
-	  	//Creeat kernl
-	  	//apply kernl
-	  	//test dims
-	  	//test nums
-
-	  	ker := NewKernel(3, 3, 3)
-	  	res := testVol.Apply(ker)
-
-	  	resExp := nil //TODO
-
-	  	if !res.Equals(resExp) {
-	  		t.Error("Result incorrect")
-	  		fmt.Println("Expected")
-	  		resExp.Print()
-	  		fmt.Println("Result")
-	  		res.Print()
-	  	}
-	*/
 }
 
 func TestVolumeReflect(t *testing.T) {
@@ -507,17 +489,6 @@ func TestVolumePointReflect(t *testing.T) {
 
 }
 
-func TestVolumeApply(t *testing.T) {
-
-	//TODO
-
-	//    layer1 = []float64{0,3,6,1,4,7,2,5,8}
-	// layer2 = []float64{9,12,15,10,13,16,11,14,17}
-	// layer3 = []float64{18,21,24,19,22,25,20,23,26}
-	// testVol := Volume{Fields: []mat64.Dense{*mat64.NewDense(5, 5, layer1), *mat64.NewDense(5, 5, layer2), *mat64.NewDense(5, 5, layer3)}}
-
-}
-
 func TestVolumeMax(t *testing.T) {
 
 	layer1 := []float64{0, 1, 2, 3, 4, 5, 6, 7, 8}
@@ -527,5 +498,426 @@ func TestVolumeMax(t *testing.T) {
 
 	if !(testVol.Max() == 26) {
 		t.Error("expected 29 got ", testVol.Max())
+	}
+}
+
+func TestVolume_SetAll(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	type args struct {
+		v Volume
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := &Volume{
+				Fields: tt.fields.Fields,
+			}
+			vol.SetAll(tt.args.v)
+		})
+	}
+}
+
+func TestVolume_Dims(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   int
+		want1  int
+		want2  int
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := &Volume{
+				Fields: tt.fields.Fields,
+			}
+			got, got1, got2 := vol.Dims()
+			if got != tt.want {
+				t.Errorf("Volume.Dims() got = %v, want %v", got, tt.want)
+			}
+			if got1 != tt.want1 {
+				t.Errorf("Volume.Dims() got1 = %v, want %v", got1, tt.want1)
+			}
+			if got2 != tt.want2 {
+				t.Errorf("Volume.Dims() got2 = %v, want %v", got2, tt.want2)
+			}
+		})
+	}
+}
+
+func TestVolume_Apply(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	type args struct {
+		kern    Kernel
+		strideR int
+		strideC int
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := &Volume{
+				Fields: tt.fields.Fields,
+			}
+			vol.Apply(tt.args.kern, tt.args.strideR, tt.args.strideC)
+		})
+	}
+}
+
+func TestNewVolumeFilled(t *testing.T) {
+	type args struct {
+		r   int
+		c   int
+		d   int
+		fil float64
+	}
+	tests := []struct {
+		name string
+		args args
+		want Volume
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := NewVolumeFilled(tt.args.r, tt.args.c, tt.args.d, tt.args.fil); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewVolumeFilled() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestVolume_SubVolumePadded(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	type args struct {
+		cR int
+		cC int
+		r  int
+		c  int
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   Volume
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := &Volume{
+				Fields: tt.fields.Fields,
+			}
+			if got := vol.SubVolumePadded(tt.args.cR, tt.args.cC, tt.args.r, tt.args.c); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Volume.SubVolumePadded() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestVolume_Equals(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	type args struct {
+		in Volume
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   bool
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := &Volume{
+				Fields: tt.fields.Fields,
+			}
+			if got := vol.Equals(tt.args.in); got != tt.want {
+				t.Errorf("Volume.Equals() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestVolume_GetAt(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	type args struct {
+		r int
+		c int
+		d int
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   float64
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := &Volume{
+				Fields: tt.fields.Fields,
+			}
+			if got := vol.GetAt(tt.args.r, tt.args.c, tt.args.d); got != tt.want {
+				t.Errorf("Volume.GetAt() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestVolume_SetAt(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	type args struct {
+		r   int
+		c   int
+		d   int
+		val float64
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := &Volume{
+				Fields: tt.fields.Fields,
+			}
+			vol.SetAt(tt.args.r, tt.args.c, tt.args.d, tt.args.val)
+		})
+	}
+}
+
+func TestVolume_Print(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	tests := []struct {
+		name   string
+		fields fields
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := &Volume{
+				Fields: tt.fields.Fields,
+			}
+			vol.Print()
+		})
+	}
+}
+
+func TestVolume_Rows(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   int
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := &Volume{
+				Fields: tt.fields.Fields,
+			}
+			if got := vol.Rows(); got != tt.want {
+				t.Errorf("Volume.Rows() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestVolume_Collumns(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   int
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := &Volume{
+				Fields: tt.fields.Fields,
+			}
+			if got := vol.Collumns(); got != tt.want {
+				t.Errorf("Volume.Collumns() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestVolume_Depth(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   int
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := &Volume{
+				Fields: tt.fields.Fields,
+			}
+			if got := vol.Depth(); got != tt.want {
+				t.Errorf("Volume.Depth() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestVolume_EqualSize(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	type args struct {
+		a Volume
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   bool
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := &Volume{
+				Fields: tt.fields.Fields,
+			}
+			if got := vol.EqualSize(tt.args.a); got != tt.want {
+				t.Errorf("Volume.EqualSize() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestVolume_PointReflect(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	tests := []struct {
+		name   string
+		fields fields
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := &Volume{
+				Fields: tt.fields.Fields,
+			}
+			vol.PointReflect()
+		})
+	}
+}
+
+func TestVolume_Reflect(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	tests := []struct {
+		name   string
+		fields fields
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := &Volume{
+				Fields: tt.fields.Fields,
+			}
+			vol.Reflect()
+		})
+	}
+}
+
+func TestVolume_MulElem2(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	type args struct {
+		v1 Volume
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := &Volume{
+				Fields: tt.fields.Fields,
+			}
+			vol.MulElem2(tt.args.v1)
+		})
+	}
+}
+
+func TestVolume_Max(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   float64
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := Volume{
+				Fields: tt.fields.Fields,
+			}
+			if got := vol.Max(); got != tt.want {
+				t.Errorf("Volume.Max() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
