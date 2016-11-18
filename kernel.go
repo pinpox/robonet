@@ -1,7 +1,7 @@
 package robonet
 
 import (
-	"fmt"
+	"errors"
 )
 
 // Kernel represets a basic conv kernel
@@ -10,12 +10,12 @@ type Kernel struct {
 }
 
 //NewKernel creates a new kernel initialized with zeros
-func NewKernel(r, c, d int) *Kernel {
+func NewKernel(r, c, d int) (*Kernel, error) {
 	if !Odd3Dim(r, c, d) {
-		panic("Kernel must have odd width and heigth")
+		return nil, errors.New("Kernel must have odd width and heigth")
 	}
 	g := Kernel{*NewVolume(r, c, d)}
-	return &g
+	return &g, nil
 }
 
 //Equals compares to kernels
@@ -24,33 +24,32 @@ func (kern *Kernel) Equals(in Kernel) bool {
 }
 
 //NewKernelRandom creates a new kernel initialized with random values
-func NewKernelRandom(r, c, d int) *Kernel {
+func NewKernelRandom(r, c, d int) (*Kernel, error) {
 	if !Odd3Dim(r, c, d) {
-		panic("Kernel must have odd width and heigth")
+		return nil, errors.New("Kernel must have odd width and heigth")
 	}
 	g := Kernel{*NewVolumeRandom(r, c, d)}
-	return &g
+	return &g, nil
 }
 
 //NewKernelFilled creates a new kernel initialized with random values
-func NewKernelFilled(r, c, d int, fil float64) *Kernel {
+func NewKernelFilled(r, c, d int, fil float64) (*Kernel, error) {
 	if !Odd3Dim(r, c, d) {
-		panic("Kernel must have odd width and heigth")
+		return nil, errors.New("Kernel must have odd width and heigth")
 	}
 	g := Kernel{*NewVolumeFilled(r, c, d, fil)}
-	return &g
+	return &g, nil
 }
 
 //Apply applys the kernel to a equally sized chunk of a volume
 //Only kernels of the same size as the volume can be applied
-func (kern Kernel) Apply(in Volume) float64 {
+func (kern Kernel) Apply(in Volume) (float64, error) {
 
 	ConvResult := 0.0
 	r, c, d := kern.Dims()
 
 	if !(kern.Volume.EqualSize(in)) {
-		fmt.Println("Kernel size doesn't match input")
-		panic("Kernel size doesn't match input")
+		return 0, errors.New("Kernel size doesn't match input")
 	}
 
 	// 1) reflect kernel
@@ -74,5 +73,5 @@ func (kern Kernel) Apply(in Volume) float64 {
 
 	// 3) normalize??
 
-	return ConvResult
+	return ConvResult, nil
 }
