@@ -1,8 +1,10 @@
 package robonet
 
 import (
+	"errors"
 	"fmt"
 	"github.com/gonum/matrix/mat64"
+	"log"
 	"math/rand"
 )
 
@@ -15,7 +17,7 @@ type Volume struct {
 func (vol *Volume) SetAll(v Volume) {
 
 	if !EqualVolDim(*vol, v) {
-		panic("Volumedimensions do not match!")
+		log.Fatal(errors.New("Volumedimensions do not match"))
 	}
 
 	*vol = v
@@ -38,7 +40,7 @@ func (vol *Volume) Apply(kern Kernel, strideR, strideC int) {
 	r2, c2, d2 := kern.Dims()
 
 	if r%strideR != 0 || c%strideC != 0 {
-		panic("strides not applicable for this volume size")
+		log.Fatal(errors.New("strides not applicable for this volume size"))
 	}
 
 	res := NewVolume(r/strideR, c/strideC, 1)
@@ -51,22 +53,22 @@ func (vol *Volume) Apply(kern Kernel, strideR, strideC int) {
 
 	//TODO normalize
 
-	*vol = *res
+	*vol = res
 }
 
 //NewVolume generates a Volume of fixed size filled with zeros
-func NewVolume(r, c, d int) *Volume {
+func NewVolume(r, c, d int) Volume {
 	v := new(Volume)
 	v.Fields = []mat64.Dense{}
 
 	for i := 0; i < d; i++ {
 		v.Fields = append(v.Fields, *mat64.NewDense(r, c, nil))
 	}
-	return v
+	return *v
 }
 
 //NewVolumeRandom generates a Volume of fixed size filled with values between 0 and 1
-func NewVolumeRandom(r, c, d int) *Volume {
+func NewVolumeRandom(r, c, d int) Volume {
 	v := new(Volume)
 	v.Fields = []mat64.Dense{}
 
@@ -80,11 +82,11 @@ func NewVolumeRandom(r, c, d int) *Volume {
 
 		v.Fields = append(v.Fields, *a)
 	}
-	return v
+	return *v
 }
 
 //NewVolumeFilled generates a Volume of fixed size filled with values between 0 and 1
-func NewVolumeFilled(r, c, d int, fil float64) *Volume {
+func NewVolumeFilled(r, c, d int, fil float64) Volume {
 	v := new(Volume)
 	v.Fields = []mat64.Dense{}
 
@@ -98,7 +100,7 @@ func NewVolumeFilled(r, c, d int, fil float64) *Volume {
 
 		v.Fields = append(v.Fields, *a)
 	}
-	return v
+	return *v
 }
 
 //SubVolumePadded returns a part of the original Volume. cR and cC determine the center of copying, r and c the size of the subvolume.
@@ -106,7 +108,7 @@ func NewVolumeFilled(r, c, d int, fil float64) *Volume {
 func (vol *Volume) SubVolumePadded(cR, cC, r, c int) Volume {
 
 	if r%2 == 0 || c%2 == 0 {
-		panic("Even dimensions not allowed for subvolumes")
+		log.Fatal(errors.New("Even dimensions not allowed for subvolumes"))
 	}
 
 	sub := NewVolume(r, c, vol.Depth())
@@ -135,7 +137,7 @@ func (vol *Volume) SubVolumePadded(cR, cC, r, c int) Volume {
 		}
 	}
 
-	return *sub
+	return sub
 }
 
 //Equals compares the volume to another volume
@@ -167,8 +169,8 @@ func (vol *Volume) GetAt(r, c, d int) float64 {
 //SetAt sets the element of a volume at a given position
 func (vol *Volume) SetAt(r, c, d int, val float64) {
 	if r >= vol.Rows() || c >= vol.Collumns() || d >= vol.Depth() {
-		fmt.Printf("SetAt request out of bounds (RxCxD) = %vx%vx%v requested for (RxCxD) = %vx%vx%vx", r, c, d, vol.Rows(), vol.Collumns(), vol.Depth())
-		panic("setat outof bounds")
+		//fmt.Printf("SetAt request out of bounds (RxCxD) = %vx%vx%v requested for (RxCxD) = %vx%vx%vx", r, c, d, vol.Rows(), vol.Collumns(), vol.Depth())
+		log.Fatal(errors.New("setat outof bounds"))
 
 	}
 	vol.Fields[d].Set(r, c, val)
@@ -220,7 +222,7 @@ func (vol *Volume) PointReflect() {
 			}
 		}
 	}
-	*vol = *temp
+	*vol = temp
 }
 
 //Reflect calculates the reflectio of a volume (left-right)
@@ -236,7 +238,7 @@ func (vol *Volume) Reflect() {
 			}
 		}
 	}
-	*vol = *temp
+	*vol = temp
 }
 
 //MulElem2 multiplies the volume with another volume element-wise
@@ -254,7 +256,7 @@ func (vol *Volume) MulElem2(v1 Volume) {
 		}
 	}
 
-	*vol = *res
+	*vol = res
 
 }
 

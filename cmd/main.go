@@ -24,9 +24,9 @@ func main() {
 	kernel2 := robonet.NewKernelRandom(3, 3, 3)
 	kernel3 := robonet.NewKernelRandom(3, 3, 3)
 
-	layConv.AddKernel(*kernel1, 1, 1)
-	layConv.AddKernel(*kernel2, 1, 1)
-	layConv.AddKernel(*kernel3, 1, 1)
+	layConv.AddKernel(kernel1, 1, 1)
+	layConv.AddKernel(kernel2, 1, 1)
+	layConv.AddKernel(kernel3, 1, 1)
 
 	//fmt.Println("add a kernel 2")
 	//kernel2 := robonet.NewKernelRandom(3, 3, 2)

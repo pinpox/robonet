@@ -21,7 +21,7 @@ func (l *ConvLayer) AddKernel(kern Kernel, strideR, strideC int) {
 //Calculate applys all Kernels to a given Volume
 func (l *ConvLayer) Calculate() {
 
-	l.output = *NewVolume(10, 10, len(l.kernels)) //TODO
+	l.output = NewVolume(10, 10, len(l.kernels)) //TODO
 	for k, v := range l.kernels {
 
 		for r := 0; r < l.input.Rows(); r++ {

@@ -1,10 +1,12 @@
 package robonet
 
 import (
+	"errors"
 	"golang.org/x/image/tiff"
 	"image"
 	"image/color"
 	"image/jpeg"
+	"log"
 	"math"
 	"os"
 )
@@ -56,15 +58,16 @@ func VolumeFromImageFile(path string) Volume {
 			vol.SetAt(x, y, 2, float64(b))
 		}
 	}
-	return *vol
+	return vol
 }
 
 //SaveVolumeToFile saves a volume to a given file
 func SaveVolumeToFile(path string, vol Volume) {
 
 	if vol.Depth() != 3 {
-		panic("only 3-deep volumes can be saved to images")
+		log.Fatal(errors.New("only 3-deep volumes can be saved to images"))
 	}
+
 	toimg, _ := os.Create(path)
 	defer toimg.Close()
 
@@ -84,7 +87,7 @@ func SaveVolumeToFile(path string, vol Volume) {
 func SaveVolumeToFileBW(path string, vol Volume) {
 
 	if vol.Depth() != 1 {
-		panic("only 1-deep volumes can be saved to images")
+		log.Fatal(errors.New("only 1-deep volumes can be saved to BW-images"))
 	}
 	toimg, _ := os.Create(path)
 	defer toimg.Close()
