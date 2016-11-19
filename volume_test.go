@@ -514,7 +514,7 @@ func TestVolume_GetAt(t *testing.T) {
 
 func TestVolume_SetAt(t *testing.T) {
 
-	res1 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, nil), *mat64.NewDense(3, 3, []float64{1, 0, 0, 0, 0, 0, 0, 0, 0}), *mat64.NewDense(3, 3, nil)}}
+	res1 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, []float64{1, 0, 0, 0, 0, 0, 0, 0, 0}), *mat64.NewDense(3, 3, nil), *mat64.NewDense(3, 3, nil)}}
 	res2 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, nil), *mat64.NewDense(3, 3, nil), *mat64.NewDense(3, 3, []float64{0, 0, 0, 0, 0, 0, 0, 0, 1})}}
 
 	type args struct {
@@ -535,8 +535,8 @@ func TestVolume_SetAt(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			vol := tt.vol1
 
-			if vol.SetAt(tt.args.r, tt.args.c, tt.args.d, tt.args.val); vol.Equals(tt.vol2) {
-				t.Errorf("Volume.GetAt() = %v, want %v", vol, tt.vol2)
+			if vol.SetAt(tt.args.r, tt.args.c, tt.args.d, tt.args.val); !vol.Equals(tt.vol2) {
+				t.Errorf("Volume.SetAt() = %v, want %v", vol, tt.vol2)
 			}
 		})
 	}

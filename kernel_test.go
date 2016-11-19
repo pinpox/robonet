@@ -29,8 +29,8 @@ func TestApply(t *testing.T) {
 	kern1.SetAll(testVol1)
 
 	// Result
-	if !(kern1.Apply(testVol1) == 33) {
-		t.Error("Expected", 33, " got", kern1.Apply(testVol1))
+	if !(kern1.Apply(testVol1) == 36) {
+		t.Error("Expected", 36, " got", kern1.Apply(testVol1))
 	}
 
 }

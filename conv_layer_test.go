@@ -69,7 +69,10 @@ func TestConvLayer_Calculate(t *testing.T) {
 func TestConvLayer_Kernels(t *testing.T) {
 
 	lay := *new(ConvLayer)
-	kers := []Kernel{NewKernelRandom(2, 2, 2), NewKernelRandom(1, 1, 1), NewKernel(3, 3, 3)}
+	lay.AddKernel(NewKernel(3, 1, 2), 1, 1)
+	lay.AddKernel(NewKernel(1, 1, 1), 1, 1)
+	lay.AddKernel(NewKernel(3, 3, 3), 1, 1)
+	kers := []Kernel{NewKernel(3, 1, 2), NewKernel(1, 1, 1), NewKernel(3, 3, 3)}
 
 	tests := []struct {
 		name string
