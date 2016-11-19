@@ -33,7 +33,6 @@ func TestConvLayer_AddKernel(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			l := tt.lay
-
 			if got := len(l.Kernels()); got != tt.want {
 				t.Errorf("ConvLayer.AddKernel() = %v, want %v", got, tt.want)
 			}
@@ -68,27 +67,19 @@ func TestConvLayer_Calculate(t *testing.T) {
 }
 
 func TestConvLayer_Kernels(t *testing.T) {
-	type fields struct {
-		LayerFields LayerFields
-		kernels     []Kernel
-		stridesR    []int
-		stridesC    []int
-	}
+
+	lay := *new(ConvLayer)
+	kers := []Kernel{NewKernelRandom(2, 2, 2), NewKernelRandom(1, 1, 1), NewKernel(3, 3, 3)}
+
 	tests := []struct {
-		name   string
-		fields fields
-		want   []Kernel
+		name string
+		lay  ConvLayer
+		want []Kernel
 	}{
-	// TODO: Add test cases.
-	}
+		{"Default", lay, kers}}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			l := ConvLayer{
-				LayerFields: tt.fields.LayerFields,
-				kernels:     tt.fields.kernels,
-				stridesR:    tt.fields.stridesR,
-				stridesC:    tt.fields.stridesC,
-			}
+			l := lay
 			if got := l.Kernels(); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("ConvLayer.Kernels() = %v, want %v", got, tt.want)
 			}
