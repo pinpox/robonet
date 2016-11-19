@@ -1,23 +1,11 @@
 package robonet
 
-import "testing"
-import "github.com/gonum/matrix/mat64"
+import (
+	"reflect"
+	"testing"
 
-func TestNewKernel(t *testing.T) {
-	//TODO
-}
-
-func TestNewKernelRandom(t *testing.T) {
-	//TODO
-}
-
-func TestPrint(t *testing.T) {
-	//TODO
-}
-
-func TestFilterDims(t *testing.T) {
-	//TODO
-}
+	"github.com/gonum/matrix/mat64"
+)
 
 func TestApply(t *testing.T) {
 	//Input
@@ -92,5 +80,126 @@ func TestKernelReflect(t *testing.T) {
 		t.Error("Reflect () Expected", kern1Reflected, " got", kern1)
 		kern1Reflected.Print()
 		kern1.Print()
+	}
+}
+
+func TestNewKernel(t *testing.T) {
+	type args struct {
+		r int
+		c int
+		d int
+	}
+	tests := []struct {
+		name string
+		args args
+		want Kernel
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := NewKernel(tt.args.r, tt.args.c, tt.args.d); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewKernel() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestKernel_Equals(t *testing.T) {
+	type fields struct {
+		Volume Volume
+	}
+	type args struct {
+		in Kernel
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   bool
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			kern := &Kernel{
+				Volume: tt.fields.Volume,
+			}
+			if got := kern.Equals(tt.args.in); got != tt.want {
+				t.Errorf("Kernel.Equals() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestNewKernelRandom(t *testing.T) {
+	type args struct {
+		r int
+		c int
+		d int
+	}
+	tests := []struct {
+		name string
+		args args
+		want Kernel
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := NewKernelRandom(tt.args.r, tt.args.c, tt.args.d); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewKernelRandom() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestNewKernelFilled(t *testing.T) {
+	type args struct {
+		r   int
+		c   int
+		d   int
+		fil float64
+	}
+	tests := []struct {
+		name string
+		args args
+		want Kernel
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := NewKernelFilled(tt.args.r, tt.args.c, tt.args.d, tt.args.fil); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewKernelFilled() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestKernel_Apply(t *testing.T) {
+	type fields struct {
+		Volume Volume
+	}
+	type args struct {
+		in Volume
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   float64
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			kern := Kernel{
+				Volume: tt.fields.Volume,
+			}
+			if got := kern.Apply(tt.args.in); got != tt.want {
+				t.Errorf("Kernel.Apply() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
