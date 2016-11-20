@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gonum/matrix/mat64"
 	"log"
+	"math"
 	"math/rand"
 )
 
@@ -142,23 +143,7 @@ func (vol *Volume) SubVolumePadded(cR, cC, r, c int) Volume {
 
 //Equals compares the volume to another volume
 func (vol *Volume) Equals(in Volume) bool {
-	if !vol.EqualSize(in) {
-		return false
-	}
-
-	r, c, d := vol.Dims()
-
-	for i1 := 0; i1 < r; i1++ {
-		for i2 := 0; i2 < c; i2++ {
-			for i3 := 0; i3 < d; i3++ {
-				if vol.GetAt(i1, i2, i3) != in.GetAt(i1, i2, i3) {
-					return false
-				}
-			}
-		}
-	}
-
-	return true
+	return vol.SimimlarTo(in, 0)
 }
 
 //GetAt returns the element of the volume at a given position
@@ -273,4 +258,26 @@ func (vol Volume) Max() float64 {
 		}
 	}
 	return max
+}
+
+//SimimlarTo compares two volumes with a given threshold
+func (vol Volume) SimimlarTo(in Volume, threshold float64) bool {
+
+	if !vol.EqualSize(in) {
+		return false
+	}
+
+	r, c, d := vol.Dims()
+
+	for i1 := 0; i1 < r; i1++ {
+		for i2 := 0; i2 < c; i2++ {
+			for i3 := 0; i3 < d; i3++ {
+				if math.Abs(math.Abs(vol.GetAt(i1, i2, i3))-math.Abs(in.GetAt(i1, i2, i3))) > threshold {
+					return false
+				}
+			}
+		}
+	}
+
+	return true
 }

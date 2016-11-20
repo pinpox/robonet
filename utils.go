@@ -103,3 +103,12 @@ func SaveVolumeToFileBW(path string, vol Volume) {
 	tiff.Encode(toimg, m, nil)
 	//jpeg.Encode(toimg, m, nil)
 }
+
+//CompareImages compares two images pixel-wise. A threshold (0-255) is specified. 0 means the two images are identical
+func CompareImages(path1, path2 string, threshold float64) bool {
+	imgvol1 := VolumeFromImageFile(path1)
+	imgvol2 := VolumeFromImageFile(path2)
+
+	return imgvol1.SimimlarTo(imgvol2, threshold)
+
+}
