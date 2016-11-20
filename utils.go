@@ -103,40 +103,34 @@ func ImageToVolume(img image.Image) Volume {
 //VolumeToImage converts a volume to a image
 func VolumeToImage(vol Volume) image.Image {
 
-	if vol.Depth() != 3 {
-		log.Fatal(errors.New("only 3-deep volumes can be saved to images"))
+	if vol.Max() > 255 {
+		log.Fatal("Can't save volume, has values over 255")
 	}
 
 	m := image.NewRGBA(image.Rect(0, 0, vol.Rows(), vol.Collumns()))
-	for c := 0; c < vol.Collumns(); c++ {
-		for r := 0; r < vol.Rows(); r++ {
+	switch vol.Depth() {
+	case 1:
 
-			red, green, blue, alpha := uint8(vol.GetAt(r, c, 0)), uint8(vol.GetAt(r, c, 1)), uint8(vol.GetAt(r, c, 2)), uint8(255)
-			m.Set(r, c, color.RGBA{red, green, blue, alpha})
+		for c := 0; c < vol.Collumns(); c++ {
+			for r := 0; r < vol.Rows(); r++ {
+
+				red, green, blue, alpha := uint8(vol.GetAt(r, c, 0)), uint8(vol.GetAt(r, c, 0)), uint8(vol.GetAt(r, c, 0)), uint8(255)
+				m.Set(r, c, color.RGBA{red, green, blue, alpha})
+			}
 		}
+	case 3:
+
+		for c := 0; c < vol.Collumns(); c++ {
+			for r := 0; r < vol.Rows(); r++ {
+
+				red, green, blue, alpha := uint8(vol.GetAt(r, c, 0)), uint8(vol.GetAt(r, c, 1)), uint8(vol.GetAt(r, c, 2)), uint8(255)
+				m.Set(r, c, color.RGBA{red, green, blue, alpha})
+			}
+		}
+	default:
+		log.Fatal(errors.New("only 3-deep or 1-deep volumes can be saved to images"))
 	}
 	return m
-}
-
-//SaveVolumeToFileBW saves a volume to a given file in black and white
-func SaveVolumeToFileBW(path string, vol Volume) {
-
-	if vol.Depth() != 1 {
-		log.Fatal(errors.New("only 1-deep volumes can be saved to BW-images"))
-	}
-	toimg, _ := os.Create(path)
-	defer toimg.Close()
-
-	m := image.NewRGBA(image.Rect(0, 0, vol.Rows(), vol.Collumns()))
-	for c := 0; c < vol.Collumns(); c++ {
-		for r := 0; r < vol.Rows(); r++ {
-
-			red, green, blue, alpha := uint8(vol.GetAt(r, c, 0)), uint8(vol.GetAt(r, c, 0)), uint8(vol.GetAt(r, c, 0)), uint8(255)
-			m.Set(r, c, color.RGBA{red, green, blue, alpha})
-		}
-	}
-	tiff.Encode(toimg, m, nil)
-	//jpeg.Encode(toimg, m, nil)
 }
 
 //CompareJPEG compares two  JPEGs pixel-wise. A threshold (0-255) is specified. 0 means the two images are identical
@@ -151,4 +145,19 @@ func CompareTIFF(path1, path2 string, threshold float64) bool {
 	imgvol1 := VolumeFromTIFF(path1)
 	imgvol2 := VolumeFromTIFF(path2)
 	return imgvol1.SimimlarTo(imgvol2, threshold)
+}
+
+//Round rounds to a given number of places
+func Round(val float64, places int) (newVal float64) {
+	var round float64
+	pow := math.Pow(10, float64(places))
+	digit := pow * val
+	_, div := math.Modf(digit)
+	if div >= .5 {
+		round = math.Ceil(digit)
+	} else {
+		round = math.Floor(digit)
+	}
+	newVal = round / pow
+	return
 }

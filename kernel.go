@@ -67,12 +67,31 @@ func (kern Kernel) Apply(in Volume) float64 {
 	for i := 0; i < r; i++ {
 		for j := 0; j < c; j++ {
 			for k := 0; k < d; k++ {
-				ConvResult += res.GetAt(i, j, k)
+				// TODO check if normalization is correct!
+				ConvResult += (res.GetAt(i, j, k) / float64(kern.Elems()))
 			}
 		}
 	}
 
-	// 3) normalize??
-
 	return ConvResult
+}
+
+//Elems returns the number of element a kernel has
+func (kern Kernel) Elems() int {
+	return kern.Volume.Elems()
+}
+
+//Sum returns the sum of all elements in the kernel
+func (kern Kernel) Sum() float64 {
+	res := 0.0
+	for r := 0; r < kern.Rows(); r++ {
+		for c := 0; c < kern.Collumns(); c++ {
+			for d := 0; d < kern.Depth(); d++ {
+				res += kern.GetAt(r, c, d)
+			}
+		}
+	}
+
+	return res
+
 }

@@ -7,22 +7,6 @@ import (
 	"github.com/gonum/matrix/mat64"
 )
 
-func TestApply(t *testing.T) {
-	//Input
-	layer1 := []float64{1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-	layer2 := []float64{1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-	testVol1 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 5, layer1), *mat64.NewDense(3, 5, layer2)}}
-
-	kern1 := NewKernel(3, 5, 2)
-	kern1.SetAll(testVol1)
-
-	// Result
-	if !(kern1.Apply(testVol1) == 36) {
-		t.Error("Expected", 36, " got", kern1.Apply(testVol1))
-	}
-
-}
-
 func TestKernelPointReflect(t *testing.T) {
 
 	//Input
@@ -178,27 +162,87 @@ func TestNewKernelFilled(t *testing.T) {
 }
 
 func TestKernel_Apply(t *testing.T) {
-	type fields struct {
-		Volume Volume
-	}
-	type args struct {
-		in Volume
-	}
+
+	layer1 := []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
+	layer2 := []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
+	layer3 := []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
+	ker1 := []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
+	ker2 := []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
+	ker3 := []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
+	testVol1 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
+	kernVol1 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, ker1), *mat64.NewDense(3, 3, ker2), *mat64.NewDense(3, 3, ker3)}}
+	kern1 := NewKernel(3, 3, 3)
+	kern1.SetAll(kernVol1)
+
+	layer1 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
+	layer2 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
+	layer3 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
+	ker1 = []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
+	ker2 = []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
+	ker3 = []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
+	testVol2 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
+	kernVol2 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, ker1), *mat64.NewDense(3, 3, ker2), *mat64.NewDense(3, 3, ker3)}}
+	kern2 := NewKernel(3, 3, 3)
+	kern2.SetAll(kernVol2)
+
+	layer1 = []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
+	layer2 = []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
+	layer3 = []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
+	ker1 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
+	ker2 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
+	ker3 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
+	testVol3 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
+	kernVol3 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, ker1), *mat64.NewDense(3, 3, ker2), *mat64.NewDense(3, 3, ker3)}}
+	kern3 := NewKernel(3, 3, 3)
+	kern3.SetAll(kernVol3)
+
+	layer1 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
+	layer2 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
+	layer3 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
+	ker1 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
+	ker2 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
+	ker3 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
+	testVol4 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
+	kernVol4 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, ker1), *mat64.NewDense(3, 3, ker2), *mat64.NewDense(3, 3, ker3)}}
+	kern4 := NewKernel(3, 3, 3)
+	kern4.SetAll(kernVol4)
+
 	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   float64
+		name string
+		kern Kernel
+		vol  Volume
+		want float64
 	}{
-	// TODO: Add test cases.
+		{"vol ones kern ones", kern1, testVol1, 1},
+		{"vol zeros kern ones", kern2, testVol2, 0},
+		{"vol ones kern zeros", kern3, testVol3, 0},
+		{"vol zeros kern zeros", kern4, testVol4, 0},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			kern := Kernel{
-				Volume: tt.fields.Volume,
-			}
-			if got := kern.Apply(tt.args.in); got != tt.want {
+			kern := tt.kern
+			if got := kern.Apply(tt.vol); Round(got, 10) != tt.want {
 				t.Errorf("Kernel.Apply() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestKernel_Elems(t *testing.T) {
+	tests := []struct {
+		name string
+		kern Kernel
+		want int
+	}{
+		{"3x3x3", NewKernelRandom(3, 3, 3), 27},
+		{"3x3x1", NewKernelRandom(3, 3, 1), 9},
+		{"3x5x1", NewKernelRandom(3, 5, 1), 15},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			kern := tt.kern
+			if got := kern.Elems(); got != tt.want {
+				t.Errorf("Kernel.Elems() = %v, want %v", got, tt.want)
 			}
 		})
 	}

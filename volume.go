@@ -38,7 +38,7 @@ func (vol *Volume) Dims() (int, int, int) {
 func (vol *Volume) Apply(kern Kernel, strideR, strideC int) {
 
 	r, c, _ := vol.Dims()
-	r2, c2, d2 := kern.Dims()
+	r2, c2, _ := kern.Dims()
 
 	if r%strideR != 0 || c%strideC != 0 {
 		log.Fatal(errors.New("strides not applicable for this volume size"))
@@ -46,12 +46,11 @@ func (vol *Volume) Apply(kern Kernel, strideR, strideC int) {
 
 	res := NewVolume(r/strideR, c/strideC, 1)
 
-	for i := 0; i < r2; i++ {
-		for j := 0; j < c2; j++ {
-			res.SetAt(r, c, 0, kern.Apply(vol.SubVolumePadded(i*strideR, j*strideC, r2, d2)))
+	for i := 0; i < r/strideR; i++ {
+		for j := 0; j < c/strideC; j++ {
+			res.SetAt(i, j, 0, kern.Apply(vol.SubVolumePadded(i*strideR, j*strideC, r2, c2)))
 		}
 	}
-
 	//TODO normalize
 
 	*vol = res
@@ -154,8 +153,8 @@ func (vol *Volume) GetAt(r, c, d int) float64 {
 //SetAt sets the element of a volume at a given position
 func (vol *Volume) SetAt(r, c, d int, val float64) {
 	if r >= vol.Rows() || c >= vol.Collumns() || d >= vol.Depth() {
-		//fmt.Printf("SetAt request out of bounds (RxCxD) = %vx%vx%v requested for (RxCxD) = %vx%vx%vx", r, c, d, vol.Rows(), vol.Collumns(), vol.Depth())
-		log.Fatal(errors.New("setat outof bounds"))
+		fmt.Printf("SetAt request out of bounds (RxCxD) = %vx%vx%v requested for (RxCxD) = %vx%vx%vx", r, c, d, vol.Rows(), vol.Collumns(), vol.Depth())
+		log.Fatal(errors.New("robonet.Volume: setAt out of bounds"))
 
 	}
 	vol.Fields[d].Set(r, c, val)
@@ -280,4 +279,10 @@ func (vol Volume) SimimlarTo(in Volume, threshold float64) bool {
 	}
 
 	return true
+}
+
+//Elems returns the number of elements in a volume
+func (vol Volume) Elems() int {
+	return vol.Rows() * vol.Collumns() * vol.Depth()
+
 }

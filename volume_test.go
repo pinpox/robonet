@@ -183,27 +183,26 @@ func TestVolume_Dims(t *testing.T) {
 }
 
 func TestVolume_Apply(t *testing.T) {
-	type fields struct {
-		Fields []mat64.Dense
-	}
 	type args struct {
 		kern    Kernel
 		strideR int
 		strideC int
 	}
 	tests := []struct {
-		name   string
-		fields fields
-		args   args
+		name string
+		args args
+		vol  Volume
+		want Volume
 	}{
+
 	// TODO: Add test cases.
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			vol := &Volume{
-				Fields: tt.fields.Fields,
+			vol := tt.vol
+			if vol.Apply(tt.args.kern, tt.args.strideR, tt.args.strideC); !vol.Equals(tt.want) {
+				t.Errorf("Volume.Apply() got = %v, want %v", vol, tt.want)
 			}
-			vol.Apply(tt.args.kern, tt.args.strideR, tt.args.strideC)
 		})
 	}
 }
@@ -706,6 +705,29 @@ func TestVolume_SimimlarTo(t *testing.T) {
 			}
 			if got := vol.SimimlarTo(tt.args.in, tt.args.threshold); got != tt.want {
 				t.Errorf("Volume.SimimlarTo() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestVolume_Elems(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   int
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := Volume{
+				Fields: tt.fields.Fields,
+			}
+			if got := vol.Elems(); got != tt.want {
+				t.Errorf("Volume.Elems() = %v, want %v", got, tt.want)
 			}
 		})
 	}

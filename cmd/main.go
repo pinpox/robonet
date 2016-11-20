@@ -56,5 +56,13 @@ func main() {
 	//robonet.SaveVolumeToFile("out.tiff", inputVol)
 
 	vimg := robonet.VolumeFromTIFF("images/grey100.tiff")
+	imgker := robonet.NewKernel(3, 3, 3)
+	imgker.SetAt(2, 2, 0, 1)
+	imgker.SetAt(2, 2, 1, 1)
+	imgker.SetAt(2, 2, 2, 1)
+
+	vimg.Apply(imgker, 1, 1)
+	robonet.SaveVolumeToTIFF("kern0on100.tiff", vimg)
+
 	vimg.Print()
 }

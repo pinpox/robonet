@@ -164,24 +164,6 @@ func TestVolumeToImage(t *testing.T) {
 	}
 }
 
-func TestSaveVolumeToFileBW(t *testing.T) {
-	type args struct {
-		path string
-		vol  Volume
-	}
-	tests := []struct {
-		name string
-		args args
-	}{
-	// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			SaveVolumeToFileBW(tt.args.path, tt.args.vol)
-		})
-	}
-}
-
 func TestCompareJPEG(t *testing.T) {
 	type args struct {
 		path1     string
@@ -227,6 +209,34 @@ func TestCompareTIFF(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := CompareTIFF(tt.args.path1, tt.args.path2, tt.args.threshold); got != tt.want {
 				t.Errorf("CompareTIFF() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestRound(t *testing.T) {
+	type args struct {
+		val    float64
+		places int
+	}
+	tests := []struct {
+		name       string
+		args       args
+		wantNewVal float64
+	}{
+		{"Round up positive", args{0.006, 2}, 0.01},
+		{"Round up positive", args{0.005, 2}, 0.01},
+		{"Round down positive", args{0.004, 2}, 0.00},
+		{"Round up negative", args{-0.006, 2}, -0.01},
+		{"Round up negative", args{-0.005, 2}, -0.01},
+		{"Round down negative", args{-0.004, 2}, -0.01},
+		{"large places", args{0.004, 100}, 0.004},
+		{"large places", args{0.0000000000000000000000000000000004, 34}, 0.0000000000000000000000000000000004},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotNewVal := Round(tt.args.val, tt.args.places); gotNewVal != tt.wantNewVal {
+				t.Errorf("Round() = %v, want %v", gotNewVal, tt.wantNewVal)
 			}
 		})
 	}
