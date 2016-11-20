@@ -67,8 +67,8 @@ func (kern Kernel) Apply(in Volume) float64 {
 	for i := 0; i < r; i++ {
 		for j := 0; j < c; j++ {
 			for k := 0; k < d; k++ {
-				// TODO check if normalization is correct!
-				ConvResult += (res.GetAt(i, j, k) / float64(kern.Elems()))
+				// TODO check if normalization is needed!
+				ConvResult += (res.GetAt(i, j, k))
 			}
 		}
 	}

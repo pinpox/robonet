@@ -213,7 +213,7 @@ func TestKernel_Apply(t *testing.T) {
 		vol  Volume
 		want float64
 	}{
-		{"vol ones kern ones", kern1, testVol1, 1},
+		{"vol ones kern ones", kern1, testVol1, 27},
 		{"vol zeros kern ones", kern2, testVol2, 0},
 		{"vol ones kern zeros", kern3, testVol3, 0},
 		{"vol zeros kern zeros", kern4, testVol4, 0},
