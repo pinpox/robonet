@@ -193,7 +193,10 @@ func TestCompareJPEG(t *testing.T) {
 		args args
 		want bool
 	}{
-	// TODO: Add test cases.
+		{"Same image thresh 0", args{"images/grey0.jpeg", "images/grey0.jpeg", 0}, true},
+		{"Same image thresh 10", args{"images/grey0.jpeg", "images/grey0.jpeg", 10}, true},
+		{"Different Images thresh 0", args{"images/grey1.jpeg", "images/grey0.jpeg", 0}, false},
+		{"Different Images thresh 30", args{"images/grey30.jpeg", "images/grey0.jpeg", 30}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
