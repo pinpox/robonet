@@ -1,6 +1,10 @@
 package robonet
 
-import "testing"
+import (
+	"image"
+	"reflect"
+	"testing"
+)
 
 func TestEqual3Dim(t *testing.T) {
 	if !Equal3Dim(1, 2, 3, 1, 2, 3) {
@@ -44,7 +48,141 @@ func TestSigmoidFast(t *testing.T) {
 	}
 }
 
-func TestCompareImages(t *testing.T) {
+func TestVolumeFromTIFF(t *testing.T) {
+	type args struct {
+		path string
+	}
+	tests := []struct {
+		name string
+		args args
+		want Volume
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := VolumeFromTIFF(tt.args.path); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("VolumeFromTIFF() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestVolumeFromJPEG(t *testing.T) {
+	type args struct {
+		path string
+	}
+	tests := []struct {
+		name string
+		args args
+		want Volume
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := VolumeFromJPEG(tt.args.path); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("VolumeFromJPEG() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSaveVolumeToTIFF(t *testing.T) {
+	type args struct {
+		path string
+		vol  Volume
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			SaveVolumeToTIFF(tt.args.path, tt.args.vol)
+		})
+	}
+}
+
+func TestSaveVolumeToJPEG(t *testing.T) {
+	type args struct {
+		path string
+		vol  Volume
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			SaveVolumeToJPEG(tt.args.path, tt.args.vol)
+		})
+	}
+}
+
+func TestImageToVolume(t *testing.T) {
+	type args struct {
+		img image.Image
+	}
+	tests := []struct {
+		name string
+		args args
+		want Volume
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ImageToVolume(tt.args.img); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("ImageToVolume() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestVolumeToImage(t *testing.T) {
+	type args struct {
+		vol Volume
+	}
+	tests := []struct {
+		name string
+		args args
+		want image.Image
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := VolumeToImage(tt.args.vol); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("VolumeToImage() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSaveVolumeToFileBW(t *testing.T) {
+	type args struct {
+		path string
+		vol  Volume
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			SaveVolumeToFileBW(tt.args.path, tt.args.vol)
+		})
+	}
+}
+
+func TestCompareJPEG(t *testing.T) {
 	type args struct {
 		path1     string
 		path2     string
@@ -59,8 +197,33 @@ func TestCompareImages(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := CompareImages(tt.args.path1, tt.args.path2, tt.args.threshold); got != tt.want {
-				t.Errorf("CompareImages() = %v, want %v", got, tt.want)
+			if got := CompareJPEG(tt.args.path1, tt.args.path2, tt.args.threshold); got != tt.want {
+				t.Errorf("CompareJPEG() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestCompareTIFF(t *testing.T) {
+	type args struct {
+		path1     string
+		path2     string
+		threshold float64
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{"Same image thresh 0", args{"images/grey0.tiff", "images/grey0.tiff", 0}, true},
+		{"Same image thresh 10", args{"images/grey0.tiff", "images/grey0.tiff", 10}, true},
+		{"Different Images thresh 0", args{"images/grey1.tiff", "images/grey0.tiff", 0}, false},
+		{"Different Images thresh 30", args{"images/grey30.tiff", "images/grey0.tiff", 30}, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := CompareTIFF(tt.args.path1, tt.args.path2, tt.args.threshold); got != tt.want {
+				t.Errorf("CompareTIFF() = %v, want %v", got, tt.want)
 			}
 		})
 	}
