@@ -43,3 +43,25 @@ func TestSigmoidFast(t *testing.T) {
 		})
 	}
 }
+
+func TestCompareImages(t *testing.T) {
+	type args struct {
+		path1     string
+		path2     string
+		threshold float64
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := CompareImages(tt.args.path1, tt.args.path2, tt.args.threshold); got != tt.want {
+				t.Errorf("CompareImages() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

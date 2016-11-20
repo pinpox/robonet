@@ -34,19 +34,85 @@ func EqualVolDim(v1, v2 Volume) bool {
 	return Equal3Dim(i1, i2, i3, e1, e2, e3)
 }
 
-//VolumeFromImageFile creates a volume from a given file
-func VolumeFromImageFile(path string) Volume {
+//VolumeFromJPEG creates a volume from a given file
+//func VolumeFromJPEG(path string) Volume {
+
+//file, err := os.Open(path)
+//if err != nil {
+//panic("could not read")
+//}
+//// decode jpeg into image.Image
+//img, err := jpeg.Decode(file)
+//if err != nil {
+//panic("could not decode")
+//}
+//file.Close()
+//vol := NewVolume(img.Bounds().Max.X, img.Bounds().Max.Y, 3)
+
+//for x := 0; x < img.Bounds().Max.X; x++ {
+//for y := 0; y < img.Bounds().Max.Y; y++ {
+//r, g, b, _ := img.At(x, y).RGBA()
+//r, g, b = (r*255)/65535, (g*255)/65535, (b*255)/65535
+//vol.SetAt(x, y, 0, float64(r))
+//vol.SetAt(x, y, 1, float64(g))
+//vol.SetAt(x, y, 2, float64(b))
+//}
+//}
+//return vol
+//}
+
+//VolumeFromTIFF creates a volume from a given file
+func VolumeFromTIFF(path string) Volume {
 
 	file, err := os.Open(path)
 	if err != nil {
 		panic("could not read")
 	}
 	// decode jpeg into image.Image
+	img, err := tiff.Decode(file)
+	if err != nil {
+		panic("could not decode")
+	}
+	defer file.Close()
+	return ImageToVolume(img)
+}
+
+//VolumeFromJPEG creates a volume from a given file
+func VolumeFromJPEG(path string) Volume {
+
+	file, err := os.Open(path)
+	if err != nil {
+		panic("could not read")
+	}
 	img, err := jpeg.Decode(file)
 	if err != nil {
 		panic("could not decode")
 	}
-	file.Close()
+	defer file.Close()
+	return ImageToVolume(img)
+}
+
+//SaveVolumeToTIFF saves a volume to a given TIFF-file
+func SaveVolumeToTIFF(path string, vol Volume) {
+
+	toimg, _ := os.Create(path)
+	defer toimg.Close()
+	m := VolumeToImage(vol)
+	tiff.Encode(toimg, m, nil)
+}
+
+//SaveVolumeToJPEG saves a volume to a given JPEG-file
+func SaveVolumeToJPEG(path string, vol Volume) {
+
+	toimg, _ := os.Create(path)
+	defer toimg.Close()
+	m := VolumeToImage(vol)
+	jpeg.Encode(toimg, m, nil)
+}
+
+//ImageToVolume creates a volume from a image.Image
+func ImageToVolume(img image.Image) Volume {
+
 	vol := NewVolume(img.Bounds().Max.X, img.Bounds().Max.Y, 3)
 
 	for x := 0; x < img.Bounds().Max.X; x++ {
@@ -61,15 +127,12 @@ func VolumeFromImageFile(path string) Volume {
 	return vol
 }
 
-//SaveVolumeToFile saves a volume to a given file
-func SaveVolumeToFile(path string, vol Volume) {
+//VolumeToImage converts a volume to a image
+func VolumeToImage(vol Volume) image.Image {
 
 	if vol.Depth() != 3 {
 		log.Fatal(errors.New("only 3-deep volumes can be saved to images"))
 	}
-
-	toimg, _ := os.Create(path)
-	defer toimg.Close()
 
 	m := image.NewRGBA(image.Rect(0, 0, vol.Rows(), vol.Collumns()))
 	for c := 0; c < vol.Collumns(); c++ {
@@ -79,8 +142,7 @@ func SaveVolumeToFile(path string, vol Volume) {
 			m.Set(r, c, color.RGBA{red, green, blue, alpha})
 		}
 	}
-	tiff.Encode(toimg, m, nil)
-	//jpeg.Encode(toimg, m, nil)
+	return m
 }
 
 //SaveVolumeToFileBW saves a volume to a given file in black and white
@@ -104,11 +166,16 @@ func SaveVolumeToFileBW(path string, vol Volume) {
 	//jpeg.Encode(toimg, m, nil)
 }
 
-//CompareImages compares two images pixel-wise. A threshold (0-255) is specified. 0 means the two images are identical
-func CompareImages(path1, path2 string, threshold float64) bool {
-	imgvol1 := VolumeFromImageFile(path1)
-	imgvol2 := VolumeFromImageFile(path2)
-
+//CompareJPEG compares two  JPEGs pixel-wise. A threshold (0-255) is specified. 0 means the two images are identical
+func CompareJPEG(path1, path2 string, threshold float64) bool {
+	imgvol1 := VolumeFromJPEG(path1)
+	imgvol2 := VolumeFromJPEG(path2)
 	return imgvol1.SimimlarTo(imgvol2, threshold)
+}
 
+//CompareTIFF compares two  TIFFs pixel-wise. A threshold (0-255) is specified. 0 means the two images are identical
+func CompareTIFF(path1, path2 string, threshold float64) bool {
+	imgvol1 := VolumeFromTIFF(path1)
+	imgvol2 := VolumeFromTIFF(path2)
+	return imgvol1.SimimlarTo(imgvol2, threshold)
 }

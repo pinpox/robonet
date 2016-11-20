@@ -8,7 +8,7 @@ import (
 func main() {
 	//Volume and Kernel
 
-	inputVol := robonet.VolumeFromImageFile("images/test2.jpg")
+	inputVol := robonet.VolumeFromJPEG("images/test2.jpg")
 
 	net := new(robonet.Net)
 
@@ -52,7 +52,9 @@ func main() {
 	fmt.Println("output was")
 	net.Output.Print()
 	inputVol.Print()
-	robonet.SaveVolumeToFile("out.tiff", net.Output)
+	robonet.SaveVolumeToTIFF("out.tiff", net.Output)
 	//robonet.SaveVolumeToFile("out.tiff", inputVol)
 
+	vimg := robonet.VolumeFromTIFF("images/grey100.tiff")
+	vimg.Print()
 }

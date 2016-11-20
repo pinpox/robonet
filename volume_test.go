@@ -1,9 +1,10 @@
 package robonet
 
 import (
-	"github.com/gonum/matrix/mat64"
 	"reflect"
 	"testing"
+
+	"github.com/gonum/matrix/mat64"
 )
 
 var volumeSizes = [][]int{
@@ -677,6 +678,34 @@ func TestVolume_Max(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.vol.Max(); got != tt.want {
 				t.Errorf("Volume.Max() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestVolume_SimimlarTo(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	type args struct {
+		in        Volume
+		threshold float64
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   bool
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := Volume{
+				Fields: tt.fields.Fields,
+			}
+			if got := vol.SimimlarTo(tt.args.in, tt.args.threshold); got != tt.want {
+				t.Errorf("Volume.SimimlarTo() = %v, want %v", got, tt.want)
 			}
 		})
 	}
