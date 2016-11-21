@@ -143,14 +143,14 @@ func VolumeToImage(vol Volume) image.Image {
 func CompareJPEG(path1, path2 string, threshold float64) bool {
 	imgvol1 := VolumeFromJPEG(path1)
 	imgvol2 := VolumeFromJPEG(path2)
-	return imgvol1.SimimlarTo(imgvol2, threshold)
+	return imgvol1.SimilarTo(imgvol2, threshold)
 }
 
 //CompareTIFF compares two  TIFFs pixel-wise. A threshold (0-255) is specified. 0 means the two images are identical
 func CompareTIFF(path1, path2 string, threshold float64) bool {
 	imgvol1 := VolumeFromTIFF(path1)
 	imgvol2 := VolumeFromTIFF(path2)
-	return imgvol1.SimimlarTo(imgvol2, threshold)
+	return imgvol1.SimilarTo(imgvol2, threshold)
 }
 
 //Round rounds to a given number of places

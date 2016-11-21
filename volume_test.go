@@ -682,7 +682,7 @@ func TestVolume_Max(t *testing.T) {
 	}
 }
 
-func TestVolume_SimimlarTo(t *testing.T) {
+func TestVolume_SimilarTo(t *testing.T) {
 	type fields struct {
 		Fields []mat64.Dense
 	}
@@ -703,8 +703,8 @@ func TestVolume_SimimlarTo(t *testing.T) {
 			vol := Volume{
 				Fields: tt.fields.Fields,
 			}
-			if got := vol.SimimlarTo(tt.args.in, tt.args.threshold); got != tt.want {
-				t.Errorf("Volume.SimimlarTo() = %v, want %v", got, tt.want)
+			if got := vol.SimilarTo(tt.args.in, tt.args.threshold); got != tt.want {
+				t.Errorf("Volume.SimilarTo() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -764,25 +764,68 @@ func TestVolume_SubVolume(t *testing.T) {
 }
 
 func TestVolume_Norm(t *testing.T) {
-	type fields struct {
-		Fields []mat64.Dense
-	}
-	type args struct {
-		max float64
-	}
+
+	tVol1 := testVol
+	res1 := testVol
+	res1.MulElem2(NewVolumeFilled(3, 3, 3, 100))
+	res1.MulElem2(NewVolumeFilled(3, 3, 3, 1.0/26.0))
+
+	tVol3 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, nil), *mat64.NewDense(3, 3, nil)}}
+	tVol3.SetAt(0, 0, 0, 0)
+	tVol3.SetAt(0, 1, 0, 1)
+	tVol3.SetAt(0, 2, 0, 2)
+	tVol3.SetAt(1, 0, 0, 3)
+	tVol3.SetAt(1, 1, 0, 4)
+	tVol3.SetAt(1, 2, 0, 5)
+	tVol3.SetAt(2, 0, 0, 6)
+	tVol3.SetAt(2, 1, 0, 7)
+	tVol3.SetAt(2, 2, 0, 8)
+	tVol3.SetAt(0, 0, 1, -0)
+	tVol3.SetAt(0, 1, 1, -1)
+	tVol3.SetAt(0, 2, 1, -2)
+	tVol3.SetAt(1, 0, 1, -3)
+	tVol3.SetAt(1, 1, 1, -4)
+	tVol3.SetAt(1, 2, 1, -5)
+	tVol3.SetAt(2, 0, 1, -6)
+	tVol3.SetAt(2, 1, 1, -7)
+	tVol3.SetAt(2, 2, 1, -8)
+
+	res3 := NewVolume(3, 3, 2)
+
+	res3.SetAt(0, 0, 0, 16)
+	res3.SetAt(0, 1, 0, 18)
+	res3.SetAt(0, 2, 0, 20)
+	res3.SetAt(1, 0, 0, 22)
+	res3.SetAt(1, 1, 0, 24)
+	res3.SetAt(1, 2, 0, 26)
+	res3.SetAt(2, 0, 0, 28)
+	res3.SetAt(2, 1, 0, 30)
+	res3.SetAt(2, 2, 0, 32)
+	res3.SetAt(0, 0, 1, 16)
+	res3.SetAt(0, 1, 1, 14)
+	res3.SetAt(0, 2, 1, 12)
+	res3.SetAt(1, 0, 1, 10)
+	res3.SetAt(1, 1, 1, 8)
+	res3.SetAt(1, 2, 1, 6)
+	res3.SetAt(2, 0, 1, 4)
+	res3.SetAt(2, 1, 1, 2)
+	res3.SetAt(2, 2, 1, 0)
+
 	tests := []struct {
-		name   string
-		fields fields
-		args   args
+		name string
+		vol1 Volume
+		max  float64
+		want Volume
 	}{
-	// TODO: Add test cases.
+		{"positive only", tVol1, 100, res1},
+		{"negative and postive", tVol3, 32, res3},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			vol := &Volume{
-				Fields: tt.fields.Fields,
+			vol := tt.vol1
+			if vol.Norm(tt.max); !vol.SimilarTo(tt.want, 0.01) {
+				t.Errorf("Volume.SubVolume() = \n%v, want \n%v", vol, tt.want)
 			}
-			vol.Norm(tt.args.max)
 		})
 	}
 }

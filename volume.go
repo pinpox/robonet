@@ -61,11 +61,21 @@ func (vol *Volume) Norm(max float64) {
 
 	volmin := vol.Min()
 
-	volmax := vol.Max()
 	for r := 0; r < vol.Rows(); r++ {
 		for c := 0; c < vol.Collumns(); c++ {
 			for d := 0; d < vol.Depth(); d++ {
-				vol.SetAt(r, c, d, (((vol.GetAt(r, c, d) - volmin) * max) / (volmax - volmin)))
+				vol.SetAt(r, c, d, (vol.GetAt(r, c, d))-volmin)
+			}
+		}
+	}
+	volmin = vol.Min()
+	volmax := vol.Max()
+
+	for r := 0; r < vol.Rows(); r++ {
+		for c := 0; c < vol.Collumns(); c++ {
+			for d := 0; d < vol.Depth(); d++ {
+				val := ((vol.GetAt(r, c, d)) * max / volmax)
+				vol.SetAt(r, c, d, val)
 			}
 		}
 	}
@@ -179,7 +189,7 @@ func (vol *Volume) SubVolume(tR, tC, r, c int) Volume {
 
 //Equals compares the volume to another volume
 func (vol *Volume) Equals(in Volume) bool {
-	return vol.SimimlarTo(in, 0)
+	return vol.SimilarTo(in, 0)
 }
 
 //GetAt returns the element of the volume at a given position
@@ -311,8 +321,8 @@ func (vol Volume) Min() float64 {
 	return min
 }
 
-//SimimlarTo compares two volumes with a given threshold
-func (vol Volume) SimimlarTo(in Volume, threshold float64) bool {
+//SimilarTo compares two volumes with a given threshold
+func (vol Volume) SimilarTo(in Volume, threshold float64) bool {
 
 	if !vol.EqualSize(in) {
 		return false

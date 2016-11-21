@@ -62,9 +62,9 @@ func main() {
 	layConv := new(robonet.ConvLayer)
 
 	//Create kernel filled with 1s (blur)
-	imgker1 := robonet.NewKernelFilled(9, 9, 3, -1)
-	imgker2 := robonet.NewKernelFilled(9, 9, 3, -1)
-	imgker3 := robonet.NewKernelFilled(9, 9, 3, -1)
+	imgker1 := robonet.NewKernelFilled(3, 3, 3, -1)
+	imgker2 := robonet.NewKernelFilled(3, 3, 3, -1)
+	imgker3 := robonet.NewKernelFilled(3, 3, 3, -1)
 
 	imgker1.SetAt(1, 1, 0, 8)
 	imgker2.SetAt(1, 1, 1, 8)
@@ -84,8 +84,9 @@ func main() {
 	net.AddLayer(layNorm1)
 
 	//Set net's input
-	net.Input = robonet.VolumeFromTIFF("images/bw5.tiff")
-
+	net.Input = robonet.VolumeFromJPEG("images/bw7.jpeg")
+	//net.Input = robonet.VolumeFromJPEG("images/grey0.jpeg")
+	net.Input.Print()
 	//Calculate the net's outpout
 	net.Calculate()
 

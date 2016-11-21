@@ -207,6 +207,11 @@ func TestKernel_Apply(t *testing.T) {
 	kern4 := NewKernel(3, 3, 3)
 	kern4.SetAll(kernVol4)
 
+	ker1 = []float64{-1, -1, -1, -1, 8, -1, -1, -1, -1}
+	kernVol5 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, ker1), *mat64.NewDense(3, 3, ker1), *mat64.NewDense(3, 3, ker1)}}
+	kern5 := NewKernel(3, 3, 3)
+	kern5.SetAll(kernVol5)
+
 	tests := []struct {
 		name string
 		kern Kernel
@@ -217,6 +222,8 @@ func TestKernel_Apply(t *testing.T) {
 		{"vol zeros kern ones", kern2, testVol2, 0},
 		{"vol ones kern zeros", kern3, testVol3, 0},
 		{"vol zeros kern zeros", kern4, testVol4, 0},
+		{"vol zero kern edgedatection", kern5, NewVolumeFilled(3, 3, 3, 0), 0},
+		{"vol 255 kern edgedatection", kern5, NewVolumeFilled(3, 3, 3, 255), 0},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
