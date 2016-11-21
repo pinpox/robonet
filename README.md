@@ -5,6 +5,22 @@
 
 ## Usage
 
+#### func  CompareJPEG
+
+```go
+func CompareJPEG(path1, path2 string, threshold float64) bool
+```
+CompareJPEG compares two JPEGs pixel-wise. A threshold (0-255) is specified. 0
+means the two images are identical
+
+#### func  CompareTIFF
+
+```go
+func CompareTIFF(path1, path2 string, threshold float64) bool
+```
+CompareTIFF compares two TIFFs pixel-wise. A threshold (0-255) is specified. 0
+means the two images are identical
+
 #### func  Equal3Dim
 
 ```go
@@ -26,19 +42,26 @@ func Odd3Dim(i1, i2, i3 int) bool
 ```
 Odd3Dim checks if the rows and collumns are odd
 
-#### func  SaveVolumeToFile
+#### func  Round
 
 ```go
-func SaveVolumeToFile(path string, vol Volume)
+func Round(val float64, places int) (newVal float64)
 ```
-SaveVolumeToFile saves a volume to a given file
+Round rounds to a given number of places
 
-#### func  SaveVolumeToFileBW
+#### func  SaveVolumeToJPEG
 
 ```go
-func SaveVolumeToFileBW(path string, vol Volume)
+func SaveVolumeToJPEG(path string, vol Volume)
 ```
-SaveVolumeToFileBW saves a volume to a given file in black and white
+SaveVolumeToJPEG saves a volume to a given JPEG-file
+
+#### func  SaveVolumeToTIFF
+
+```go
+func SaveVolumeToTIFF(path string, vol Volume)
+```
+SaveVolumeToTIFF saves a volume to a given TIFF-file
 
 #### func  SigmoidFast
 
@@ -47,6 +70,14 @@ func SigmoidFast(x float64) float64
 ```
 SigmoidFast calcultes the value for activation using a fast sigmoid
 approximation
+
+#### func  VolumeToImage
+
+```go
+func VolumeToImage(vol Volume) image.Image
+```
+VolumeToImage converts a volume to a image. Values are rounded to 2 decimal
+palaces
 
 #### type ConvLayer
 
@@ -161,12 +192,26 @@ func (kern Kernel) Apply(in Volume) float64
 Apply applys the kernel to a equally sized chunk of a volume Only kernels of the
 same size as the volume can be applied
 
+#### func (Kernel) Elems
+
+```go
+func (kern Kernel) Elems() int
+```
+Elems returns the number of element a kernel has
+
 #### func (*Kernel) Equals
 
 ```go
 func (kern *Kernel) Equals(in Kernel) bool
 ```
 Equals compares to kernels
+
+#### func (Kernel) Sum
+
+```go
+func (kern Kernel) Sum() float64
+```
+Sum returns the sum of all elements in the kernel
 
 #### type Layer
 
@@ -293,6 +338,13 @@ type Volume struct {
 
 Volume is a basic type to hold the layer's information
 
+#### func  ImageToVolume
+
+```go
+func ImageToVolume(img image.Image) Volume
+```
+ImageToVolume creates a volume from a image.Image
+
 #### func  NewVolume
 
 ```go
@@ -316,12 +368,19 @@ func NewVolumeRandom(r, c, d int) Volume
 NewVolumeRandom generates a Volume of fixed size filled with values between 0
 and 1
 
-#### func  VolumeFromImageFile
+#### func  VolumeFromJPEG
 
 ```go
-func VolumeFromImageFile(path string) Volume
+func VolumeFromJPEG(path string) Volume
 ```
-VolumeFromImageFile creates a volume from a given file
+VolumeFromJPEG creates a volume from a given file
+
+#### func  VolumeFromTIFF
+
+```go
+func VolumeFromTIFF(path string) Volume
+```
+VolumeFromTIFF creates a volume from a given file
 
 #### func (*Volume) Apply
 
@@ -345,12 +404,19 @@ func (vol *Volume) Depth() int
 ```
 Depth of the Volume
 
-#### func (*Volume) Dims
+#### func (Volume) Dims
 
 ```go
-func (vol *Volume) Dims() (int, int, int)
+func (vol Volume) Dims() (int, int, int)
 ```
 Dims returns the Dimensions of a Volume
+
+#### func (Volume) Elems
+
+```go
+func (vol Volume) Elems() int
+```
+Elems returns the number of elements in a volume
 
 #### func (*Volume) EqualSize
 
@@ -386,6 +452,13 @@ Max returns the hightest number in a volume
 func (vol *Volume) MulElem2(v1 Volume)
 ```
 MulElem2 multiplies the volume with another volume element-wise
+
+#### func (*Volume) Norm
+
+```go
+func (vol *Volume) Norm(max float64)
+```
+Norm normalizes the volume to a given maximum value
 
 #### func (*Volume) PointReflect
 
@@ -428,6 +501,13 @@ SetAll sets all values of the volume from another equal-sized volume
 func (vol *Volume) SetAt(r, c, d int, val float64)
 ```
 SetAt sets the element of a volume at a given position
+
+#### func (Volume) SimimlarTo
+
+```go
+func (vol Volume) SimimlarTo(in Volume, threshold float64) bool
+```
+SimimlarTo compares two volumes with a given threshold
 
 #### func (*Volume) SubVolumePadded
 
