@@ -30,6 +30,14 @@ func main() {
 	layNorm1.NormVal = 255
 	net.AddLayer(layNorm1)
 
+	//Add a poolig layer to reduce image size by half
+	layPool := new(robonet.PoolLayer)
+	layPool.StrideR = 2
+	layPool.StrideC = 2
+	layPool.SizeR = 2
+	layPool.SizeC = 2
+	net.AddLayer(layPool)
+
 	//Set net's input
 	net.Input = robonet.VolumeFromTIFF("images/bw5.tiff")
 

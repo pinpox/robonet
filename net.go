@@ -30,8 +30,8 @@ func (net *Net) Calculate() {
 		fmt.Printf("[Layer-%v] Calculating\n", k)
 		v.Calculate()
 
-		fmt.Printf("[Layer-%v] Output Dims %vx%vx%v\n", k, res.Rows(), res.Collumns(), res.Depth())
 		res = v.Output()
+		fmt.Printf("[Layer-%v] Output Dims %vx%vx%v\n", k, res.Rows(), res.Collumns(), res.Depth())
 	}
 
 	fmt.Printf("Total output Dims %vx%vx%v\n", res.Rows(), res.Collumns(), res.Depth())

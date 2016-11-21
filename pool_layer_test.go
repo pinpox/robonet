@@ -1,15 +1,9 @@
 package robonet
 
 import (
-	//"github.com/gonum/matrix/mat64"
 	"reflect"
 	"testing"
 )
-
-//var data1 = []float64{0, 1, 2, 3, 4, 5, 6, 7, 8}
-//var data2 = []float64{9, 10, 11, 12, 13, 14, 15, 16, 17}
-//var data3 = []float64{18, 19, 20, 21, 22, 23, 24, 25, 26}
-//var testVol = Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, data1), *mat64.NewDense(3, 3, data2), *mat64.NewDense(3, 3, data3)}}
 
 func Test_maxPool(t *testing.T) {
 	tests := []struct {
