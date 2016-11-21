@@ -56,17 +56,19 @@ func (vol *Volume) Apply(kern Kernel, strideR, strideC int) {
 	*vol = res
 }
 
-//Norm normalizes the volume to a given maximum value
+//Norm normalizes the volume to a given maximum and 0
 func (vol *Volume) Norm(max float64) {
+
+	volmin := vol.Min()
+
 	volmax := vol.Max()
 	for r := 0; r < vol.Rows(); r++ {
 		for c := 0; c < vol.Collumns(); c++ {
 			for d := 0; d < vol.Depth(); d++ {
-				vol.SetAt(r, c, d, ((vol.GetAt(r, c, d) * max) / volmax))
+				vol.SetAt(r, c, d, (((vol.GetAt(r, c, d) - volmin) * max) / (volmax - volmin)))
 			}
 		}
 	}
-
 }
 
 //NewVolume generates a Volume of fixed size filled with zeros
@@ -189,6 +191,7 @@ func (vol *Volume) GetAt(r, c, d int) float64 {
 func (vol *Volume) SetAt(r, c, d int, val float64) {
 	if r >= vol.Rows() || c >= vol.Collumns() || d >= vol.Depth() {
 		//fmt.Printf("SetAt request out of bounds (RxCxD) = %vx%vx%v requested for (RxCxD) = %vx%vx%vx", r, c, d, vol.Rows(), vol.Collumns(), vol.Depth())
+		panic("out od bounds")
 		log.Fatal(errors.New("robonet.Volume: setAt out of bounds"))
 	}
 	vol.Fields[d].Set(r, c, val)
@@ -291,6 +294,21 @@ func (vol Volume) Max() float64 {
 		}
 	}
 	return max
+}
+
+//Min returns the lowest number in a volume
+func (vol Volume) Min() float64 {
+	min := 0.0
+	for i := 0; i < vol.Rows(); i++ {
+		for j := 0; j < vol.Collumns(); j++ {
+			for k := 0; k < vol.Depth(); k++ {
+				if vol.GetAt(i, j, k) < min {
+					min = vol.GetAt(i, j, k)
+				}
+			}
+		}
+	}
+	return min
 }
 
 //SimimlarTo compares two volumes with a given threshold

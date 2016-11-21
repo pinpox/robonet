@@ -44,8 +44,8 @@ func (l *ConvLayer) Calculate() {
 	for k, v := range l.kernels {
 
 		fmt.Println("	Calculating Kernel ", k)
-		for r := 0; r < l.input.Rows(); r++ {
-			for c := 0; c < l.input.Collumns(); c++ {
+		for r := 0; r < l.output.Rows(); r++ {
+			for c := 0; c < l.output.Collumns(); c++ {
 
 				l.output.SetAt(r, c, k, v.Apply(l.input.SubVolumePadded(r*l.strideR, c*l.strideC, v.Rows(), v.Collumns())))
 			}

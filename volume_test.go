@@ -762,3 +762,27 @@ func TestVolume_SubVolume(t *testing.T) {
 		})
 	}
 }
+
+func TestVolume_Norm(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	type args struct {
+		max float64
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := &Volume{
+				Fields: tt.fields.Fields,
+			}
+			vol.Norm(tt.args.max)
+		})
+	}
+}
