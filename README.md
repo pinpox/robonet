@@ -278,6 +278,7 @@ Calculate calcuates te Output
 ```go
 type NormLayer struct {
 	LayerFields
+	NormVal float64
 }
 ```
 
@@ -296,6 +297,10 @@ volume
 ```go
 type PoolLayer struct {
 	LayerFields
+	SizeR   int
+	SizeC   int
+	StrideR int
+	StrideC int
 }
 ```
 
@@ -307,7 +312,8 @@ PoolLayer will perform a downsampling operation along the spatial dimensions
 ```go
 func (lay *PoolLayer) Calculate()
 ```
-Calculate for Pooling layers
+Calculate for Pooling layers applies the pooling operation after the parameters
+have been set.
 
 #### type ReluLayer
 
@@ -508,6 +514,15 @@ SetAt sets the element of a volume at a given position
 func (vol Volume) SimimlarTo(in Volume, threshold float64) bool
 ```
 SimimlarTo compares two volumes with a given threshold
+
+#### func (*Volume) SubVolume
+
+```go
+func (vol *Volume) SubVolume(tR, tC, r, c int) Volume
+```
+SubVolume returns a part of the original Volume. tR and tC determine the center
+of copying, r and c the size of the subvolume. If the size exceeds the
+underlying volume the an error will be thrown, padding is not allowed.
 
 #### func (*Volume) SubVolumePadded
 
