@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"gitlab.com/binaryplease/robonet"
 )
 
@@ -13,12 +12,11 @@ func main() {
 	//Create ConvLayer
 	layConv := new(robonet.ConvLayer)
 
-	//Create Kernel (blur)
-	imgker := robonet.NewKernelFilled(9, 9, 3, 1) //BLUR
+	//Create kernel filled with 1s (blur)
+	imgker := robonet.NewKernelFilled(9, 9, 3, 1)
 
 	//Add kernel to ConvLayer
 	layConv.AddKernel(imgker, 1, 1)
-	fmt.Println("kernels in lay1", len(layConv.Kernels()))
 
 	//Add ConvLayer to net
 	net.AddLayer(layConv)

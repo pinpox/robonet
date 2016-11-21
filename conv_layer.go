@@ -19,6 +19,7 @@ type ConvLayer struct {
 //AddKernel adds a kernel to a layer
 func (l *ConvLayer) AddKernel(kern Kernel, strideR, strideC int) {
 	l.kernels = append(l.kernels, kern)
+
 	if l.strideC == 0 || l.strideR == 0 {
 		if strideC == 0 || strideR == 0 {
 			log.Fatal(errors.New("robonet.ConvLayer: invalid stride for kernel"))
@@ -29,7 +30,7 @@ func (l *ConvLayer) AddKernel(kern Kernel, strideR, strideC int) {
 	} else {
 
 		if l.strideC != strideC || l.strideR != strideR {
-			log.Fatal(errors.New("robonet.ConvLayer: invalid stride for kernel"))
+			log.Fatal(errors.New("robonet.ConvLayer: invalid stride for kernel, already set"))
 
 		}
 	}
@@ -38,7 +39,7 @@ func (l *ConvLayer) AddKernel(kern Kernel, strideR, strideC int) {
 //Calculate applys all Kernels to a given Volume
 func (l *ConvLayer) Calculate() {
 
-	l.output = NewVolume(l.input.Rows()/l.strideR, l.input.Collumns()/l.strideC, len(l.kernels)) //TODO
+	l.output = NewVolume(l.input.Rows()/l.strideR, l.input.Collumns()/l.strideC, len(l.kernels))
 	for k, v := range l.kernels {
 
 		for r := 0; r < l.input.Rows(); r++ {

@@ -22,16 +22,18 @@ func (net *Net) Calculate() {
 	res := net.Input
 
 	for k, v := range net.layers {
-		fmt.Println("Started layer: ", k)
-		fmt.Printf("Input has Dims %vx%vx%v \n", res.Rows(), res.Collumns(), res.Depth())
+		fmt.Printf("[Layer-%v] Start\n", k)
+
+		fmt.Printf("[Layer-%v] Input Dims %vx%vx%v \n", k, res.Rows(), res.Collumns(), res.Depth())
 		v.Input(res)
-		fmt.Println("Calculating: ", k)
+
+		fmt.Printf("[Layer-%v] Calculating\n", k)
 		v.Calculate()
+
+		fmt.Printf("[Layer-%v] Output Dims %vx%vx%v\n", k, res.Rows(), res.Collumns(), res.Depth())
 		res = v.Output()
-		fmt.Printf("output has Dims %vx%vx%v\n", res.Rows(), res.Collumns(), res.Depth())
 	}
 
-	fmt.Printf("totoal output has dims %vx%vx%v\n", res.Rows(), res.Collumns(), res.Depth())
-	//res.Print()
+	fmt.Printf("Total output Dims %vx%vx%v\n", res.Rows(), res.Collumns(), res.Depth())
 	net.Output = res
 }
