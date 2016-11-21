@@ -20,16 +20,17 @@ func main() {
 
 	//Add ConvLayer to net
 	net.AddLayer(layConv)
-	net.AddLayer(new(robonet.ReluLayer))
+
+	//Add normalisation Layer to limit output to 255 max
+	layNorm := new(robonet.NormLayer)
+	layNorm.NormVal = 255
+	net.AddLayer(layNorm)
 
 	//Set net's input
 	net.Input = robonet.VolumeFromTIFF("images/bw5.tiff")
 
 	//Calculate the net's outpout
 	net.Calculate()
-
-	//Normalize output to 255 max
-	net.Output.Norm(255.0)
 
 	//Save the output to B/W image
 	robonet.SaveVolumeToTIFF("out.tiff", net.Output)
