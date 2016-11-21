@@ -100,30 +100,36 @@ func ImageToVolume(img image.Image) Volume {
 	return vol
 }
 
-//VolumeToImage converts a volume to a image
+//VolumeToImage converts a volume to a image. Values are rounded to 2 decimal palaces
 func VolumeToImage(vol Volume) image.Image {
-
-	if vol.Max() > 255 {
-		log.Fatal("Can't save volume, has values over 255")
-	}
 
 	m := image.NewRGBA(image.Rect(0, 0, vol.Rows(), vol.Collumns()))
 	switch vol.Depth() {
 	case 1:
 
+		if Round(vol.Max(), 2) > 765 {
+			log.Fatal("Can't save volume as BW image, has values over 765: ", vol.Max())
+
+		}
+
 		for c := 0; c < vol.Collumns(); c++ {
 			for r := 0; r < vol.Rows(); r++ {
 
-				red, green, blue, alpha := uint8(vol.GetAt(r, c, 0)), uint8(vol.GetAt(r, c, 0)), uint8(vol.GetAt(r, c, 0)), uint8(255)
+				red, green, blue, alpha := uint8(Round(vol.GetAt(r, c, 0), 2)), uint8(Round(vol.GetAt(r, c, 0), 2)), uint8(Round(vol.GetAt(r, c, 0), 2)), uint8(255)
+				//fmt.Println("setting ", red, blue, green)
 				m.Set(r, c, color.RGBA{red, green, blue, alpha})
 			}
 		}
 	case 3:
 
+		if Round(vol.Max(), 2) > 255 {
+			log.Fatal("Can't save volume as color image, has values over 255: ", vol.Max())
+
+		}
 		for c := 0; c < vol.Collumns(); c++ {
 			for r := 0; r < vol.Rows(); r++ {
 
-				red, green, blue, alpha := uint8(vol.GetAt(r, c, 0)), uint8(vol.GetAt(r, c, 1)), uint8(vol.GetAt(r, c, 2)), uint8(255)
+				red, green, blue, alpha := uint8(Round(vol.GetAt(r, c, 0), 2)), uint8(Round(vol.GetAt(r, c, 1), 2)), uint8(Round(vol.GetAt(r, c, 2), 2)), uint8(255)
 				m.Set(r, c, color.RGBA{red, green, blue, alpha})
 			}
 		}

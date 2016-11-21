@@ -2,6 +2,7 @@ package robonet
 
 import (
 	"errors"
+	"fmt"
 	"log"
 )
 
@@ -50,7 +51,8 @@ func (kern Kernel) Apply(in Volume) float64 {
 	r, c, d := kern.Dims()
 
 	if !(kern.Volume.EqualSize(in)) {
-		log.Fatal(errors.New("Kernel size doesn't match input"))
+		fmt.Printf("kernel: %vx%vx%v, vol: %vx%vx%v", r, c, d, in.Rows(), in.Collumns(), in.Depth())
+		log.Fatal(errors.New("Kernel size doesn't match input "))
 	}
 
 	// 1) reflect kernel

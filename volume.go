@@ -25,7 +25,7 @@ func (vol *Volume) SetAll(v Volume) {
 }
 
 //Dims returns the Dimensions of a Volume
-func (vol *Volume) Dims() (int, int, int) {
+func (vol Volume) Dims() (int, int, int) {
 	d := len(vol.Fields)
 	if d != 0 {
 		r, c := vol.Fields[0].Dims()
@@ -56,6 +56,19 @@ func (vol *Volume) Apply(kern Kernel, strideR, strideC int) {
 	*vol = res
 }
 
+//Norm normalizes the volume to a given maximum value
+func (vol *Volume) Norm(max float64) {
+	volmax := vol.Max()
+	for r := 0; r < vol.Rows(); r++ {
+		for c := 0; c < vol.Collumns(); c++ {
+			for d := 0; d < vol.Depth(); d++ {
+				vol.SetAt(r, c, d, ((vol.GetAt(r, c, d) * max) / volmax))
+			}
+		}
+	}
+
+}
+
 //NewVolume generates a Volume of fixed size filled with zeros
 func NewVolume(r, c, d int) Volume {
 	v := new(Volume)
@@ -64,6 +77,7 @@ func NewVolume(r, c, d int) Volume {
 	for i := 0; i < d; i++ {
 		v.Fields = append(v.Fields, *mat64.NewDense(r, c, nil))
 	}
+
 	return *v
 }
 
@@ -153,7 +167,7 @@ func (vol *Volume) GetAt(r, c, d int) float64 {
 //SetAt sets the element of a volume at a given position
 func (vol *Volume) SetAt(r, c, d int, val float64) {
 	if r >= vol.Rows() || c >= vol.Collumns() || d >= vol.Depth() {
-		fmt.Printf("SetAt request out of bounds (RxCxD) = %vx%vx%v requested for (RxCxD) = %vx%vx%vx", r, c, d, vol.Rows(), vol.Collumns(), vol.Depth())
+		//fmt.Printf("SetAt request out of bounds (RxCxD) = %vx%vx%v requested for (RxCxD) = %vx%vx%vx", r, c, d, vol.Rows(), vol.Collumns(), vol.Depth())
 		log.Fatal(errors.New("robonet.Volume: setAt out of bounds"))
 
 	}

@@ -6,63 +6,33 @@ import (
 )
 
 func main() {
-	//Volume and Kernel
 
-	inputVol := robonet.VolumeFromJPEG("images/test2.jpg")
-
+	//Create Net
 	net := new(robonet.Net)
 
-	fmt.Println("Setting input")
-	inputVol.Print()
-	net.Input = inputVol
-
-	fmt.Println("Create a new Layer")
+	//Create ConvLayer
 	layConv := new(robonet.ConvLayer)
 
-	fmt.Println("add a kernel 1")
-	kernel1 := robonet.NewKernelRandom(3, 3, 3)
-	kernel2 := robonet.NewKernelRandom(3, 3, 3)
-	kernel3 := robonet.NewKernelRandom(3, 3, 3)
+	//Create Kernel (blur)
+	imgker := robonet.NewKernelFilled(9, 9, 3, 1) //BLUR
 
-	layConv.AddKernel(kernel1, 1, 1)
-	layConv.AddKernel(kernel2, 1, 1)
-	layConv.AddKernel(kernel3, 1, 1)
+	//Add kernel to ConvLayer
+	layConv.AddKernel(imgker, 1, 1)
+	fmt.Println("kernels in lay1", len(layConv.Kernels()))
 
-	//fmt.Println("add a kernel 2")
-	//kernel2 := robonet.NewKernelRandom(3, 3, 2)
-	//kernel2.Print()
-	//layConv.AddKernel(*kernel2, 1, 1)
-
-	//layIn := new(robonet.InputLayer)
-
-	//net.AddLayer(new(robonet.InputLayer))
-	//net.AddLayer(new(robonet.ConvLayer))
-	//net.AddLayer(new(robonet.PoolLayer))
-	//net.AddLayer(new(robonet.NormLayer))
-	//net.AddLayer(new(robonet.FCLayer))
-	//net.AddLayer(new(robonet.ReluLayer))
-
-	//net.AddLayer(layIn)
+	//Add ConvLayer to net
 	net.AddLayer(layConv)
-	//net.AddLayer(new(robonet.PoolLayer))
 
-	fmt.Println("calculate output")
+	//Set net's input
+	net.Input = robonet.VolumeFromTIFF("images/bw5.tiff")
+
+	//Calculate the net's outpout
 	net.Calculate()
 
-	fmt.Println("output was")
-	net.Output.Print()
-	inputVol.Print()
+	//Normalize output to 255 max
+	net.Output.Norm(255.0)
+
+	//Save the output to B/W image
 	robonet.SaveVolumeToTIFF("out.tiff", net.Output)
-	//robonet.SaveVolumeToFile("out.tiff", inputVol)
 
-	vimg := robonet.VolumeFromTIFF("images/grey100.tiff")
-	imgker := robonet.NewKernel(3, 3, 3)
-	imgker.SetAt(2, 2, 0, 1)
-	imgker.SetAt(2, 2, 1, 1)
-	imgker.SetAt(2, 2, 2, 1)
-
-	vimg.Apply(imgker, 1, 1)
-	robonet.SaveVolumeToTIFF("kern0on100.tiff", vimg)
-
-	vimg.Print()
 }
