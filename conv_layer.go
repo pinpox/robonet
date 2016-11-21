@@ -2,6 +2,7 @@ package robonet
 
 import (
 	"errors"
+	"fmt"
 	"log"
 )
 
@@ -42,6 +43,7 @@ func (l *ConvLayer) Calculate() {
 	l.output = NewVolume(l.input.Rows()/l.strideR, l.input.Collumns()/l.strideC, len(l.kernels))
 	for k, v := range l.kernels {
 
+		fmt.Println("	Calculating Kernel ", k)
 		for r := 0; r < l.input.Rows(); r++ {
 			for c := 0; c < l.input.Collumns(); c++ {
 
