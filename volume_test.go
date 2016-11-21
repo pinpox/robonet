@@ -732,3 +732,33 @@ func TestVolume_Elems(t *testing.T) {
 		})
 	}
 }
+
+func TestVolume_SubVolume(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	type args struct {
+		tR int
+		tC int
+		r  int
+		c  int
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   Volume
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := &Volume{
+				Fields: tt.fields.Fields,
+			}
+			if got := vol.SubVolume(tt.args.tR, tt.args.tC, tt.args.r, tt.args.c); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Volume.SubVolume() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

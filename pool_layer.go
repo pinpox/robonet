@@ -21,16 +21,16 @@ func (lay *PoolLayer) Calculate() {
 		log.Fatal(errors.New("PoolLayer: Parameters not set"))
 	}
 
-	if lay.input.Rows()%lay.StrideR != 0 || lay.input.Collumns()%lay.StrideC != 0 {
+	if ((lay.input.Rows()%(lay.StrideR))%lay.SizeR != 0) || ((lay.input.Collumns()%(lay.StrideR))%lay.SizeC != 0) {
 		log.Fatal(errors.New("PoolLayer: Input Size not divisible by factor"))
 	}
 
-	lay.output = NewVolume(lay.input.Rows()/lay.StrideR, lay.input.Collumns()/lay.StrideC, lay.input.Depth())
+	lay.output = NewVolume((lay.input.Rows()-lay.SizeR)/lay.StrideR+1, (lay.input.Collumns()-lay.SizeC)/lay.StrideC+1, lay.input.Depth())
 
-	for r := 0; r < lay.input.Rows(); r++ {
-		for c := 0; c < lay.input.Collumns(); c++ {
+	for r := 0; r < lay.output.Rows(); r++ {
+		for c := 0; c < lay.output.Collumns(); c++ {
 
-			res := maxPool(lay.input.SubVolumePadded(r*lay.StrideR, c*lay.StrideC, lay.SizeR, lay.SizeC))
+			res := maxPool(lay.input.SubVolume(r*lay.StrideR, c*lay.StrideC, lay.SizeR, lay.SizeC))
 
 			for d := 0; d < lay.input.Depth(); d++ {
 

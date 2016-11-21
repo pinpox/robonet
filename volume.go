@@ -154,6 +154,27 @@ func (vol *Volume) SubVolumePadded(cR, cC, r, c int) Volume {
 	return sub
 }
 
+//SubVolume returns a part of the original Volume. tR and tC determine the center of copying, r and c the size of the subvolume.
+//If the size exceeds the underlying volume the an error will be thrown, padding is not allowed.
+func (vol *Volume) SubVolume(tR, tC, r, c int) Volume {
+
+	if tR+r > vol.Rows() || tC+c > vol.Collumns() {
+		log.Fatal(errors.New("Volume: Subvolume size exceeds volume dimensions"))
+	}
+
+	sub := NewVolume(r, c, vol.Depth())
+
+	for ir := 0; ir < sub.Rows(); ir++ {
+		for ic := 0; ic < sub.Collumns(); ic++ {
+			for id := 0; id < sub.Depth(); id++ {
+				sub.SetAt(ir, ic, id, vol.GetAt(tR+ir, tC+ic, id))
+			}
+		}
+	}
+
+	return sub
+}
+
 //Equals compares the volume to another volume
 func (vol *Volume) Equals(in Volume) bool {
 	return vol.SimimlarTo(in, 0)
@@ -168,9 +189,7 @@ func (vol *Volume) GetAt(r, c, d int) float64 {
 func (vol *Volume) SetAt(r, c, d int, val float64) {
 	if r >= vol.Rows() || c >= vol.Collumns() || d >= vol.Depth() {
 		//fmt.Printf("SetAt request out of bounds (RxCxD) = %vx%vx%v requested for (RxCxD) = %vx%vx%vx", r, c, d, vol.Rows(), vol.Collumns(), vol.Depth())
-		panic("Out of Bounds")
 		log.Fatal(errors.New("robonet.Volume: setAt out of bounds"))
-
 	}
 	vol.Fields[d].Set(r, c, val)
 }
