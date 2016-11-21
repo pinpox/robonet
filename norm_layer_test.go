@@ -3,21 +3,23 @@ package robonet
 import "testing"
 
 func TestNormLayer_Calculate(t *testing.T) {
-	type fields struct {
-		LayerFields LayerFields
-	}
 	tests := []struct {
-		name   string
-		fields fields
+		name  string
+		lay   NormLayer
+		val   float64
+		input Volume
 	}{
-	// TODO: Add test cases.
+		{"Zero input", *new(NormLayer), 0.0, NewVolume(3, 3, 3)},
+		{"100 filled input to 50", *new(NormLayer), 50.0, NewVolumeFilled(3, 3, 3, 100)},
+		{"100 filled input to 1", *new(NormLayer), 1.0, NewVolumeFilled(3, 3, 3, 100)},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			lay := &NormLayer{
-				LayerFields: tt.fields.LayerFields,
+			lay := tt.lay
+			lay.input = tt.input
+			if lay.Calculate(); lay.output.Max() > tt.val {
+				t.Errorf("NormLayer.Calculate().Max() = %v, want %v", lay.output.Max(), tt.val)
 			}
-			lay.Calculate()
 		})
 	}
 }
