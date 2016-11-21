@@ -3,21 +3,22 @@ package robonet
 import "testing"
 
 func TestReluLayer_Calculate(t *testing.T) {
-	type fields struct {
-		LayerFields LayerFields
-	}
 	tests := []struct {
-		name   string
-		fields fields
+		name  string
+		lay   ReluLayer
+		input Volume
+		want  Volume
 	}{
-	// TODO: Add test cases.
+		{"Zero input", *new(ReluLayer), NewVolume(3, 3, 3), NewVolume(3, 3, 3)},
+		{"4 filled input", *new(ReluLayer), NewVolumeFilled(3, 3, 3, 4), NewVolumeFilled(3, 3, 3, 0.8)},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			lay := &ReluLayer{
-				LayerFields: tt.fields.LayerFields,
+			lay := tt.lay
+			lay.input = tt.input
+			if lay.Calculate(); !lay.output.Equals(tt.want) {
+				t.Errorf("ReluLayer.Calculate() = %v, want %v", lay.output, tt.want)
 			}
-			lay.Calculate()
 		})
 	}
 }

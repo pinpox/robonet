@@ -11,6 +11,7 @@ type Layer interface {
 type LayerFields struct {
 	input  Volume
 	output Volume
+	ready  bool
 }
 
 // Input is the Default method for Setting the input of a layer

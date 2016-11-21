@@ -20,6 +20,7 @@ func main() {
 
 	//Add ConvLayer to net
 	net.AddLayer(layConv)
+	net.AddLayer(new(robonet.ReluLayer))
 
 	//Set net's input
 	net.Input = robonet.VolumeFromTIFF("images/bw5.tiff")
