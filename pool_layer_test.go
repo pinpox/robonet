@@ -48,6 +48,11 @@ func TestPoolLayer_Calculate(t *testing.T) {
 	res1.SetAt(1, 0, 2, 25)
 	res1.SetAt(1, 1, 2, 26)
 
+	res2 := NewVolume(1, 1, 3)
+	res2.SetAt(0, 0, 0, 8)
+	res2.SetAt(0, 0, 1, 17)
+	res2.SetAt(0, 0, 2, 26)
+
 	type fields struct {
 		SizeR   int
 		SizeC   int
@@ -67,8 +72,7 @@ func TestPoolLayer_Calculate(t *testing.T) {
 		{"All Zeros stride 6 size 4", NewVolume(10, 10, 3), fields{4, 4, 6, 6}, NewVolume(2, 2, 3)},
 		{"All Zeros stride 5 size 2", NewVolume(10, 10, 3), fields{2, 2, 5, 5}, NewVolume(2, 2, 3)},
 		{"testVol stride 5 size 2", testVol, fields{2, 2, 1, 1}, res1},
-
-		//TODO add test cases wit numbers
+		{"testVol stride 5 size 2", testVol, fields{3, 3, 1, 1}, res2},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
