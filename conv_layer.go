@@ -41,16 +41,18 @@ func (l *ConvLayer) AddKernel(kern Kernel, strideR, strideC int) {
 func (l *ConvLayer) Calculate() {
 
 	l.output = NewVolume(l.input.Rows()/l.strideR, l.input.Collumns()/l.strideC, len(l.kernels))
+	res := l.output
 	for k, v := range l.kernels {
 
 		fmt.Println("	Calculating Kernel ", k)
 		for r := 0; r < l.output.Rows(); r++ {
 			for c := 0; c < l.output.Collumns(); c++ {
 
-				l.output.SetAt(r, c, k, v.Apply(l.input.SubVolumePadded(r*l.strideR, c*l.strideC, v.Rows(), v.Collumns())))
+				res.SetAt(r, c, k, v.Apply(l.input.SubVolumePadded(r*l.strideR, c*l.strideC, v.Rows(), v.Collumns())))
 			}
 		}
 	}
+	l.output = res
 }
 
 //Kernels returns the kernels of the layer

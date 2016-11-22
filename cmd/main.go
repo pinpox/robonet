@@ -61,19 +61,15 @@ func main() {
 	//Create ConvLayer
 	layConv := new(robonet.ConvLayer)
 
-	//Create kernel filled with 1s (blur)
+	//Create kernel filled with -1 and 8 (edge detection)
 	imgker1 := robonet.NewKernelFilled(3, 3, 3, -1)
-	imgker2 := robonet.NewKernelFilled(3, 3, 3, -1)
-	imgker3 := robonet.NewKernelFilled(3, 3, 3, -1)
 
 	imgker1.SetAt(1, 1, 0, 8)
-	imgker2.SetAt(1, 1, 1, 8)
-	imgker3.SetAt(1, 1, 2, 8)
+	imgker1.SetAt(1, 1, 1, 8)
+	imgker1.SetAt(1, 1, 2, 8)
 
 	//Add kernel to ConvLayer
 	layConv.AddKernel(imgker1, 1, 1)
-	layConv.AddKernel(imgker2, 1, 1)
-	layConv.AddKernel(imgker3, 1, 1)
 
 	//Add ConvLayer to net
 	net.AddLayer(layConv)
@@ -84,13 +80,11 @@ func main() {
 	net.AddLayer(layNorm1)
 
 	//Set net's input
-	net.Input = robonet.VolumeFromJPEG("images/bw7.jpeg")
-	//net.Input = robonet.VolumeFromJPEG("images/grey0.jpeg")
-	net.Input.Print()
+	net.Input = robonet.VolumeFromTIFF("images/bwcircle.tiff")
+
 	//Calculate the net's outpout
 	net.Calculate()
 
-	net.Output.Print()
 	//Save the output to B/W image
 	robonet.SaveVolumeToTIFF("out.tiff", net.Output)
 }
