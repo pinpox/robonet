@@ -9,7 +9,7 @@ import (
 	"math/rand"
 )
 
-// Volume is a basic type to hold the layer's information
+// Volume is a basic type to hold the layer's info
 type Volume struct {
 	Fields []mat64.Dense
 }
