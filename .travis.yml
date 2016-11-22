@@ -3,7 +3,7 @@ sudo: false
 language: go
 
 go:
- - tip
+ - master
 
 # Required for coverage, and testing.
 #before_install:
