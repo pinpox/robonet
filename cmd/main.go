@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gitlab.com/binaryplease/robonet"
+	"github.com/binaryplease/robonet"
 )
 
 func main() {
