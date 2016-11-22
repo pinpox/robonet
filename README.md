@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/binaryplease/robonet.svg?branch=master)](https://travis-ci.org/binaryplease/robonet)
+
 # robonet
 --
     import "gitlab.com/binaryplease/robonet"
