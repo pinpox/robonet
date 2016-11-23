@@ -3,26 +3,26 @@ package robonet
 import (
 	"reflect"
 	"testing"
-
-	"github.com/gonum/matrix/mat64"
 )
 
 func TestKernelPointReflect(t *testing.T) {
 
 	//Input
-	layer1 := []float64{0, 1, 2, 3, 4, 5, 6, 7, 8}
-	layer2 := []float64{9, 10, 11, 12, 13, 14, 15, 16, 17}
-	layer3 := []float64{18, 19, 20, 21, 22, 23, 24, 25, 26}
-	testVol1 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
+	data := []float64{0, 1, 2, 3, 4, 5, 6, 7, 8,
+		9, 10, 11, 12, 13, 14, 15, 16, 17,
+		18, 19, 20, 21, 22, 23, 24, 25, 26}
+
+	testVol1 := NewWithData(3, 3, 3, data)
 
 	kern1 := NewKernel(3, 3, 3)
 	kern1.SetAll(testVol1)
 
 	//Result
-	layer1 = []float64{0, 3, 6, 1, 4, 7, 2, 5, 8}
-	layer2 = []float64{9, 12, 15, 10, 13, 16, 11, 14, 17}
-	layer3 = []float64{18, 21, 24, 19, 22, 25, 20, 23, 26}
-	testVol1Reflected := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
+	data = []float64{0, 3, 6, 1, 4, 7, 2, 5, 8,
+		9, 12, 15, 10, 13, 16, 11, 14, 17,
+		18, 21, 24, 19, 22, 25, 20, 23, 26}
+
+	testVol1Reflected := NewWithData(3, 3, 3, data)
 
 	kern1Reflected := NewKernel(3, 3, 3)
 	kern1Reflected.SetAll(testVol1Reflected)
@@ -40,19 +40,15 @@ func TestKernelPointReflect(t *testing.T) {
 func TestKernelReflect(t *testing.T) {
 
 	//Input
-	layer1 := []float64{0, 1, 2, 3, 4, 5, 6, 7, 8}
-	layer2 := []float64{9, 10, 11, 12, 13, 14, 15, 16, 17}
-	layer3 := []float64{18, 19, 20, 21, 22, 23, 24, 25, 26}
-	testVol1 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
+	data := []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26}
+	testVol1 := NewWithData(3, 3, 3, data)
 
 	kern1 := NewKernel(3, 3, 3)
 	kern1.SetAll(testVol1)
 
 	//Result
-	layer1 = []float64{2, 1, 0, 5, 4, 3, 8, 7, 6}
-	layer2 = []float64{11, 10, 9, 14, 13, 12, 17, 16, 15}
-	layer3 = []float64{20, 19, 18, 23, 22, 21, 26, 25, 24}
-	testVol1Reflected := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
+	data = []float64{2, 1, 0, 5, 4, 3, 8, 7, 6, 11, 10, 9, 14, 13, 12, 17, 16, 15, 20, 19, 18, 23, 22, 21, 26, 25, 24}
+	testVol1Reflected := NewWithData(3, 3, 3, data)
 
 	kern1Reflected := NewKernel(3, 3, 3)
 	kern1Reflected.SetAll(testVol1Reflected)
@@ -163,52 +159,39 @@ func TestNewKernelFilled(t *testing.T) {
 
 func TestKernel_Apply(t *testing.T) {
 
-	layer1 := []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
-	layer2 := []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
-	layer3 := []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
-	ker1 := []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
-	ker2 := []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
-	ker3 := []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
-	testVol1 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
-	kernVol1 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, ker1), *mat64.NewDense(3, 3, ker2), *mat64.NewDense(3, 3, ker3)}}
+	data1 := []float64{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+	ker1 := []float64{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+	testVol1 := NewWithData(3, 3, 3, data1)
+	kernVol1 := NewWithData(3, 3, 3, ker1)
 	kern1 := NewKernel(3, 3, 3)
+
 	kern1.SetAll(kernVol1)
 
-	layer1 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
-	layer2 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
-	layer3 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
-	ker1 = []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
-	ker2 = []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
-	ker3 = []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
-	testVol2 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
-	kernVol2 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, ker1), *mat64.NewDense(3, 3, ker2), *mat64.NewDense(3, 3, ker3)}}
+	data1 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+	ker1 = []float64{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+	testVol2 := NewWithData(3, 3, 3, data1)
+	kernVol2 := NewWithData(3, 3, 3, ker1)
 	kern2 := NewKernel(3, 3, 3)
 	kern2.SetAll(kernVol2)
 
-	layer1 = []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
-	layer2 = []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
-	layer3 = []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}
-	ker1 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
-	ker2 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
-	ker3 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
-	testVol3 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
-	kernVol3 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, ker1), *mat64.NewDense(3, 3, ker2), *mat64.NewDense(3, 3, ker3)}}
+	data1 = []float64{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+	ker1 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+	testVol3 := NewWithData(3, 3, 3, data1)
+	kernVol3 := NewWithData(3, 3, 3, ker1)
 	kern3 := NewKernel(3, 3, 3)
 	kern3.SetAll(kernVol3)
 
-	layer1 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
-	layer2 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
-	layer3 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
-	ker1 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
-	ker2 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
-	ker3 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0}
-	testVol4 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
-	kernVol4 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, ker1), *mat64.NewDense(3, 3, ker2), *mat64.NewDense(3, 3, ker3)}}
+	data1 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+	ker1 = []float64{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+
+	testVol4 := NewWithData(3, 3, 3, data1)
+
+	kernVol4 := NewWithData(3, 3, 3, ker1)
 	kern4 := NewKernel(3, 3, 3)
 	kern4.SetAll(kernVol4)
 
 	ker1 = []float64{-1, -1, -1, -1, 8, -1, -1, -1, -1}
-	kernVol5 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, ker1), *mat64.NewDense(3, 3, ker1), *mat64.NewDense(3, 3, ker1)}}
+	kernVol5 := NewWithData(3, 3, 3, ker1)
 	kern5 := NewKernel(3, 3, 3)
 	kern5.SetAll(kernVol5)
 
@@ -222,8 +205,8 @@ func TestKernel_Apply(t *testing.T) {
 		{"vol zeros kern ones", kern2, testVol2, 0},
 		{"vol ones kern zeros", kern3, testVol3, 0},
 		{"vol zeros kern zeros", kern4, testVol4, 0},
-		{"vol zero kern edgedatection", kern5, NewVolumeFilled(3, 3, 3, 0), 0},
-		{"vol 255 kern edgedatection", kern5, NewVolumeFilled(3, 3, 3, 255), 0},
+		{"vol zero kern edgedatection", kern5, NewFull(3, 3, 3, 0), 0},
+		{"vol 255 kern edgedatection", kern5, NewFull(3, 3, 3, 255), 0},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

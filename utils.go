@@ -28,8 +28,8 @@ func Odd3Dim(i1, i2, i3 int) bool {
 
 //EqualVolDim checks if two given volumes have the same dimensions
 func EqualVolDim(v1, v2 Volume) bool {
-	i1, i2, i3 := v1.Dims()
-	e1, e2, e3 := v2.Dims()
+	i1, i2, i3 := v1.Shape()
+	e1, e2, e3 := v2.Shape()
 
 	return Equal3Dim(i1, i2, i3, e1, e2, e3)
 }
@@ -86,7 +86,7 @@ func SaveVolumeToJPEG(path string, vol Volume) {
 //ImageToVolume creates a volume from a image.Image
 func ImageToVolume(img image.Image) Volume {
 
-	vol := NewVolume(img.Bounds().Max.X, img.Bounds().Max.Y, 3)
+	vol := New(img.Bounds().Max.X, img.Bounds().Max.Y, 3)
 
 	for x := 0; x < img.Bounds().Max.X; x++ {
 		for y := 0; y < img.Bounds().Max.Y; y++ {

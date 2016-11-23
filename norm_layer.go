@@ -9,5 +9,5 @@ type NormLayer struct {
 //Calculate applyes the normalisation funktion for every element in the input volume
 func (lay *NormLayer) Calculate() {
 	lay.output = lay.input
-	lay.output.Norm(lay.NormVal)
+	//lay.output.Norm(lay.NormVal) //TODO FIX
 }

@@ -25,7 +25,7 @@ func (lay *PoolLayer) Calculate() {
 		log.Fatal(errors.New("PoolLayer: Input Size not divisible by factor"))
 	}
 
-	lay.output = NewVolume((lay.input.Rows()-lay.SizeR)/lay.StrideR+1, (lay.input.Collumns()-lay.SizeC)/lay.StrideC+1, lay.input.Depth())
+	lay.output = New((lay.input.Rows()-lay.SizeR)/lay.StrideR+1, (lay.input.Collumns()-lay.SizeC)/lay.StrideC+1, lay.input.Depth())
 
 	for r := 0; r < lay.output.Rows(); r++ {
 		for c := 0; c < lay.output.Collumns(); c++ {

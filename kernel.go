@@ -16,7 +16,7 @@ func NewKernel(r, c, d int) Kernel {
 	if !Odd3Dim(r, c, d) {
 		log.Fatal(errors.New("Kernel must have odd width and heigth"))
 	}
-	g := Kernel{NewVolume(r, c, d)}
+	g := Kernel{New(r, c, d)}
 	return g
 }
 
@@ -30,7 +30,7 @@ func NewKernelRandom(r, c, d int) Kernel {
 	if !Odd3Dim(r, c, d) {
 		log.Fatal(errors.New("Kernel must have odd width and heigth"))
 	}
-	g := Kernel{NewVolumeRandom(r, c, d)}
+	g := Kernel{NewRand(r, c, d)}
 	return g
 }
 
@@ -39,7 +39,7 @@ func NewKernelFilled(r, c, d int, fil float64) Kernel {
 	if !Odd3Dim(r, c, d) {
 		log.Fatal(errors.New("Kernel must have odd width and heigth"))
 	}
-	g := Kernel{NewVolumeFilled(r, c, d, fil)}
+	g := Kernel{NewFull(r, c, d, fil)}
 	return g
 }
 
@@ -48,9 +48,15 @@ func NewKernelFilled(r, c, d int, fil float64) Kernel {
 func (kern Kernel) Apply(in Volume) float64 {
 
 	ConvResult := 0.0
-	r, c, d := kern.Dims()
+	r, c, d := kern.Shape()
 
 	if !(kern.Volume.EqualSize(in)) {
+		if in == nil {
+
+			panic("nil")
+			fmt.Printf("kernel: %vx%vx%v vol: nil", r, c, d)
+			log.Fatal(errors.New("Kernel size doesn't match input "))
+		}
 		fmt.Printf("kernel: %vx%vx%v, vol: %vx%vx%v", r, c, d, in.Rows(), in.Collumns(), in.Depth())
 		log.Fatal(errors.New("Kernel size doesn't match input "))
 	}
@@ -60,11 +66,11 @@ func (kern Kernel) Apply(in Volume) float64 {
 	kernRef.PointReflect()
 	// 2) multiply pairwise
 
-	res := NewVolume(r, c, d)
+	res := New(r, c, d)
 
-	res = kern.Volume
+	res.SetAll(kern.Volume)
 
-	res.MulElem2(in)
+	res.MulElem(in)
 
 	for i := 0; i < r; i++ {
 		for j := 0; j < c; j++ {

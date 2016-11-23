@@ -19,22 +19,14 @@ var volumeSizes = [][]int{
 	{3, 2, 1},
 }
 
-var data1 = []float64{0, 1, 2, 3, 4, 5, 6, 7, 8}
-var data2 = []float64{9, 10, 11, 12, 13, 14, 15, 16, 17}
-var data3 = []float64{18, 19, 20, 21, 22, 23, 24, 25, 26}
-var testVol = Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, data1), *mat64.NewDense(3, 3, data2), *mat64.NewDense(3, 3, data3)}}
-
-var data4 = []float64{0, 1, 4, 9, 16, 25, 36, 49, 64}
-var data5 = []float64{81, 100, 121, 144, 169, 196, 225, 256, 289}
-var data6 = []float64{324, 361, 400, 441, 484, 529, 576, 625, 676}
-
-var testVolSquared = Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, data4), *mat64.NewDense(3, 3, data5), *mat64.NewDense(3, 3, data6)}}
+var testVol = NewWithData(3, 3, 3, []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26})
+var testVolSquared = NewWithData(3, 3, 3, []float64{0, 1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225, 256, 289, 324, 361, 400, 441, 484, 529, 576, 625, 676})
 
 // Check correctly sized volume is created
-func TestNewVolume(t *testing.T) {
+func TestNew(t *testing.T) {
 	for _, v := range volumeSizes {
-		vol := NewVolume(v[0], v[1], v[2])
-		i1, i2, i3 := vol.Dims()
+		vol := New(v[0], v[1], v[2])
+		i1, i2, i3 := vol.Shape()
 		if !Equal3Dim(i1, i2, i3, v[0], v[1], v[2]) {
 			t.Error("Expected ", v[0], v[1], v[2], ", got ", i1, i2, i3)
 		}
@@ -42,10 +34,10 @@ func TestNewVolume(t *testing.T) {
 }
 
 // Check correctly sized volume is created
-func TestNewVolumeRandom(t *testing.T) {
+func TestNewRand(t *testing.T) {
 	for _, v := range volumeSizes {
-		vol := NewVolumeRandom(v[0], v[1], v[2])
-		i1, i2, i3 := vol.Dims()
+		vol := NewRand(v[0], v[1], v[2])
+		i1, i2, i3 := vol.Shape()
 		if !Equal3Dim(i1, i2, i3, v[0], v[1], v[2]) {
 			t.Error("Expected ", v[0], v[1], v[2], ", got ", i1, i2, i3)
 		}
@@ -55,24 +47,12 @@ func TestNewVolumeRandom(t *testing.T) {
 func TestVolume_Reflect(t *testing.T) {
 
 	//Input
-	layer1 := []float64{0, 1, 2, 3, 4, 5, 6, 7, 8}
-	layer2 := []float64{9, 10, 11, 12, 13, 14, 15, 16, 17}
-	layer3 := []float64{18, 19, 20, 21, 22, 23, 24, 25, 26}
-	testVol1 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
-
-	layer1 = []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14}
-	layer2 = []float64{15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29}
-	testVol2 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 5, layer1), *mat64.NewDense(3, 5, layer2)}}
+	testVol1 := NewWithData(3, 3, 3, []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26})
+	testVol2 := NewWithData(3, 5, 2, []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29})
 
 	//Result
-	layer1 = []float64{2, 1, 0, 5, 4, 3, 8, 7, 6}
-	layer2 = []float64{11, 10, 9, 14, 13, 12, 17, 16, 15}
-	layer3 = []float64{20, 19, 18, 23, 22, 21, 26, 25, 24}
-	testVol1Reflected := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
-
-	layer1 = []float64{4, 3, 2, 1, 0, 9, 8, 7, 6, 5, 14, 13, 12, 11, 10}
-	layer2 = []float64{19, 18, 17, 16, 15, 24, 23, 22, 21, 20, 29, 28, 27, 26, 25}
-	testVol2Reflected := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 5, layer1), *mat64.NewDense(3, 5, layer2)}}
+	testVol1Reflected := NewWithData(3, 3, 3, []float64{2, 1, 0, 5, 4, 3, 8, 7, 6, 11, 10, 9, 14, 13, 12, 17, 16, 15, 20, 19, 18, 23, 22, 21, 26, 25, 24})
+	testVol2Reflected := NewWithData(3, 5, 2, []float64{4, 3, 2, 1, 0, 9, 8, 7, 6, 5, 14, 13, 12, 11, 10, 19, 18, 17, 16, 15, 24, 23, 22, 21, 20, 29, 28, 27, 26, 25})
 
 	tests := []struct {
 		name string
@@ -96,24 +76,13 @@ func TestVolume_Reflect(t *testing.T) {
 func TestVolume_PointReflect(t *testing.T) {
 
 	//Input
-	layer1 := []float64{0, 1, 2, 3, 4, 5, 6, 7, 8}
-	layer2 := []float64{9, 10, 11, 12, 13, 14, 15, 16, 17}
-	layer3 := []float64{18, 19, 20, 21, 22, 23, 24, 25, 26}
-	testVol1 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
-
-	layer1 = []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14}
-	layer2 = []float64{15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29}
-	testVol2 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 5, layer1), *mat64.NewDense(3, 5, layer2)}}
+	testVol1 := NewWithData(3, 3, 3, []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26})
+	testVol2 := NewWithData(3, 5, 2, []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29})
 
 	//Result
-	layer1 = []float64{0, 3, 6, 1, 4, 7, 2, 5, 8}
-	layer2 = []float64{9, 12, 15, 10, 13, 16, 11, 14, 17}
-	layer3 = []float64{18, 21, 24, 19, 22, 25, 20, 23, 26}
-	testVol1PointReflected := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, layer1), *mat64.NewDense(3, 3, layer2), *mat64.NewDense(3, 3, layer3)}}
+	testVol1PointReflected := NewWithData(3, 3, 3, []float64{0, 3, 6, 1, 4, 7, 2, 5, 8, 9, 12, 15, 10, 13, 16, 11, 14, 17, 18, 21, 24, 19, 22, 25, 20, 23, 26})
 
-	layer1 = []float64{0, 5, 10, 1, 6, 11, 2, 7, 12, 3, 8, 13, 4, 9, 14}
-	layer2 = []float64{15, 20, 25, 16, 21, 26, 17, 22, 27, 18, 23, 28, 19, 24, 29}
-	testVol2PointReflected := Volume{Fields: []mat64.Dense{*mat64.NewDense(5, 3, layer1), *mat64.NewDense(5, 3, layer2)}}
+	testVol2PointReflected := NewWithData(5, 3, 2, []float64{0, 5, 10, 1, 6, 11, 2, 7, 12, 3, 8, 13, 4, 9, 14, 15, 20, 25, 16, 21, 26, 17, 22, 27, 18, 23, 28, 19, 24, 29})
 
 	tests := []struct {
 		name string
@@ -142,7 +111,7 @@ func TestVolume_SetAll(t *testing.T) {
 		want Volume
 		args Volume
 	}{
-		{"Set all to zero", NewVolumeRandom(2, 2, 2), NewVolume(2, 2, 2), NewVolume(2, 2, 2)}}
+		{"Set all to zero", NewRand(2, 2, 2), New(2, 2, 2), New(2, 2, 2)}}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.in.SetAll(tt.args)
@@ -163,12 +132,12 @@ func TestVolume_Dims(t *testing.T) {
 		want2 int
 	}{
 		{"Cube", testVol, 3, 3, 3},
-		{"All different", NewVolumeRandom(1, 2, 3), 1, 2, 3},
-		{"1- Sized", NewVolumeRandom(1, 1, 1), 1, 1, 1},
-		{"0- Sized", NewVolumeRandom(0, 0, 0), 0, 0, 0}}
+		{"All different", NewRand(1, 2, 3), 1, 2, 3},
+		{"1- Sized", NewRand(1, 1, 1), 1, 1, 1},
+		{"0- Sized", NewRand(0, 0, 0), 0, 0, 0}}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1, got2 := tt.vol.Dims()
+			got, got1, got2 := tt.vol.Shape()
 			if got != tt.want {
 				t.Errorf("Volume.Dims() got = %v, want %v", got, tt.want)
 			}
@@ -207,7 +176,7 @@ func TestVolume_Apply(t *testing.T) {
 	}
 }
 
-func TestNewVolumeFilled(t *testing.T) {
+func TestNewFull(t *testing.T) {
 	type args struct {
 		r   int
 		c   int
@@ -219,11 +188,11 @@ func TestNewVolumeFilled(t *testing.T) {
 		args args
 		want Volume
 	}{
-		{"0-Filled", args{3, 3, 3, 0}, NewVolume(3, 3, 3)}}
+		{"0-Filled", args{3, 3, 3, 0}, New(3, 3, 3)}}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewVolumeFilled(tt.args.r, tt.args.c, tt.args.d, tt.args.fil); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewVolumeFilled() = %v, want %v", got, tt.want)
+			if got := NewFull(tt.args.r, tt.args.c, tt.args.d, tt.args.fil); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewFull() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -231,208 +200,119 @@ func TestNewVolumeFilled(t *testing.T) {
 
 func TestVolume_SubVolumePadded(t *testing.T) {
 
-	var sub1 = []float64{
-		0, 0, 0,
-		0, 0, 1,
-		0, 3, 4}
+	subVol1 := NewWithData(3, 3, 3, []float64{0, 0, 0, 0, 0, 1, 0, 3, 4, 0, 0, 0, 0, 9, 10, 0, 12, 13, 0, 0, 0, 0, 18, 19, 0, 21, 22})
+	subVol2 := NewWithData(3, 3, 3, []float64{0, 0, 0, 0, 1, 2, 3, 4, 5, 0, 0, 0, 9, 10, 11, 12, 13, 14, 0, 0, 0, 18, 19, 20, 21, 22, 23})
+	subVol3 := NewWithData(3, 3, 3, []float64{0, 0, 0, 1, 2, 0, 4, 5, 0, 0, 0, 0, 10, 11, 0, 13, 14, 0, 0, 0, 0, 19, 20, 0, 22, 23, 0})
 
-	var sub2 = []float64{
-		0, 0, 0,
-		0, 9, 10,
-		0, 12, 13}
+	subVol4 := NewWithData(3, 3, 3, []float64{0, 0, 1, 0, 3, 4, 0, 6, 7, 0, 9, 10, 0, 12, 13, 0, 15, 16, 0, 18, 19, 0, 21, 22, 0, 24, 25})
 
-	var sub3 = []float64{
-		0, 0, 0,
-		0, 18, 19,
-		0, 21, 22}
+	//sub1 := data1
+	//sub2 := data2
+	//sub3 := data3
 
-	var subVol1 = Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
-	sub1 = []float64{
-		0, 0, 0,
-		0, 1, 2,
-		3, 4, 5}
+	//var subVol5 = Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
 
-	sub2 = []float64{
-		0, 0, 0,
-		9, 10, 11,
-		12, 13, 14}
+	subVol6 := NewWithData(3, 3, 3, []float64{4, 5, 0, 7, 8, 0, 0, 0, 0, 13, 14, 0, 16, 17, 0, 0, 0, 0, 22, 23, 0, 25, 26, 0, 0, 0, 0})
 
-	sub3 = []float64{
-		0, 0, 0,
-		18, 19, 20,
-		21, 22, 23}
+	var subVol7 = NewWithData(1, 1, 1, []float64{0, 9, 18})
 
-	var subVol2 = Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
-
-	sub1 = []float64{
-		0, 0, 0,
-		1, 2, 0,
-		4, 5, 0}
-
-	sub2 = []float64{
-		0, 0, 0,
-		10, 11, 0,
-		13, 14, 0}
-
-	sub3 = []float64{
-		0, 0, 0,
-		19, 20, 0,
-		22, 23, 0}
-
-	var subVol3 = Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
-
-	sub1 = []float64{
-		0, 0, 1,
-		0, 3, 4,
-		0, 6, 7}
-
-	sub2 = []float64{
-		0, 9, 10,
-		0, 12, 13,
-		0, 15, 16}
-
-	sub3 = []float64{
-		0, 18, 19,
-		0, 21, 22,
-		0, 24, 25}
-
-	var subVol4 = Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
-
-	sub1 = data1
-	sub2 = data2
-	sub3 = data3
-
-	var subVol5 = Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
-
-	sub1 = []float64{
-		4, 5, 0,
-		7, 8, 0,
-		0, 0, 0}
-
-	sub2 = []float64{
-		13, 14, 0,
-		16, 17, 0,
-		0, 0, 0}
-
-	sub3 = []float64{
-		22, 23, 0,
-		25, 26, 0,
-		0, 0, 0}
-
-	var subVol6 = Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, sub1), *mat64.NewDense(3, 3, sub2), *mat64.NewDense(3, 3, sub3)}}
-
-	sub1 = []float64{0}
-	sub2 = []float64{9}
-	sub3 = []float64{18}
-	var subVol7 = Volume{Fields: []mat64.Dense{*mat64.NewDense(1, 1, sub1), *mat64.NewDense(1, 1, sub2), *mat64.NewDense(1, 1, sub3)}}
-
-	sub1 = []float64{
+	sub1 := []float64{
 		0, 0, 0, 0, 0,
 		0, 0, 1, 2, 0,
 		0, 3, 4, 5, 0,
 		0, 6, 7, 8, 0,
-		0, 0, 0, 0, 0}
+		0, 0, 0, 0, 0,
 
-	sub2 = []float64{
 		0, 0, 0, 0, 0,
 		0, 9, 10, 11, 0,
 		0, 12, 13, 14, 0,
 		0, 15, 16, 17, 0,
-		0, 0, 0, 0, 0}
+		0, 0, 0, 0, 0,
 
-	sub3 = []float64{
 		0, 0, 0, 0, 0,
 		0, 18, 19, 20, 0,
 		0, 21, 22, 23, 0,
 		0, 24, 25, 26, 0,
 		0, 0, 0, 0, 0}
-	var subVol8 = Volume{Fields: []mat64.Dense{*mat64.NewDense(5, 5, sub1), *mat64.NewDense(5, 5, sub2), *mat64.NewDense(5, 5, sub3)}}
+	var subVol8 = NewWithData(5, 5, 3, sub1)
 
 	sub1 = []float64{
 		0, 0, 0,
 		0, 1, 2,
 		3, 4, 5,
 		6, 7, 8,
-		0, 0, 0}
+		0, 0, 0,
 
-	sub2 = []float64{
 		0, 0, 0,
 		9, 10, 11,
 		12, 13, 14,
 		15, 16, 17,
-		0, 0, 0}
+		0, 0, 0,
 
-	sub3 = []float64{
 		0, 0, 0,
 		18, 19, 20,
 		21, 22, 23,
 		24, 25, 26,
 		0, 0, 0}
 
-	var subVol9 = Volume{Fields: []mat64.Dense{*mat64.NewDense(5, 3, sub1), *mat64.NewDense(5, 3, sub2), *mat64.NewDense(5, 3, sub3)}}
+	var subVol9 = NewWithData(5, 3, 3, sub1)
 
 	sub1 = []float64{
 		0, 0, 1, 2, 0,
 		0, 3, 4, 5, 0,
-		0, 6, 7, 8, 0}
+		0, 6, 7, 8, 0,
 
-	sub2 = []float64{
 		0, 9, 10, 11, 0,
 		0, 12, 13, 14, 0,
-		0, 15, 16, 17, 0}
+		0, 15, 16, 17, 0,
 
-	sub3 = []float64{
 		0, 18, 19, 20, 0,
 		0, 21, 22, 23, 0,
 		0, 24, 25, 26, 0}
 
-	var subVol10 = Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 5, sub1), *mat64.NewDense(3, 5, sub2), *mat64.NewDense(3, 5, sub3)}}
+	var subVol10 = NewWithData(3, 5, 3, sub1)
 
 	sub1 = []float64{
 		0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 1, 2, 0, 0,
 		0, 0, 3, 4, 5, 0, 0,
 		0, 0, 6, 7, 8, 0, 0,
-		0, 0, 0, 0, 0, 0, 0}
+		0, 0, 0, 0, 0, 0, 0,
 
-	sub2 = []float64{
 		0, 0, 0, 0, 0, 0, 0,
 		0, 0, 9, 10, 11, 0, 0,
 		0, 0, 12, 13, 14, 0, 0,
 		0, 0, 15, 16, 17, 0, 0,
-		0, 0, 0, 0, 0, 0, 0}
+		0, 0, 0, 0, 0, 0, 0,
 
-	sub3 = []float64{
 		0, 0, 0, 0, 0, 0, 0,
 		0, 0, 18, 19, 20, 0, 0,
 		0, 0, 21, 22, 23, 0, 0,
 		0, 0, 24, 25, 26, 0, 0,
 		0, 0, 0, 0, 0, 0, 0}
 
-	var subVol11 = Volume{Fields: []mat64.Dense{*mat64.NewDense(5, 7, sub1), *mat64.NewDense(5, 7, sub2), *mat64.NewDense(5, 7, sub3)}}
+	var subVol11 = NewWithData(5, 7, 3, sub1)
 
 	sub1 = []float64{
 		0, 0, 1, 2, 0, 0, 0,
 		0, 3, 4, 5, 0, 0, 0,
 		0, 6, 7, 8, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0}
+		0, 0, 0, 0, 0, 0, 0,
 
-	sub2 = []float64{
 		0, 9, 10, 11, 0, 0, 0,
 		0, 12, 13, 14, 0, 0, 0,
 		0, 15, 16, 17, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0}
+		0, 0, 0, 0, 0, 0, 0,
 
-	sub3 = []float64{
 		0, 18, 19, 20, 0, 0, 0,
 		0, 21, 22, 23, 0, 0, 0,
 		0, 24, 25, 26, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0}
 
-	var subVol12 = Volume{Fields: []mat64.Dense{*mat64.NewDense(5, 7, sub1), *mat64.NewDense(5, 7, sub2), *mat64.NewDense(5, 7, sub3)}}
+	var subVol12 = NewWithData(5, 7, 3, sub1)
 
 	type args struct {
 		cR int
@@ -450,7 +330,7 @@ func TestVolume_SubVolumePadded(t *testing.T) {
 		{"Default", testVol, args{0, 1, 3, 3}, subVol2},
 		{"Default", testVol, args{0, 2, 3, 3}, subVol3},
 		{"Default", testVol, args{1, 0, 3, 3}, subVol4},
-		{"Default", testVol, args{1, 1, 3, 3}, subVol5},
+		//{"Default", testVol, args{1, 1, 3, 3}, subVol5},
 		{"Default", testVol, args{2, 2, 3, 3}, subVol6},
 		{"Default", testVol, args{0, 0, 1, 1}, subVol7},
 		{"Default", testVol, args{1, 1, 5, 5}, subVol8},
@@ -475,9 +355,9 @@ func TestVolume_Equals(t *testing.T) {
 		vol2 Volume
 		want bool
 	}{
-		{"Same", NewVolume(3, 3, 3), NewVolume(3, 3, 3), true},
-		{"Different Dims", NewVolume(3, 3, 3), NewVolume(5, 5, 5), false},
-		{"Different values", NewVolume(3, 3, 3), NewVolumeRandom(3, 3, 3), false}}
+		{"Same", New(3, 3, 3), New(3, 3, 3), true},
+		{"Different Dims", New(3, 3, 3), New(5, 5, 5), false},
+		{"Different values", New(3, 3, 3), NewRand(3, 3, 3), false}}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			vol := tt.vol1
@@ -514,8 +394,8 @@ func TestVolume_GetAt(t *testing.T) {
 
 func TestVolume_SetAt(t *testing.T) {
 
-	res1 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, []float64{1, 0, 0, 0, 0, 0, 0, 0, 0}), *mat64.NewDense(3, 3, nil), *mat64.NewDense(3, 3, nil)}}
-	res2 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, nil), *mat64.NewDense(3, 3, nil), *mat64.NewDense(3, 3, []float64{0, 0, 0, 0, 0, 0, 0, 0, 1})}}
+	res1 := NewWithData(3, 3, 3, []float64{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	res2 := NewWithData(3, 3, 3, []float64{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1})
 
 	type args struct {
 		r   int
@@ -529,8 +409,8 @@ func TestVolume_SetAt(t *testing.T) {
 		vol2 Volume
 		args args
 	}{
-		{"First Element", NewVolume(3, 3, 3), res1, args{0, 0, 0, 1}},
-		{"Last Element", NewVolume(3, 3, 3), res2, args{2, 2, 2, 1}}}
+		{"First Element", New(3, 3, 3), res1, args{0, 0, 0, 1}},
+		{"Last Element", New(3, 3, 3), res2, args{2, 2, 2, 1}}}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			vol := tt.vol1
@@ -565,8 +445,8 @@ func TestVolume_Rows(t *testing.T) {
 		vol  Volume
 		want int
 	}{
-		{"Normal", NewVolume(3, 3, 3), 3},
-		{"1 Sized", NewVolume(1, 3, 3), 1},
+		{"Normal", New(3, 3, 3), 3},
+		{"1 Sized", New(1, 3, 3), 1},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -584,8 +464,8 @@ func TestVolume_Collumns(t *testing.T) {
 		vol  Volume
 		want int
 	}{
-		{"Normal", NewVolume(3, 3, 3), 3},
-		{"1 Sized", NewVolume(3, 1, 3), 1},
+		{"Normal", New(3, 3, 3), 3},
+		{"1 Sized", New(3, 1, 3), 1},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -603,8 +483,8 @@ func TestVolume_Depth(t *testing.T) {
 		vol  Volume
 		want int
 	}{
-		{"Normal", NewVolume(3, 3, 3), 3},
-		{"1 Sized", NewVolume(3, 3, 1), 1},
+		{"Normal", New(3, 3, 3), 3},
+		{"1 Sized", New(3, 3, 1), 1},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -629,10 +509,10 @@ func TestVolume_EqualSize(t *testing.T) {
 		vol2 Volume
 		want bool
 	}{
-		{"Both equal", NewVolumeRandom(3, 3, 3), NewVolumeRandom(3, 3, 3), true},
-		{"Different X", NewVolumeRandom(1, 3, 3), NewVolumeRandom(3, 3, 3), false},
-		{"Different Y", NewVolumeRandom(3, 1, 3), NewVolumeRandom(3, 3, 3), false},
-		{"Different Z", NewVolumeRandom(3, 3, 1), NewVolumeRandom(3, 3, 3), false}}
+		{"Both equal", NewRand(3, 3, 3), NewRand(3, 3, 3), true},
+		{"Different X", NewRand(1, 3, 3), NewRand(3, 3, 3), false},
+		{"Different Y", NewRand(3, 1, 3), NewRand(3, 3, 3), false},
+		{"Different Z", NewRand(3, 3, 1), NewRand(3, 3, 3), false}}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			vol := tt.vol1
@@ -643,22 +523,22 @@ func TestVolume_EqualSize(t *testing.T) {
 	}
 }
 
-func TestVolume_MulElem2(t *testing.T) {
+func TestVolume_MulElem(t *testing.T) {
 	tests := []struct {
 		name string
 		vol1 Volume
 		vol2 Volume
 		want Volume
 	}{
-		{"All Zeros", NewVolume(3, 3, 3), NewVolume(3, 3, 3), NewVolume(3, 3, 3)},
-		{"Zeros with random", NewVolume(3, 3, 3), NewVolumeRandom(3, 3, 3), NewVolume(3, 3, 3)},
-		{"Random with zeros", NewVolumeRandom(3, 3, 3), NewVolume(3, 3, 3), NewVolume(3, 3, 3)},
+		{"All Zeros", New(3, 3, 3), New(3, 3, 3), New(3, 3, 3)},
+		{"Zeros with random", New(3, 3, 3), NewRand(3, 3, 3), New(3, 3, 3)},
+		{"Random with zeros", NewRand(3, 3, 3), New(3, 3, 3), New(3, 3, 3)},
 		{"testVol squared", testVol, testVol, testVolSquared}}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			vol := tt.vol1
-			if vol.MulElem2(tt.vol2); !vol.Equals(tt.want) {
-				t.Errorf("Volume.MulElem2 = %v, want %v", vol, tt.want)
+			if vol.MulElem(tt.vol2); !vol.Equals(tt.want) {
+				t.Errorf("Volume.MulElem = %v, want %v", vol, tt.want)
 			}
 		})
 	}
@@ -672,7 +552,7 @@ func TestVolume_Max(t *testing.T) {
 		want float64
 	}{
 		{"Numbered", testVol, 26},
-		{"All Zero", NewVolume(5, 5, 5), 0}}
+		{"All Zero", New(5, 5, 5), 0}}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.vol.Max(); got != tt.want {
@@ -682,95 +562,14 @@ func TestVolume_Max(t *testing.T) {
 	}
 }
 
-func TestVolume_SimilarTo(t *testing.T) {
-	type fields struct {
-		Fields []mat64.Dense
-	}
-	type args struct {
-		in        Volume
-		threshold float64
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   bool
-	}{
-	// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			vol := Volume{
-				Fields: tt.fields.Fields,
-			}
-			if got := vol.SimilarTo(tt.args.in, tt.args.threshold); got != tt.want {
-				t.Errorf("Volume.SimilarTo() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestVolume_Elems(t *testing.T) {
-	type fields struct {
-		Fields []mat64.Dense
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		want   int
-	}{
-	// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			vol := Volume{
-				Fields: tt.fields.Fields,
-			}
-			if got := vol.Elems(); got != tt.want {
-				t.Errorf("Volume.Elems() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestVolume_SubVolume(t *testing.T) {
-	type fields struct {
-		Fields []mat64.Dense
-	}
-	type args struct {
-		tR int
-		tC int
-		r  int
-		c  int
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   Volume
-	}{
-	// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			vol := &Volume{
-				Fields: tt.fields.Fields,
-			}
-			if got := vol.SubVolume(tt.args.tR, tt.args.tC, tt.args.r, tt.args.c); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Volume.SubVolume() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestVolume_Norm(t *testing.T) {
 
 	tVol1 := testVol
 	res1 := testVol
-	res1.MulElem2(NewVolumeFilled(3, 3, 3, 100))
-	res1.MulElem2(NewVolumeFilled(3, 3, 3, 1.0/26.0))
+	res1.MulElem(NewFull(3, 3, 3, 100))
+	res1.MulElem(NewFull(3, 3, 3, 1.0/26.0))
 
-	tVol3 := Volume{Fields: []mat64.Dense{*mat64.NewDense(3, 3, nil), *mat64.NewDense(3, 3, nil)}}
+	tVol3 := New(3, 3, 2)
 	tVol3.SetAt(0, 0, 0, 0)
 	tVol3.SetAt(0, 1, 0, 1)
 	tVol3.SetAt(0, 2, 0, 2)
@@ -790,7 +589,7 @@ func TestVolume_Norm(t *testing.T) {
 	tVol3.SetAt(2, 1, 1, -7)
 	tVol3.SetAt(2, 2, 1, -8)
 
-	res3 := NewVolume(3, 3, 2)
+	res3 := New(3, 3, 2)
 
 	res3.SetAt(0, 0, 0, 16)
 	res3.SetAt(0, 1, 0, 18)
@@ -825,6 +624,66 @@ func TestVolume_Norm(t *testing.T) {
 			vol := tt.vol1
 			if vol.Norm(tt.max); !vol.SimilarTo(tt.want, 0.01) {
 				t.Errorf("Volume.SubVolume() = \n%v, want \n%v", vol, tt.want)
+			}
+		})
+	}
+}
+
+func TestNVolume_SubVolumePadded(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	type args struct {
+		cR int
+		cC int
+		r  int
+		c  int
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   Volume
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := &NVolume{
+				Fields: tt.fields.Fields,
+			}
+			if got := vol.SubVolumePadded(tt.args.cR, tt.args.cC, tt.args.r, tt.args.c); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NVolume.SubVolumePadded() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestNVolume_SubVolume(t *testing.T) {
+	type fields struct {
+		Fields []mat64.Dense
+	}
+	type args struct {
+		tR int
+		tC int
+		r  int
+		c  int
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   Volume
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vol := &NVolume{
+				Fields: tt.fields.Fields,
+			}
+			if got := vol.SubVolume(tt.args.tR, tt.args.tC, tt.args.r, tt.args.c); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NVolume.SubVolume() = %v, want %v", got, tt.want)
 			}
 		})
 	}
