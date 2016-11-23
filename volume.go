@@ -173,7 +173,7 @@ func NewFull(r, c, d int, fil float64) Volume {
 
 //SubVolumePadded returns a part of the original D3Volume. cR and cC determine the center of copying, r and c the size of the subvolume.
 //If the size exceeds the underlying volume the submodule is filled(padded with Zeros.
-func (vol *D3Volume) SubVolumePadded(cR, cC, r, c int) Volume {
+func (vol D3Volume) SubVolumePadded(cR, cC, r, c int) Volume {
 
 	if r%2 == 0 || c%2 == 0 {
 		log.Fatal(errors.New("Even dimensions not allowed for subvolumes"))
@@ -181,26 +181,17 @@ func (vol *D3Volume) SubVolumePadded(cR, cC, r, c int) Volume {
 
 	sub := New(r, c, vol.Depth())
 
-	for ir := 0; ir < sub.Rows(); ir++ {
-		for ic := 0; ic < sub.Collumns(); ic++ {
-			for id := 0; id < sub.Depth(); id++ {
+	for id := 0; id < sub.Depth(); id++ {
+		for ir := 0; ir < sub.Rows(); ir++ {
+			for ic := 0; ic < sub.Collumns(); ic++ {
 
-				val := 0.0
-
-				offsetR := ((vol.Rows() - 1) / 2) - cR
-				offsetC := ((vol.Collumns() - 1) / 2) - cC
-
-				cordR := ir + ((vol.Rows() - r) / 2) - offsetR
-				cordC := ic + ((vol.Collumns() - c) / 2) - offsetC
+				cordR := ir + cR + (-r+1)/2
+				cordC := ic + cC + (-c+1)/2
 
 				if cordR < 0 || cordR > vol.Rows()-1 || cordC < 0 || cordC > vol.Collumns()-1 {
-					val = 0.0
 				} else {
-					val = vol.GetAt(cordR, cordC, id)
+					sub.SetAt(ir, ic, id, vol.GetAt(cordR, cordC, id))
 				}
-
-				sub.SetAt(ir, ic, id, val)
-
 			}
 		}
 	}
