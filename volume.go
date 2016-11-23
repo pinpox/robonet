@@ -6,7 +6,7 @@ import (
 	"github.com/gonum/matrix/mat64"
 	"log"
 	"math"
-	//"math/rand"
+	"math/rand"
 )
 
 // Volume is a basic type to hold the layer's info
@@ -45,7 +45,12 @@ type NVolume struct {
 //SetAll sets all values of the volume from another equal-sized volume
 func (vol *NVolume) SetAll(v Volume) {
 
+	if v == nil {
+		panic("tried to set Volume with nil input")
+	}
+
 	if !EqualVolDim(vol, v) {
+		fmt.Printf("set %vx%vx%v with %vx%vx%v", vol.Rows(), vol.Collumns(), vol.Depth(), v.Rows(), v.Collumns(), v.Depth())
 		log.Fatal(errors.New("NVolumedimensions do not match"))
 	}
 
@@ -113,43 +118,30 @@ func (vol *NVolume) Norm(max float64) {
 //New generates a NVolume of fixed size filled with zeros
 func New(r, c, d int) *NVolume {
 	v := new(NVolume)
-	//v.Fields = []mat64.Dense{}
+	v.Fields = []mat64.Dense{}
 
-	//for i := 0; i < d; i++ {
-	//v.Fields = append(v.Fields, *mat64.NewDense(r, c, nil))
-	//}
+	for i := 0; i < d; i++ {
+		v.Fields = append(v.Fields, *mat64.NewDense(r, c, nil))
+	}
 
 	return v
 }
 
 //NewWithData generates a NVolume of fixed size filled with custom data
 func NewWithData(r, c, d int, data []float64) *NVolume {
-	v := new(NVolume)
-	//v.Fields = []mat64.Dense{}
-
-	//for i := 0; i < d; i++ {
-	//v.Fields = append(v.Fields, *mat64.NewDense(r, c, nil))
-	//}
-
+	v := New(r, c, d) //TODO
 	return v
 }
 
 //NewRand generates a NVolume of fixed size filled with values between 0 and 1
 func NewRand(r, c, d int) *NVolume {
-	v := new(NVolume)
-	//v.Fields = []mat64.Dense{}
+	data := []float64{}
 
-	//for j := 0; j < d; j++ {
+	for i := 0; i < r*c*d; i++ {
+		data = append(data, rand.Float64())
+	}
 
-	//data := make([]float64, r*c)
-	//for i := range data {
-	//data[i] = rand.Float64()
-	//}
-	//a := mat64.NewDense(r, c, data)
-
-	//v.Fields = append(v.Fields, *a)
-	//}
-	return v
+	return NewWithData(r, c, d, data)
 }
 
 //NewFull generates a NVolume of fixed size filled with values between 0 and 1
@@ -163,19 +155,6 @@ func NewFull(r, c, d int, fil float64) Volume {
 	}
 
 	return NewWithData(r, c, d, data)
-	//v.Fields = []mat64.Dense{}
-
-	//for j := 0; j < d; j++ {
-
-	//data := make([]float64, r*c)
-	//for i := range data {
-	//data[i] = fil
-	//}
-	//a := mat64.NewDense(r, c, data)
-
-	//v.Fields = append(v.Fields, *a)
-	//}
-	//return *v
 }
 
 //SubVolumePadded returns a part of the original NVolume. cR and cC determine the center of copying, r and c the size of the subvolume.
@@ -249,7 +228,7 @@ func (vol *NVolume) GetAt(r, c, d int) float64 {
 //SetAt sets the element of a volume at a given position
 func (vol *NVolume) SetAt(r, c, d int, val float64) {
 	if r >= vol.Rows() || c >= vol.Collumns() || d >= vol.Depth() {
-		//fmt.Printf("SetAt request out of bounds (RxCxD) = %vx%vx%v requested for (RxCxD) = %vx%vx%vx", r, c, d, vol.Rows(), vol.Collumns(), vol.Depth())
+		fmt.Printf("SetAt request out of bounds (RxCxD) = %vx%vx%v requested for (RxCxD) = %vx%vx%vx", r, c, d, vol.Rows(), vol.Collumns(), vol.Depth())
 		panic("out od bounds")
 		log.Fatal(errors.New("robonet.NVolume: setAt out of bounds"))
 	}
