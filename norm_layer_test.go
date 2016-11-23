@@ -17,9 +17,9 @@ func TestNormLayer_Calculate(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			lay := tt.lay
 			lay.input = tt.input
-			//if lay.Calculate(); lay.output.Max() > tt.val {
-			//t.Errorf("NormLayer.Calculate().Max() = %v, want %v", lay.output.Max(), tt.val)
-			//} //TODO fix
+			if lay.Calculate(); lay.output.Max() > tt.val {
+				t.Errorf("NormLayer.Calculate().Max() = %v, want %v", lay.output.Max(), tt.val)
+			}
 		})
 	}
 }

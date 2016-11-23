@@ -351,7 +351,7 @@ func (vol NVolume) Max() float64 {
 }
 
 //Min returns the lowest number in a volume
-func (vol *NVolume) Min() float64 {
+func (vol NVolume) Min() float64 {
 	min := 0.0
 	for i := 0; i < vol.Rows(); i++ {
 		for j := 0; j < vol.Collumns(); j++ {
