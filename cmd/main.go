@@ -52,39 +52,46 @@ func main() {
 	   	//Save the output to B/W image
 	   	robonet.SaveVolumeToTIFF("out.tiff", net.Output)
 	*/
+	/*
+		//Example: Edge detection
 
-	//Example: Edge detection
+		//Create Net
+		net := new(robonet.Net)
 
-	//Create Net
-	net := new(robonet.Net)
+		//Create ConvLayer
+		layConv := new(robonet.ConvLayer)
 
-	//Create ConvLayer
-	layConv := new(robonet.ConvLayer)
+		//Create kernel filled with -1 and 8 (edge detection)
+		imgker1 := robonet.NewKernelFilled(3, 3, 3, -1)
 
-	//Create kernel filled with -1 and 8 (edge detection)
-	imgker1 := robonet.NewKernelFilled(3, 3, 3, -1)
+		imgker1.SetAt(1, 1, 0, 8)
+		imgker1.SetAt(1, 1, 1, 8)
+		imgker1.SetAt(1, 1, 2, 8)
 
-	imgker1.SetAt(1, 1, 0, 8)
-	imgker1.SetAt(1, 1, 1, 8)
-	imgker1.SetAt(1, 1, 2, 8)
+		//Add kernel to ConvLayer
+		layConv.AddKernel(imgker1, 1, 1)
 
-	//Add kernel to ConvLayer
-	layConv.AddKernel(imgker1, 1, 1)
+		//Add ConvLayer to net
+		net.AddLayer(layConv)
 
-	//Add ConvLayer to net
-	net.AddLayer(layConv)
+		//Add normalisation Layer to limit output to 255 max
+		layNorm1 := new(robonet.NormLayer)
+		layNorm1.NormVal = 255
+		net.AddLayer(layNorm1)
 
-	//Add normalisation Layer to limit output to 255 max
-	layNorm1 := new(robonet.NormLayer)
-	layNorm1.NormVal = 255
-	net.AddLayer(layNorm1)
+		//Set net's input
+		net.Input = robonet.VolumeFromTIFF("images/bwcircle.tiff")
 
-	//Set net's input
-	net.Input = robonet.VolumeFromTIFF("images/bwcircle.tiff")
+		//Calculate the net's outpout
+		net.Calculate()
 
-	//Calculate the net's outpout
-	net.Calculate()
+		//Save the output to B/W image
+		robonet.SaveVolumeToTIFF("out.tiff", net.Output)
+	*/
 
-	//Save the output to B/W image
-	robonet.SaveVolumeToTIFF("out.tiff", net.Output)
+	data := []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26}
+
+	vol := robonet.NewWithData(3, 3, 3, data)
+	vol.Print()
+
 }

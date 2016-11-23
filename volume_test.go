@@ -214,7 +214,7 @@ func TestVolume_SubVolumePadded(t *testing.T) {
 
 	subVol6 := NewWithData(3, 3, 3, []float64{4, 5, 0, 7, 8, 0, 0, 0, 0, 13, 14, 0, 16, 17, 0, 0, 0, 0, 22, 23, 0, 25, 26, 0, 0, 0, 0})
 
-	var subVol7 = NewWithData(1, 1, 1, []float64{0, 9, 18})
+	var subVol7 = NewWithData(1, 1, 3, []float64{0, 9, 18})
 
 	sub1 := []float64{
 		0, 0, 0, 0, 0,
@@ -538,7 +538,7 @@ func TestVolume_MulElem(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			vol := tt.vol1
 			if vol.MulElem(tt.vol2); !vol.Equals(tt.want) {
-				t.Errorf("Volume.MulElem = %v, want %v", vol, tt.want)
+				t.Errorf("Volume.MulElem = \n\n%v, want \n\n%v", vol, tt.want)
 			}
 		})
 	}
@@ -546,12 +546,14 @@ func TestVolume_MulElem(t *testing.T) {
 
 func TestVolume_Max(t *testing.T) {
 
+	test := NewWithData(3, 3, 3, []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26})
+
 	tests := []struct {
 		name string
 		vol  Volume
 		want float64
 	}{
-		{"Numbered", testVol, 26},
+		{"Numbered", test, 26},
 		{"All Zero", New(5, 5, 5), 0}}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

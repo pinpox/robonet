@@ -87,7 +87,7 @@ func (vol *NVolume) Apply(kern Kernel, strideR, strideC int) {
 	}
 	//TODO normalize
 
-	vol = res
+	*vol = *res
 }
 
 //Norm normalizes the volume to a given maximum and 0
@@ -129,7 +129,21 @@ func New(r, c, d int) *NVolume {
 
 //NewWithData generates a NVolume of fixed size filled with custom data
 func NewWithData(r, c, d int, data []float64) *NVolume {
-	v := New(r, c, d) //TODO
+
+	if len(data) != r*c*d {
+		fmt.Printf("supplied %v data items for %v length", len(data), r*c*d)
+		panic("data length does not match dimessions")
+	}
+	v := New(r, c, d)
+	count := 0
+	for id := 0; id < d; id++ {
+		for ir := 0; ir < r; ir++ {
+			for ic := 0; ic < c; ic++ {
+				v.SetAt(ir, ic, id, data[count])
+				count++
+			}
+		}
+	}
 	return v
 }
 
@@ -146,7 +160,6 @@ func NewRand(r, c, d int) *NVolume {
 
 //NewFull generates a NVolume of fixed size filled with values between 0 and 1
 func NewFull(r, c, d int, fil float64) Volume {
-	//v := new(Volume)
 
 	data := []float64{}
 
@@ -284,7 +297,7 @@ func (vol *NVolume) PointReflect() {
 			}
 		}
 	}
-	vol = temp
+	*vol = *temp
 }
 
 //Reflect calculates the reflectio of a volume (left-right)
@@ -300,11 +313,11 @@ func (vol *NVolume) Reflect() {
 			}
 		}
 	}
-	vol = temp
+	*vol = *temp
 }
 
 //MulElem multiplies the volume with another volume element-wise
-func (vol NVolume) MulElem(v1 Volume) {
+func (vol *NVolume) MulElem(v1 Volume) {
 	r, c, d := vol.Shape()
 
 	res := New(r, c, d)
@@ -318,7 +331,7 @@ func (vol NVolume) MulElem(v1 Volume) {
 		}
 	}
 
-	vol = *res
+	*vol = *res
 
 }
 
