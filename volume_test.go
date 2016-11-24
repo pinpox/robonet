@@ -26,9 +26,8 @@ var testVolSquared = NewWithData(3, 3, 3, []float64{0, 1, 4, 9, 16, 25, 36, 49, 
 func TestNew(t *testing.T) {
 	for _, v := range volumeSizes {
 		vol := New(v[0], v[1], v[2])
-		i1, i2, i3 := vol.Shape()
-		if !Equal3Dim(i1, i2, i3, v[0], v[1], v[2]) {
-			t.Error("Expected ", v[0], v[1], v[2], ", got ", i1, i2, i3)
+		if !EqualNDim(vol.Shape(), v) {
+			t.Error("Expected ", v[0], v[1], v[2], ", got ", vol.Shape())
 		}
 	}
 }
@@ -37,9 +36,8 @@ func TestNew(t *testing.T) {
 func TestNewRand(t *testing.T) {
 	for _, v := range volumeSizes {
 		vol := NewRand(v[0], v[1], v[2])
-		i1, i2, i3 := vol.Shape()
-		if !Equal3Dim(i1, i2, i3, v[0], v[1], v[2]) {
-			t.Error("Expected ", v[0], v[1], v[2], ", got ", i1, i2, i3)
+		if !EqualNDim(vol.Shape(), v) {
+			t.Error("Expected ", v, ", got ", vol.Shape())
 		}
 	}
 }
@@ -137,15 +135,15 @@ func TestVolume_Dims(t *testing.T) {
 		{"0- Sized", NewRand(0, 0, 0), 0, 0, 0}}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1, got2 := tt.vol.Shape()
-			if got != tt.want {
-				t.Errorf("Volume.Dims() got = %v, want %v", got, tt.want)
+			vs := tt.vol.Shape()
+			if vs[0] != tt.want {
+				t.Errorf("Volume.Dims() got = %v, want %v", vs[0], tt.want)
 			}
-			if got1 != tt.want1 {
-				t.Errorf("Volume.Dims() got1 = %v, want %v", got1, tt.want1)
+			if vs[1] != tt.want1 {
+				t.Errorf("Volume.Dims() got1 = %v, want %v", vs[1], tt.want1)
 			}
-			if got2 != tt.want2 {
-				t.Errorf("Volume.Dims() got2 = %v, want %v", got2, tt.want2)
+			if vs[2] != tt.want2 {
+				t.Errorf("Volume.Dims() got2 = %v, want %v", vs[2], tt.want2)
 			}
 		})
 	}

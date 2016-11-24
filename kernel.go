@@ -48,16 +48,16 @@ func NewKernelFilled(r, c, d int, fil float64) Kernel {
 func (kern Kernel) Apply(in Volume) float64 {
 
 	ConvResult := 0.0
-	r, c, d := kern.Shape()
+	s := kern.Shape()
 
 	if !(kern.Volume.EqualSize(in)) {
 		if in == nil {
 
 			panic("nil")
-			fmt.Printf("kernel: %vx%vx%v vol: nil", r, c, d)
+			fmt.Printf("kernel: %vx%vx%v vol: nil", s[0], s[1], s[2])
 			log.Fatal(errors.New("Kernel size doesn't match input "))
 		}
-		fmt.Printf("kernel: %vx%vx%v, vol: %vx%vx%v", r, c, d, in.Rows(), in.Collumns(), in.Depth())
+		fmt.Printf("kernel: %vx%vx%v, vol: %vx%vx%v", s[0], s[1], s[2], in.Rows(), in.Collumns(), in.Depth())
 		log.Fatal(errors.New("Kernel size doesn't match input "))
 	}
 
@@ -66,15 +66,15 @@ func (kern Kernel) Apply(in Volume) float64 {
 	kernRef.PointReflect()
 	// 2) multiply pairwise
 
-	res := New(r, c, d)
+	res := New(s[0], s[1], s[2])
 
 	res.SetAll(kern.Volume)
 
 	res.MulElem(in)
 
-	for i := 0; i < r; i++ {
-		for j := 0; j < c; j++ {
-			for k := 0; k < d; k++ {
+	for i := 0; i < s[0]; i++ {
+		for j := 0; j < s[1]; j++ {
+			for k := 0; k < s[2]; k++ {
 				// TODO check if normalization is needed!
 				ConvResult += (res.GetAt(i, j, k))
 			}

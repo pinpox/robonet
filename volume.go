@@ -32,7 +32,7 @@ type Volume interface {
 	Rows() int
 	SetAll(Volume)
 	SetAt(int, int, int, float64)
-	Shape() (int, int, int)
+	Shape() []int
 	SimilarTo(Volume, float64) bool
 	SubVolume(int, int, int, int) Volume
 	SubVolumePadded(int, int, int, int) Volume
@@ -60,30 +60,30 @@ func (vol *D3Volume) SetAll(v Volume) {
 }
 
 //Shape returns the extend in every dimension of a D3Volume
-func (vol *D3Volume) Shape() (int, int, int) {
+func (vol *D3Volume) Shape() []int {
 	d := len(vol.Fields)
 	if d != 0 {
 		r, c := vol.Fields[0].Dims()
-		return r, c, d
+		return []int{r, c, d}
 	}
-	return 0, 0, 0
+	return []int{0, 0, 0}
 }
 
 //Apply applys the given kernel to the whole volume, returnung a D3Volume with 1 depth
 func (vol *D3Volume) Apply(kern Kernel, strideR, strideC int) {
 
-	r, c, _ := vol.Shape()
-	r2, c2, _ := kern.Shape()
+	vs := vol.Shape()
+	ks := vol.Shape()
 
-	if r%strideR != 0 || c%strideC != 0 {
+	if vs[0]%strideR != 0 || vs[1]%strideC != 0 {
 		log.Fatal(errors.New("strides not applicable for this volume size"))
 	}
 
-	res := New(r/strideR, c/strideC, 1)
+	res := New(vs[0]/strideR, vs[1]/strideC, 1)
 
-	for i := 0; i < r/strideR; i++ {
-		for j := 0; j < c/strideC; j++ {
-			res.SetAt(i, j, 0, kern.Apply(vol.SubVolumePadded(i*strideR, j*strideC, r2, c2)))
+	for i := 0; i < vs[0]/strideR; i++ {
+		for j := 0; j < vs[1]/strideC; j++ {
+			res.SetAt(i, j, 0, kern.Apply(vol.SubVolumePadded(i*strideR, j*strideC, ks[0], ks[1])))
 		}
 	}
 	//TODO normalize
@@ -182,8 +182,8 @@ func (vol D3Volume) SubVolumePadded(cR, cC, r, c int) Volume {
 	sub := New(r, c, vol.Depth())
 
 	for id := 0; id < sub.Depth(); id++ {
-		for ir := 0; ir < sub.Rows(); ir++ {
-			for ic := 0; ic < sub.Collumns(); ic++ {
+		for ir := (cR - (r+1)/2); ir < sub.Rows(); ir++ {
+			for ic := (cC - (c+1)/2); ic < sub.Collumns(); ic++ {
 
 				cordR := ir + cR + (-r+1)/2
 				cordC := ic + cC + (-c+1)/2
@@ -196,6 +196,35 @@ func (vol D3Volume) SubVolumePadded(cR, cC, r, c int) Volume {
 		}
 	}
 
+	return sub
+}
+
+//Sub returns a part of the volume. Start and end are arrays containing the coordinates for the start and endpoints  in all dimensions
+func (vol D3Volume) Sub(start, end []int) Volume {
+
+	sub := New(end[0]-start[0], end[1]-start[1], end[2]-start[2])
+
+	//Pad minimums
+	for i := 0; i < 3; i++ {
+		if start[i] < 0 {
+			start[i] = 0
+		}
+	}
+
+	//Pad maximums
+	for i := 0; i < 3; i++ {
+		if end[i] >= vol.Shape()[i] {
+			end[i] = vol.Shape()[i]
+		}
+	}
+
+	for r := start[0]; r < end[0]; r++ {
+		for c := start[1]; c < end[1]; c++ {
+			for d := start[2]; d < end[2]; d++ {
+				sub.SetAt(r, c, d, vol.GetAt(r, c, d))
+			}
+		}
+	}
 	return sub
 }
 
@@ -251,20 +280,17 @@ func (vol *D3Volume) Print() {
 
 // Rows of the D3Volume
 func (vol *D3Volume) Rows() int {
-	r, _, _ := vol.Shape()
-	return r
+	return vol.Shape()[0]
 }
 
 // Collumns of the D3Volume
 func (vol *D3Volume) Collumns() int {
-	_, c, _ := vol.Shape()
-	return c
+	return vol.Shape()[1]
 }
 
 //Depth of the D3Volume
 func (vol *D3Volume) Depth() int {
-	_, _, d := vol.Shape()
-	return d
+	return vol.Shape()[2]
 }
 
 //EqualSize checks if the size of two volumes are the same
@@ -272,19 +298,18 @@ func (vol *D3Volume) EqualSize(a Volume) bool {
 	if a == nil {
 		return false
 	}
-	i1, i2, i3 := vol.Shape()
-	e1, e2, e3 := a.Shape()
-	return Equal3Dim(i1, i2, i3, e1, e2, e3)
+	return EqualVolDim(vol, a)
 }
 
 //PointReflect calculates the pointreflection of a volume
 func (vol *D3Volume) PointReflect() {
-	r, c, d := vol.Shape()
-	temp := New(c, r, d)
+	vs := vol.Shape()
 
-	for id := 0; id < d; id++ {
-		for ir := 0; ir < r; ir++ {
-			for ic := 0; ic < c; ic++ {
+	temp := New(vs[1], vs[0], vs[2])
+
+	for id := 0; id < vs[2]; id++ {
+		for ir := 0; ir < vs[0]; ir++ {
+			for ic := 0; ic < vs[1]; ic++ {
 				temp.SetAt(ic, ir, id, vol.GetAt(ir, ic, id))
 			}
 		}
@@ -295,13 +320,13 @@ func (vol *D3Volume) PointReflect() {
 //Reflect calculates the reflectio of a volume (left-right)
 func (vol *D3Volume) Reflect() {
 
-	r, c, d := vol.Shape()
-	temp := New(r, c, d)
+	vs := vol.Shape()
+	temp := New(vs[0], vs[1], vs[2])
 
-	for id := 0; id < d; id++ {
-		for ir := 0; ir < r; ir++ {
-			for ic := 0; ic < c; ic++ {
-				temp.SetAt(ir, ic, id, vol.GetAt(ir, c-(ic+1), id))
+	for id := 0; id < vs[2]; id++ {
+		for ir := 0; ir < vs[0]; ir++ {
+			for ic := 0; ic < vs[1]; ic++ {
+				temp.SetAt(ir, ic, id, vol.GetAt(ir, vs[1]-(ic+1), id))
 			}
 		}
 	}
@@ -310,13 +335,13 @@ func (vol *D3Volume) Reflect() {
 
 //MulElem multiplies the volume with another volume element-wise
 func (vol *D3Volume) MulElem(v1 Volume) {
-	r, c, d := vol.Shape()
 
-	res := New(r, c, d)
+	vs := vol.Shape()
+	res := New(vs[0], vs[1], vs[2])
 
-	for i := 0; i < r; i++ {
-		for j := 0; j < c; j++ {
-			for k := 0; k < d; k++ {
+	for i := 0; i < vs[0]; i++ {
+		for j := 0; j < vs[1]; j++ {
+			for k := 0; k < vs[2]; k++ {
 				res.SetAt(i, j, k, vol.GetAt(i, j, k)*v1.GetAt(i, j, k))
 
 			}
@@ -364,11 +389,11 @@ func (vol *D3Volume) SimilarTo(in Volume, threshold float64) bool {
 		return false
 	}
 
-	r, c, d := vol.Shape()
+	vs := vol.Shape()
 
-	for i1 := 0; i1 < r; i1++ {
-		for i2 := 0; i2 < c; i2++ {
-			for i3 := 0; i3 < d; i3++ {
+	for i1 := 0; i1 < vs[0]; i1++ {
+		for i2 := 0; i2 < vs[1]; i2++ {
+			for i3 := 0; i3 < vs[2]; i3++ {
 				if math.Abs(math.Abs(vol.GetAt(i1, i2, i3))-math.Abs(in.GetAt(i1, i2, i3))) > threshold {
 					return false
 				}
