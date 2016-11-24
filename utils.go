@@ -21,18 +21,6 @@ func Equal3Dim(e1, e2, e3, i1, i2, i3 int) bool {
 	return (e1 == i1 && e2 == i2 && e3 == i3)
 }
 
-func EqualNDim(v1, v2 []int) bool {
-	if len(v1) == len(v2) {
-		for k, v := range v1 {
-			if v != v2[k] {
-				return false
-			}
-		}
-		return true
-	}
-	return false
-}
-
 //Odd3Dim checks if the rows and collumns are odd
 func Odd3Dim(i1, i2, i3 int) bool {
 	return !(i1%2 == 0 && i2%2 == 0)
@@ -40,15 +28,10 @@ func Odd3Dim(i1, i2, i3 int) bool {
 
 //EqualVolDim checks if two given volumes have the same dimensions
 func EqualVolDim(v1, v2 Volume) bool {
-	if len(v1.Shape()) == len(v2.Shape()) {
-		for k, v := range v1.Shape() {
-			if v != v2.Shape()[k] {
-				return false
-			}
-		}
-		return true
-	}
-	return false
+	i1, i2, i3 := v1.Shape()
+	e1, e2, e3 := v2.Shape()
+
+	return Equal3Dim(i1, i2, i3, e1, e2, e3)
 }
 
 //VolumeFromTIFF creates a volume from a given file
