@@ -12,7 +12,7 @@ go:
 
 script:
  - go build -x -v ./cmd/main.go
- - go test -a -x -v *.go
+ - go test -race -coverprofile=coverage.txt -covermode=atomic -a -x -v *.go
 
 notifications:
   email:
@@ -20,4 +20,6 @@ notifications:
       - binaryplease@gmail.com
  
 after_success:
+cript:
+  - go test -race -coverprofile=coverage.txt -covermode=atomic
  - bash <(curl -s https://codecov.io/bash)
