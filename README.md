@@ -2,3 +2,4 @@
 
 
 [![GoDoc](https://godoc.org/github.com/binaryplease/robonet?status.svg)](https://godoc.org/github.com/binaryplease/robonet)
+[![Go Report Card](https://goreportcard.com/badge/github.com/binaryplease/robonet)](https://goreportcard.com/report/github.com/binaryplease/robonet)
