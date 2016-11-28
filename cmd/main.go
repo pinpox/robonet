@@ -79,7 +79,7 @@ func main() {
 	net.AddLayer(layNorm1)
 
 	//Set net's input
-	net.Input = robonet.VolumeFromTIFF("images/bwcircle.tiff")
+	net.Input = robonet.VolumeFromJPEG("images/elefant.jpg")
 
 	//Calculate the net's outpout
 	net.Calculate()
