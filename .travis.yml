@@ -12,9 +12,12 @@ go:
 
 script:
  - go build -x -v ./cmd/main.go
- - go test -a -x -v *.go
+ - go test -race -coverprofile=coverage.txt -covermode=atomic -a -x -v *.go
 
 notifications:
   email:
     recipients:
       - binaryplease@gmail.com
+ 
+after_success:
+ - bash <(curl -s https://codecov.io/bash)
