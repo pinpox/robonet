@@ -17,7 +17,7 @@ script:
 notifications:
   email:
     recipients:
-      - binaryplease@gmail.com
+      - pablo1@mailbox.org
  
 after_success:
  - bash <(curl -s https://codecov.io/bash)
